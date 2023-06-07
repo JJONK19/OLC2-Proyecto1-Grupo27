@@ -18,8 +18,24 @@ class dato(instruccion):
         self.clase = Clases.PRIMITIVO.value
         self.tipoInstruccion = Instrucciones.DATO.value
 
-    def grafo(self):
-        pass
+    def grafo(self, REPORTES):
+        '''
+            Se llama al metodo para graficar las instrucciones, retorna el ID del nodo raiz de la instruccion.
+            - Reportes: Variable de tipo reportes. Contene la variable con el dot.
+        '''
+        #Declarar el padre
+        padre = "NODO" + str(REPORTES.cont)
+        REPORTES.dot += padre + "[ label = \"Valor\" ];\n"
+        REPORTES.cont += 1
+
+        #Declarar los nodos hijos
+        nodoValor = "NODO" + str(REPORTES.cont)
+        REPORTES.dot += nodoValor + "[ label = \"" +  self.valor + "\" ];\n"
+        REPORTES.cont += 1
+
+        #Conectar con el padre
+        REPORTES.dot += padre + "->" + nodoValor + ";\n"
+        return padre
 
     def analisis(self, SIMBOLOS, REPORTES):
         '''

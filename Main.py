@@ -64,8 +64,15 @@ class ventana (QtWidgets.QMainWindow):
         for i in Salida.getErrores(): 
             print(i.descripcion)
 
+        #Instrucciones
         for i in Salida.instrucciones: 
             print(i)
+
+        #AST
+        #print("//////////////////////////////////////////////////")
+        #print(Salida.Grafo())
+        #print("//////////////////////////////////////////////////")
+        
 
         #--- MOSTRAR EL CONTENIDO EN LA CONSOLA
         self.Consola.setPlainText(Salida.getConsola())

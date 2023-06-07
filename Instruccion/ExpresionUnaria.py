@@ -18,8 +18,33 @@ class expresionUnaria(instruccion):
         self.tipoOperacion = TIPO_OPERACION
         self.tipoInstruccion = Instrucciones.OPERACION.value
 
-    def grafo(self):
-        pass
+    def grafo(self, REPORTES):
+        '''
+            Se llama al metodo para graficar las instrucciones, retorna el ID del nodo raiz de la instruccion.
+            - Reportes: Variable de tipo reportes. Contene la variable con el dot.
+        '''
+        #Declarar el padre
+        padre = "NODO" + str(REPORTES.cont)
+        REPORTES.dot += padre + "[ label = \"Expresion\" ];\n"
+        REPORTES.cont += 1
+
+        #Declarar operador
+        nodoOperador = "NODO" + str(REPORTES.cont)
+        operador = ""
+        if self.tipoOperacion == Expresion.UNARIO.value:
+            operador = "-"
+        elif self.tipoOperacion == Expresion.UNARIO.value:
+            operador = "!"
+        REPORTES.dot += nodoOperador + "[ label = \"" +  operador + "\" ];\n"
+        REPORTES.cont += 1
+
+        #Declarar operacion
+        nodoExpresion = self.expresion.grafo(REPORTES)
+
+        #Conectar con el padre
+        REPORTES.dot += padre + "->" + nodoOperador + ";\n"
+        REPORTES.dot += padre + "->" + nodoExpresion + ";\n"
+        return padre    
 
     def analisis(self, SIMBOLOS, REPORTES):
         '''

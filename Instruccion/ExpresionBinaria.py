@@ -19,8 +19,61 @@ class expresionBinaria(instruccion):
         self.tipoOperacion = TIPO_OPERACION
         self.tipoInstruccion = Instrucciones.OPERACION.value
 
-    def grafo(self):
-        pass
+    def grafo(self, REPORTES):
+        '''
+            Se llama al metodo para graficar las instrucciones, retorna el ID del nodo raiz de la instruccion.
+            - Reportes: Variable de tipo reportes. Contene la variable con el dot.
+        '''
+        #Declarar el padre
+        padre = "NODO" + str(REPORTES.cont)
+        REPORTES.dot += padre + "[ label = \"Expresion\" ];\n"
+        REPORTES.cont += 1
+
+        #Declarar operador izquiedo
+        nodoIzquierdo = self.izquierda.grafo(REPORTES)
+
+        #Declarar operador
+        nodoOperador = "NODO" + str(REPORTES.cont)
+        operador = ""
+        if self.tipoOperacion == Expresion.SUMA.value:
+            operador = "+"
+        elif self.tipoOperacion == Expresion.RESTA.value:
+            operador = "-"
+        elif self.tipoOperacion == Expresion.MULTIPLICACION.value:
+            operador = "*"
+        elif self.tipoOperacion == Expresion.DIVISION.value:
+            operador = "/"
+        elif self.tipoOperacion == Expresion.POT.value:
+            operador = "^"
+        elif self.tipoOperacion == Expresion.MOD.value:
+            operador = "%"
+        elif self.tipoOperacion == Expresion.IGUALACION.value:
+            operador = "==="
+        elif self.tipoOperacion == Expresion.DISTINTO.value:
+            operador = "!="
+        elif self.tipoOperacion == Expresion.MAYORQ.value:
+            operador = ">"
+        elif self.tipoOperacion == Expresion.MENORQ.value:
+            operador = "<"
+        elif self.tipoOperacion == Expresion.MAYORIG.value:
+            operador = ">="
+        elif self.tipoOperacion == Expresion.MENORIG.value:
+            operador = "<"
+        elif self.tipoOperacion == Expresion.OR.value:
+            operador = "||"
+        elif self.tipoOperacion == Expresion.AND.value:
+            operador = "&&"
+        REPORTES.dot += nodoOperador + "[ label = \"" +  operador + "\" ];\n"
+        REPORTES.cont += 1
+
+        #Declarar operador derecho
+        nodoDerecho = self.derecha.grafo(REPORTES)
+
+        #Conectar con el padre
+        REPORTES.dot += padre + "->" + nodoIzquierdo + ";\n"
+        REPORTES.dot += padre + "->" + nodoOperador + ";\n"
+        REPORTES.dot += padre + "->" + nodoDerecho + ";\n"
+        return padre
 
     def analisis(self, SIMBOLOS, REPORTES):
         '''

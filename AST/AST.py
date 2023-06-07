@@ -65,19 +65,25 @@ class AST:
         '''
         pass
 
-    def Grafo (self, REPORTES):
+    def Grafo (self):
         '''
-            Se llama al metodo para analizar las instrucciones, retorna el codigo de graphviz.
+            Se llama al metodo para graficar las instrucciones, retorna el codigo de graphviz.
             - Reportes: Variable de tipo reportes. Contene la variable con el dot.
         '''
-        REPORTES.dot = "diagraph G{ rankdir = TB; node[shape = square];"
+        self.reporte.dot = "diagraph G{ rankdir = TB; node[shape = square];"
 
         #Añadir el padre
-        
+        padre = "NODO" + str(self.reporte.cont)
+        self.reporte.dot += padre + "[ label = \"Instrucciones\" ];\n"
+        self.reporte.cont += 1
 
-        REPORTES.dot += "}"
+        for instruccion in self.instrucciones:
+            #Obtener el nombre del hijo (recursivo)
+            hijo = instruccion.grafo(self.reporte)
 
-        pass
+            #Conectar ek padre con el hijo
+            self.reporte.dot += padre + "->" + hijo + ";\n"
+        self.reporte.dot += "}"
 
     def Ejecucion (self):
         '''

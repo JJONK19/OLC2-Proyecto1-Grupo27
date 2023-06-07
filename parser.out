@@ -1,0 +1,502 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    COMA
+    CORD
+    CORI
+    DISTINTO
+    DOSPTS
+    ID
+    IGUAL
+    IGUALACION
+    LLAVED
+    LLAVEI
+    MAYORIG
+    MAYORQ
+    MENORIG
+    MENORQ
+    MOD
+    NOT
+    OR
+    POT
+
+Grammar
+
+Rule 0     S' -> inicio
+Rule 1     inicio -> sentencias
+Rule 2     sentencias -> sentencias sentencia
+Rule 3     sentencias -> sentencia
+Rule 4     sentencia -> print PTCOMA
+Rule 5     print -> RCONSOLE PT RLOG PARENI expresion PAREND
+Rule 6     expresion -> expresion MAS expresion
+Rule 7     expresion -> expresion MENOS expresion
+Rule 8     expresion -> expresion MUL expresion
+Rule 9     expresion -> expresion DIV expresion
+Rule 10    expresion -> MENOS expresion
+Rule 11    expresion -> PARENI expresion PAREND
+Rule 12    expresion -> ENTERO
+Rule 13    expresion -> DECIMAL
+Rule 14    expresion -> CADENA
+
+Terminals, with rules where they appear
+
+AND                  : 
+CADENA               : 14
+COMA                 : 
+CORD                 : 
+CORI                 : 
+DECIMAL              : 13
+DISTINTO             : 
+DIV                  : 9
+DOSPTS               : 
+ENTERO               : 12
+ID                   : 
+IGUAL                : 
+IGUALACION           : 
+LLAVED               : 
+LLAVEI               : 
+MAS                  : 6
+MAYORIG              : 
+MAYORQ               : 
+MENORIG              : 
+MENORQ               : 
+MENOS                : 7 10
+MOD                  : 
+MUL                  : 8
+NOT                  : 
+OR                   : 
+PAREND               : 5 11
+PARENI               : 5 11
+POT                  : 
+PT                   : 5
+PTCOMA               : 4
+RCONSOLE             : 5
+RLOG                 : 5
+error                : 
+
+Nonterminals, with rules where they appear
+
+expresion            : 5 6 6 7 7 8 8 9 9 10 11
+inicio               : 0
+print                : 4
+sentencia            : 2 3
+sentencias           : 1 2
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . inicio
+    (1) inicio -> . sentencias
+    (2) sentencias -> . sentencias sentencia
+    (3) sentencias -> . sentencia
+    (4) sentencia -> . print PTCOMA
+    (5) print -> . RCONSOLE PT RLOG PARENI expresion PAREND
+
+    RCONSOLE        shift and go to state 5
+
+    inicio                         shift and go to state 1
+    sentencias                     shift and go to state 2
+    sentencia                      shift and go to state 3
+    print                          shift and go to state 4
+
+state 1
+
+    (0) S' -> inicio .
+
+
+
+state 2
+
+    (1) inicio -> sentencias .
+    (2) sentencias -> sentencias . sentencia
+    (4) sentencia -> . print PTCOMA
+    (5) print -> . RCONSOLE PT RLOG PARENI expresion PAREND
+
+    $end            reduce using rule 1 (inicio -> sentencias .)
+    RCONSOLE        shift and go to state 5
+
+    sentencia                      shift and go to state 6
+    print                          shift and go to state 4
+
+state 3
+
+    (3) sentencias -> sentencia .
+
+    RCONSOLE        reduce using rule 3 (sentencias -> sentencia .)
+    $end            reduce using rule 3 (sentencias -> sentencia .)
+
+
+state 4
+
+    (4) sentencia -> print . PTCOMA
+
+    PTCOMA          shift and go to state 7
+
+
+state 5
+
+    (5) print -> RCONSOLE . PT RLOG PARENI expresion PAREND
+
+    PT              shift and go to state 8
+
+
+state 6
+
+    (2) sentencias -> sentencias sentencia .
+
+    RCONSOLE        reduce using rule 2 (sentencias -> sentencias sentencia .)
+    $end            reduce using rule 2 (sentencias -> sentencias sentencia .)
+
+
+state 7
+
+    (4) sentencia -> print PTCOMA .
+
+    RCONSOLE        reduce using rule 4 (sentencia -> print PTCOMA .)
+    $end            reduce using rule 4 (sentencia -> print PTCOMA .)
+
+
+state 8
+
+    (5) print -> RCONSOLE PT . RLOG PARENI expresion PAREND
+
+    RLOG            shift and go to state 9
+
+
+state 9
+
+    (5) print -> RCONSOLE PT RLOG . PARENI expresion PAREND
+
+    PARENI          shift and go to state 10
+
+
+state 10
+
+    (5) print -> RCONSOLE PT RLOG PARENI . expresion PAREND
+    (6) expresion -> . expresion MAS expresion
+    (7) expresion -> . expresion MENOS expresion
+    (8) expresion -> . expresion MUL expresion
+    (9) expresion -> . expresion DIV expresion
+    (10) expresion -> . MENOS expresion
+    (11) expresion -> . PARENI expresion PAREND
+    (12) expresion -> . ENTERO
+    (13) expresion -> . DECIMAL
+    (14) expresion -> . CADENA
+
+    MENOS           shift and go to state 13
+    PARENI          shift and go to state 11
+    ENTERO          shift and go to state 14
+    DECIMAL         shift and go to state 15
+    CADENA          shift and go to state 16
+
+    expresion                      shift and go to state 12
+
+state 11
+
+    (11) expresion -> PARENI . expresion PAREND
+    (6) expresion -> . expresion MAS expresion
+    (7) expresion -> . expresion MENOS expresion
+    (8) expresion -> . expresion MUL expresion
+    (9) expresion -> . expresion DIV expresion
+    (10) expresion -> . MENOS expresion
+    (11) expresion -> . PARENI expresion PAREND
+    (12) expresion -> . ENTERO
+    (13) expresion -> . DECIMAL
+    (14) expresion -> . CADENA
+
+    MENOS           shift and go to state 13
+    PARENI          shift and go to state 11
+    ENTERO          shift and go to state 14
+    DECIMAL         shift and go to state 15
+    CADENA          shift and go to state 16
+
+    expresion                      shift and go to state 17
+
+state 12
+
+    (5) print -> RCONSOLE PT RLOG PARENI expresion . PAREND
+    (6) expresion -> expresion . MAS expresion
+    (7) expresion -> expresion . MENOS expresion
+    (8) expresion -> expresion . MUL expresion
+    (9) expresion -> expresion . DIV expresion
+
+    PAREND          shift and go to state 18
+    MAS             shift and go to state 19
+    MENOS           shift and go to state 20
+    MUL             shift and go to state 21
+    DIV             shift and go to state 22
+
+
+state 13
+
+    (10) expresion -> MENOS . expresion
+    (6) expresion -> . expresion MAS expresion
+    (7) expresion -> . expresion MENOS expresion
+    (8) expresion -> . expresion MUL expresion
+    (9) expresion -> . expresion DIV expresion
+    (10) expresion -> . MENOS expresion
+    (11) expresion -> . PARENI expresion PAREND
+    (12) expresion -> . ENTERO
+    (13) expresion -> . DECIMAL
+    (14) expresion -> . CADENA
+
+    MENOS           shift and go to state 13
+    PARENI          shift and go to state 11
+    ENTERO          shift and go to state 14
+    DECIMAL         shift and go to state 15
+    CADENA          shift and go to state 16
+
+    expresion                      shift and go to state 23
+
+state 14
+
+    (12) expresion -> ENTERO .
+
+    PAREND          reduce using rule 12 (expresion -> ENTERO .)
+    MAS             reduce using rule 12 (expresion -> ENTERO .)
+    MENOS           reduce using rule 12 (expresion -> ENTERO .)
+    MUL             reduce using rule 12 (expresion -> ENTERO .)
+    DIV             reduce using rule 12 (expresion -> ENTERO .)
+
+
+state 15
+
+    (13) expresion -> DECIMAL .
+
+    PAREND          reduce using rule 13 (expresion -> DECIMAL .)
+    MAS             reduce using rule 13 (expresion -> DECIMAL .)
+    MENOS           reduce using rule 13 (expresion -> DECIMAL .)
+    MUL             reduce using rule 13 (expresion -> DECIMAL .)
+    DIV             reduce using rule 13 (expresion -> DECIMAL .)
+
+
+state 16
+
+    (14) expresion -> CADENA .
+
+    PAREND          reduce using rule 14 (expresion -> CADENA .)
+    MAS             reduce using rule 14 (expresion -> CADENA .)
+    MENOS           reduce using rule 14 (expresion -> CADENA .)
+    MUL             reduce using rule 14 (expresion -> CADENA .)
+    DIV             reduce using rule 14 (expresion -> CADENA .)
+
+
+state 17
+
+    (11) expresion -> PARENI expresion . PAREND
+    (6) expresion -> expresion . MAS expresion
+    (7) expresion -> expresion . MENOS expresion
+    (8) expresion -> expresion . MUL expresion
+    (9) expresion -> expresion . DIV expresion
+
+    PAREND          shift and go to state 24
+    MAS             shift and go to state 19
+    MENOS           shift and go to state 20
+    MUL             shift and go to state 21
+    DIV             shift and go to state 22
+
+
+state 18
+
+    (5) print -> RCONSOLE PT RLOG PARENI expresion PAREND .
+
+    PTCOMA          reduce using rule 5 (print -> RCONSOLE PT RLOG PARENI expresion PAREND .)
+
+
+state 19
+
+    (6) expresion -> expresion MAS . expresion
+    (6) expresion -> . expresion MAS expresion
+    (7) expresion -> . expresion MENOS expresion
+    (8) expresion -> . expresion MUL expresion
+    (9) expresion -> . expresion DIV expresion
+    (10) expresion -> . MENOS expresion
+    (11) expresion -> . PARENI expresion PAREND
+    (12) expresion -> . ENTERO
+    (13) expresion -> . DECIMAL
+    (14) expresion -> . CADENA
+
+    MENOS           shift and go to state 13
+    PARENI          shift and go to state 11
+    ENTERO          shift and go to state 14
+    DECIMAL         shift and go to state 15
+    CADENA          shift and go to state 16
+
+    expresion                      shift and go to state 25
+
+state 20
+
+    (7) expresion -> expresion MENOS . expresion
+    (6) expresion -> . expresion MAS expresion
+    (7) expresion -> . expresion MENOS expresion
+    (8) expresion -> . expresion MUL expresion
+    (9) expresion -> . expresion DIV expresion
+    (10) expresion -> . MENOS expresion
+    (11) expresion -> . PARENI expresion PAREND
+    (12) expresion -> . ENTERO
+    (13) expresion -> . DECIMAL
+    (14) expresion -> . CADENA
+
+    MENOS           shift and go to state 13
+    PARENI          shift and go to state 11
+    ENTERO          shift and go to state 14
+    DECIMAL         shift and go to state 15
+    CADENA          shift and go to state 16
+
+    expresion                      shift and go to state 26
+
+state 21
+
+    (8) expresion -> expresion MUL . expresion
+    (6) expresion -> . expresion MAS expresion
+    (7) expresion -> . expresion MENOS expresion
+    (8) expresion -> . expresion MUL expresion
+    (9) expresion -> . expresion DIV expresion
+    (10) expresion -> . MENOS expresion
+    (11) expresion -> . PARENI expresion PAREND
+    (12) expresion -> . ENTERO
+    (13) expresion -> . DECIMAL
+    (14) expresion -> . CADENA
+
+    MENOS           shift and go to state 13
+    PARENI          shift and go to state 11
+    ENTERO          shift and go to state 14
+    DECIMAL         shift and go to state 15
+    CADENA          shift and go to state 16
+
+    expresion                      shift and go to state 27
+
+state 22
+
+    (9) expresion -> expresion DIV . expresion
+    (6) expresion -> . expresion MAS expresion
+    (7) expresion -> . expresion MENOS expresion
+    (8) expresion -> . expresion MUL expresion
+    (9) expresion -> . expresion DIV expresion
+    (10) expresion -> . MENOS expresion
+    (11) expresion -> . PARENI expresion PAREND
+    (12) expresion -> . ENTERO
+    (13) expresion -> . DECIMAL
+    (14) expresion -> . CADENA
+
+    MENOS           shift and go to state 13
+    PARENI          shift and go to state 11
+    ENTERO          shift and go to state 14
+    DECIMAL         shift and go to state 15
+    CADENA          shift and go to state 16
+
+    expresion                      shift and go to state 28
+
+state 23
+
+    (10) expresion -> MENOS expresion .
+    (6) expresion -> expresion . MAS expresion
+    (7) expresion -> expresion . MENOS expresion
+    (8) expresion -> expresion . MUL expresion
+    (9) expresion -> expresion . DIV expresion
+
+    PAREND          reduce using rule 10 (expresion -> MENOS expresion .)
+    MAS             reduce using rule 10 (expresion -> MENOS expresion .)
+    MENOS           reduce using rule 10 (expresion -> MENOS expresion .)
+    MUL             reduce using rule 10 (expresion -> MENOS expresion .)
+    DIV             reduce using rule 10 (expresion -> MENOS expresion .)
+
+  ! MAS             [ shift and go to state 19 ]
+  ! MENOS           [ shift and go to state 20 ]
+  ! MUL             [ shift and go to state 21 ]
+  ! DIV             [ shift and go to state 22 ]
+
+
+state 24
+
+    (11) expresion -> PARENI expresion PAREND .
+
+    PAREND          reduce using rule 11 (expresion -> PARENI expresion PAREND .)
+    MAS             reduce using rule 11 (expresion -> PARENI expresion PAREND .)
+    MENOS           reduce using rule 11 (expresion -> PARENI expresion PAREND .)
+    MUL             reduce using rule 11 (expresion -> PARENI expresion PAREND .)
+    DIV             reduce using rule 11 (expresion -> PARENI expresion PAREND .)
+
+
+state 25
+
+    (6) expresion -> expresion MAS expresion .
+    (6) expresion -> expresion . MAS expresion
+    (7) expresion -> expresion . MENOS expresion
+    (8) expresion -> expresion . MUL expresion
+    (9) expresion -> expresion . DIV expresion
+
+    PAREND          reduce using rule 6 (expresion -> expresion MAS expresion .)
+    MAS             reduce using rule 6 (expresion -> expresion MAS expresion .)
+    MENOS           reduce using rule 6 (expresion -> expresion MAS expresion .)
+    MUL             shift and go to state 21
+    DIV             shift and go to state 22
+
+  ! MUL             [ reduce using rule 6 (expresion -> expresion MAS expresion .) ]
+  ! DIV             [ reduce using rule 6 (expresion -> expresion MAS expresion .) ]
+  ! MAS             [ shift and go to state 19 ]
+  ! MENOS           [ shift and go to state 20 ]
+
+
+state 26
+
+    (7) expresion -> expresion MENOS expresion .
+    (6) expresion -> expresion . MAS expresion
+    (7) expresion -> expresion . MENOS expresion
+    (8) expresion -> expresion . MUL expresion
+    (9) expresion -> expresion . DIV expresion
+
+    PAREND          reduce using rule 7 (expresion -> expresion MENOS expresion .)
+    MAS             reduce using rule 7 (expresion -> expresion MENOS expresion .)
+    MENOS           reduce using rule 7 (expresion -> expresion MENOS expresion .)
+    MUL             shift and go to state 21
+    DIV             shift and go to state 22
+
+  ! MUL             [ reduce using rule 7 (expresion -> expresion MENOS expresion .) ]
+  ! DIV             [ reduce using rule 7 (expresion -> expresion MENOS expresion .) ]
+  ! MAS             [ shift and go to state 19 ]
+  ! MENOS           [ shift and go to state 20 ]
+
+
+state 27
+
+    (8) expresion -> expresion MUL expresion .
+    (6) expresion -> expresion . MAS expresion
+    (7) expresion -> expresion . MENOS expresion
+    (8) expresion -> expresion . MUL expresion
+    (9) expresion -> expresion . DIV expresion
+
+    PAREND          reduce using rule 8 (expresion -> expresion MUL expresion .)
+    MAS             reduce using rule 8 (expresion -> expresion MUL expresion .)
+    MENOS           reduce using rule 8 (expresion -> expresion MUL expresion .)
+    MUL             reduce using rule 8 (expresion -> expresion MUL expresion .)
+    DIV             reduce using rule 8 (expresion -> expresion MUL expresion .)
+
+  ! MAS             [ shift and go to state 19 ]
+  ! MENOS           [ shift and go to state 20 ]
+  ! MUL             [ shift and go to state 21 ]
+  ! DIV             [ shift and go to state 22 ]
+
+
+state 28
+
+    (9) expresion -> expresion DIV expresion .
+    (6) expresion -> expresion . MAS expresion
+    (7) expresion -> expresion . MENOS expresion
+    (8) expresion -> expresion . MUL expresion
+    (9) expresion -> expresion . DIV expresion
+
+    PAREND          reduce using rule 9 (expresion -> expresion DIV expresion .)
+    MAS             reduce using rule 9 (expresion -> expresion DIV expresion .)
+    MENOS           reduce using rule 9 (expresion -> expresion DIV expresion .)
+    MUL             reduce using rule 9 (expresion -> expresion DIV expresion .)
+    DIV             reduce using rule 9 (expresion -> expresion DIV expresion .)
+
+  ! MAS             [ shift and go to state 19 ]
+  ! MENOS           [ shift and go to state 20 ]
+  ! MUL             [ shift and go to state 21 ]
+  ! DIV             [ shift and go to state 22 ]
+

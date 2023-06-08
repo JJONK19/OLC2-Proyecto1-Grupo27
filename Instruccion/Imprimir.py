@@ -27,7 +27,7 @@ class imprimir(instruccion):
 
         #Declarar funcion
         nodoFuncionA = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += nodoFuncionA + "[ label = \"Console.log(\" ];\n"
+        REPORTES.dot += nodoFuncionA + "[ label = \"Console.log (\" ];\n"
         REPORTES.cont += 1
 
         #Declarar operacion
@@ -50,7 +50,11 @@ class imprimir(instruccion):
             - Simbolos: Lista con los entornos de la ejecucion.
             - Reportes: Almacena un resumen de la ejecucion. 
         '''
-        pass
+        #Obtener el valor de la expresion
+        expresion = self.expresion.analisis(SIMBOLOS, REPORTES)
+
+        #Añadirlo al string de la consola (Salida)
+        REPORTES.salida += expresion.string + "\n"
 
     def c3d(self):
         pass

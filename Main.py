@@ -65,16 +65,21 @@ class ventana (QtWidgets.QMainWindow):
             print(i.descripcion)
 
         #Instrucciones
+        '''
         for i in Salida.instrucciones: 
             print(i)
 
+        '''        
         #AST
-        #print("//////////////////////////////////////////////////")
-        #print(Salida.Grafo())
-        #print("//////////////////////////////////////////////////")
+        print("//////////////////////////////////////////////////")
+        print(Salida.Grafo())
+        print("//////////////////////////////////////////////////")
         
+        #EJECUTAR
+        Salida.Ejecucion()
 
         #--- MOSTRAR EL CONTENIDO EN LA CONSOLA
+        print(Salida.getConsola())
         self.Consola.setPlainText(Salida.getConsola())
 
         """

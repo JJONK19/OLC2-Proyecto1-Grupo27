@@ -1,5 +1,6 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
+from Ejecucion.Valor import valor
 
 class expresionUnaria(instruccion):
     '''
@@ -33,7 +34,7 @@ class expresionUnaria(instruccion):
         operador = ""
         if self.tipoOperacion == Expresion.UNARIO.value:
             operador = "-"
-        elif self.tipoOperacion == Expresion.UNARIO.value:
+        elif self.tipoOperacion == Expresion.NOT.value:
             operador = "!"
         REPORTES.dot += nodoOperador + "[ label = \"" +  operador + "\" ];\n"
         REPORTES.cont += 1
@@ -52,7 +53,91 @@ class expresionUnaria(instruccion):
             - Simbolos: Lista con los entornos de la ejecucion.
             - Reportes: Almacena un resumen de la ejecucion. 
         '''
-        pass
+        #Obtener el valor de la expresion
+        expresion = self.expresion.analisis(SIMBOLOS, REPORTES)
+
+        #Comprobar que no sea NUll
+        if expresion.tipo == Tipo.NULL.value:
+            retorno = valor()
+            retorno.id = "NULL"
+            retorno.tipo = Tipo.NULL.value
+            retorno.valor = "NULL"
+            retorno.clase = Clases.NULL.value
+            retorno.string = "NULL"
+            
+            REPORTES.salida += "ERROR: No se puede operar un valor de tipo Null (1). \n"
+            mensaje = "No se puede operar un valor de tipo Null (1)."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+            return retorno
+
+        #Comprobar que sea primitivo
+        if expresion.clase != Clases.PRIMITIVO.value:
+            retorno = valor()
+            retorno.id = "NULL"
+            retorno.tipo = Tipo.NULL.value
+            retorno.valor = "NULL"
+            retorno.clase = Clases.NULL.value
+            retorno.string = "NULL"
+            
+            REPORTES.salida += "ERROR: Se esperaba un valor de tipo primitivo (1). \n"
+            mensaje = "ERROR: Se esperaba un valor de tipo primitivo (1)."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+            return retorno
+        
+        #Separacion de instruccion
+        if self.tipoOperacion == Expresion.NOT.value:
+            #Evaluar que el valor sea booleano
+            if expresion.tipo != Tipo.BOOLEAN.value:
+                retorno = valor()
+                retorno.id = "NULL"
+                retorno.tipo = Tipo.NULL.value
+                retorno.valor = "NULL"
+                retorno.clase = Clases.NULL.value
+                retorno.string = "NULL"
+                
+                REPORTES.salida += "ERROR: La operación not solo recibe booleanos. \n"
+                mensaje = "La operación not solo recibe booleanos."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                return retorno
+            
+            #Retorno
+            retorno = valor()
+            retorno.id = expresion.id
+            retorno.tipo = expresion.tipo
+            if expresion.valor == "true":
+                retorno.valor = "false"
+            else:
+                retorno.valor = "true"
+            retorno.clase = expresion.clase
+            retorno.string = retorno.valor
+            return retorno
+            
+        elif self.tipoOperacion == Expresion.UNARIO.value:
+            #Evaluar que el valor sea booleano
+            if expresion.tipo != Tipo.NUMBER.value:
+                retorno = valor()
+                retorno.id = "NULL"
+                retorno.tipo = Tipo.NULL.value
+                retorno.valor = "NULL"
+                retorno.clase = Clases.NULL.value
+                retorno.string = "NULL"
+                
+                REPORTES.salida += "ERROR: La negacion unaria solo recibe numbers. \n"
+                mensaje = "La negacion unaria solo recibe numbers."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                return retorno
+            
+            #Convertir el numero
+            numero = float(expresion.valor) * -1
+            
+            #Retorno
+            retorno = valor()
+            retorno.id = expresion.id
+            retorno.tipo = expresion.tipo
+            retorno.valor = str(numero)
+            retorno.clase = expresion.clase
+            retorno.string = retorno.valor
+            return retorno
 
     def c3d(self):
         pass

@@ -305,40 +305,40 @@ class Analizador:
         """
             expresion : expresion MAS expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.SUMA.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.SUMA.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
 
     def p_EXPRESION_RESTA(p):
         """
             expresion : expresion MENOS expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.RESTA.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.RESTA.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
 
     def p_EXPRESION_MULTIPLICACION(p):
         """
             expresion : expresion MUL expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.MULTIPLICACION.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.MULTIPLICACION.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
 
     def p_EXPRESION_DIVISION(p):
         """
             expresion : expresion DIV expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.DIVISION.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.DIVISION.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
     def p_EXPRESION_MOD(p):
         """
             expresion : expresion MOD expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.MOD.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.MOD.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
     def p_EXPRESION_POTENCIA(p):
         """
             expresion : expresion POT expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.POT.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.POT.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
 
     def p_EXPRESION_NOT(p):
@@ -347,71 +347,56 @@ class Analizador:
         """
         p[0] = expresionUnaria(p[2], Expresion.NOT.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
-
-
     def p_EXPRESION_IGUALACION(p):
         """
             expresion : expresion IGUALACION expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.IGUALACION.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.IGUALACION.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
     def p_EXPRESION_DISTINTO(p):
         """
             expresion : expresion DISTINTO expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.DISTINTO.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.DISTINTO.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
     def p_EXPRESION_MAYORQ(p):
         """
             expresion : expresion MAYORQ expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.MAYORQ.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.MAYORQ.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
 
     def p_EXPRESION_MENORQ(p):
         """
             expresion : expresion MENORQ expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.MENORQ.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.MENORQ.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
     def p_EXPRESION_MAYORIG(p):
         """
             expresion : expresion MAYORIG expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.MAYORIG.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.MAYORIG.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
 
     def p_EXPRESION_MENORIG(p):
         """
             expresion : expresion MENORIG expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.MENORIG.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.MENORIG.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
 
     def p_EXPRESION_OR(p):
         """
             expresion : expresion OR expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.OR.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.OR.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
     def p_EXPRESION_AND(p):
         """
             expresion : expresion AND expresion
         """
-        p[0] = expresionBinaria(p[1], p[2], Expresion.AND.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
-
-    def p_EXPRESION_BOOLEAN(t):
-        """
-            expresion : RTRUE
-                     | RFALSE
-        """
-        t[0] = dato(t[1], Tipo.BOOLEAN.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
-
-    def p_EXPRESION_NULL(t):
-        """
-            expresion : RNULL
-        """
-        t[0] = dato(t[1], Tipo.NULL.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        p[0] = expresionBinaria(p[1], p[3], Expresion.AND.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
     def p_EXPRESION_UNARIO(p):
         """
@@ -426,6 +411,18 @@ class Analizador:
         """
         p[0] = p[2]
 
+    def p_EXPRESION_BOOLEAN(t):
+        """
+            expresion : RTRUE
+                     | RFALSE
+        """
+        t[0] = dato(t[1], Tipo.BOOLEAN.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_EXPRESION_NULL(t):
+        """
+            expresion : RNULL
+        """
+        t[0] = dato(t[1], Tipo.NULL.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_EXPRESION_NUMBER(t):
         """

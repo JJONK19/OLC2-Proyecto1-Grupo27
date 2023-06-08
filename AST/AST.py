@@ -1,4 +1,5 @@
 from Reporte.Reporte import reportes
+from Ejecucion.Entorno import entorno
 
 class AST:
     '''
@@ -70,7 +71,7 @@ class AST:
             Se llama al metodo para graficar las instrucciones, retorna el codigo de graphviz.
             - Reportes: Variable de tipo reportes. Contene la variable con el dot.
         '''
-        self.reporte.dot = "diagraph G{ rankdir = TB; node[shape = square];"
+        self.reporte.dot = "digraph G{ rankdir = TB; node[shape = oval];\n"
 
         #Añadir el padre
         padre = "NODO" + str(self.reporte.cont)
@@ -84,10 +85,17 @@ class AST:
             #Conectar ek padre con el hijo
             self.reporte.dot += padre + "->" + hijo + ";\n"
         self.reporte.dot += "}"
+        return self.reporte.dot
 
     def Ejecucion (self):
         '''
             Se llama el metodo de ejecución y se le manda el arreglo de instrucciones. Este llena las variables 
             con los resulatdos de la ejecución. 
         '''
-        pass 
+        #Se crea la lista de entornos y se añade el entorno global
+        entornos = []
+        entornos.append(entorno("Global"))  
+
+        #Se recorre y ejecutan las instrucciones
+        for instruccion in self.instrucciones:
+            instruccion.analisis(entornos, self.reporte)

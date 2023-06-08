@@ -1,5 +1,6 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
+from Ejecucion.Valor import valor
  
 class dato(instruccion):
     '''
@@ -43,8 +44,15 @@ class dato(instruccion):
             - Simbolos: Lista con los entornos de la ejecucion.
             - Reportes: Almacena un resumen de la ejecucion. 
         '''
-        pass
+        #Armar el objeto de tipo Valor y retornarlo
+        retorno = valor()
+        retorno.valor = self.valor
+        retorno.tipo = self.tipo
+        retorno.clase = self.clase
+        retorno.string = self.valor
+        return retorno
 
     def c3d(self):
         pass
+
 

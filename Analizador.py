@@ -514,25 +514,25 @@ class Analizador:
         '''
             tolowercase : expresion PT RLC PARENI PAREND 
         '''
-        t[0] = nativaSinValor(t[1], Expresion.TOLOWERCASE, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativaSinValor(t[1], Expresion.TOLOWERCASE.value , t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_NATIVA_TOUPPERCASE(t):
         '''
             touppercase : expresion PT RUC PARENI PAREND 
         '''
-        t[0] = nativaSinValor(t[1], Expresion.TOUPPERCASE, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativaSinValor(t[1], Expresion.TOUPPERCASE.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_NATIVA_SPLIT(t):
         '''
             split : expresion PT RSPLIT PARENI expresion PAREND 
         '''
-        t[0] = nativasVector(t[1], t[5], Expresion.SPLIT, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativasVector(t[1], t[5], Expresion.SPLIT.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_NATIVA_CONCAT(t):
         '''
             concat : expresion PT RCONCAT PARENI expresion PAREND
         '''
-        t[0] = nativasVector(t[1], t[5], Expresion.CONCAT, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativasVector(t[1], t[5], Expresion.CONCAT.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
 
 

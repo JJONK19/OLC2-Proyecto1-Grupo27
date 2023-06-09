@@ -56,7 +56,110 @@ class nativaConValor(instruccion):
             - Simbolos: Lista con los entornos de la ejecucion.
             - Reportes: Almacena un resumen de la ejecucion.
         '''
-        pass
+        #Extraer valores
+        expresionEvaluar = self.modificar.analisis(SIMBOLOS, REPORTES)
+        expresionContenido = self.contenido.analisis(SIMBOLOS, REPORTES)
 
+        #VErificar que no sea nulo
+        if expresionEvaluar.tipo == Tipo.NULL.value:
+            retorno = valor()
+            retorno.id = "NULL"
+            retorno.tipo = Tipo.NULL.value
+            retorno.valor = "NULL"
+            retorno.clase = Clases.NULL.value
+            retorno.string = "NULL"
+            
+            REPORTES.salida += "ERROR: La funcion nativa se esta ejecutando sobre un NULL. \n"
+            mensaje = "La funcion nativa se esta ejecutando sobre un NULL."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+            return retorno
+        
+        if expresionContenido.tipo == Tipo.NULL.value:
+            retorno = valor()
+            retorno.id = "NULL"
+            retorno.tipo = Tipo.NULL.value
+            retorno.valor = "NULL"
+            retorno.clase = Clases.NULL.value
+            retorno.string = "NULL"
+            
+            REPORTES.salida += "ERROR: La funcion nativa recibio un parametro NULL. \n"
+            mensaje = "La funcion nativa recibio un parametro NULL."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+            return retorno
+        
+        #Comprobar que sea primitivo
+        if expresionEvaluar.clase != Clases.PRIMITIVO.value:
+            retorno = valor()
+            retorno.id = "NULL"
+            retorno.tipo = Tipo.NULL.value
+            retorno.valor = "NULL"
+            retorno.clase = Clases.NULL.value
+            retorno.string = "NULL"
+            
+            REPORTES.salida += "ERROR: La funcion " + self.tipoInstruccion + " solo opera sobre tipos Primitivos. \n"
+            mensaje = "La funcion " + self.tipoInstruccion + " solo opera sobre tipos Primitivos."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+            return retorno
+        
+        if expresionContenido.clase != Clases.PRIMITIVO.value:
+            retorno = valor()
+            retorno.id = "NULL"
+            retorno.tipo = Tipo.NULL.value
+            retorno.valor = "NULL"
+            retorno.clase = Clases.NULL.value
+            retorno.string = "NULL"
+            
+            REPORTES.salida += "ERROR: La funcion " + self.tipoInstruccion + " solo recibe tipos Primitivos. \n"
+            mensaje = "La funcion " + self.tipoInstruccion + " solo recibe sobre tipos Primitivos."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+            return retorno
+        
+        #Verificar que reciba un number en la entrada y el parametro
+        if expresionEvaluar.tipo != Tipo.NUMBER.value or expresionContenido.tipo != Tipo.NUMBER.value:
+            retorno = valor()
+            retorno.id = "NULL"
+            retorno.tipo = Tipo.NULL.value
+            retorno.valor = "NULL"
+            retorno.clase = Clases.NULL.value
+            retorno.string = "NULL"
+            
+            REPORTES.salida += "ERROR: La funcion " + self.tipoInstruccion + " solo maneja numbers. \n"
+            mensaje = "La funcion " + self.tipoInstruccion + " solo maneja numbers."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+            return retorno
+    
+        #Clasificar por tipo de operacion y ejecutar
+        if self.tipoInstruccion == Expresion.TOFIXED.value:
+            #Ejecutar la funcion. El numero de decimales es contenido y el valor que se trabaja es modificar
+            numero = float(expresionEvaluar.valor)
+            cifras = int(expresionContenido.valor)
+            aproximar = f"{numero:.{cifras}f}"
+
+            retorno = valor()
+            retorno.id = expresionEvaluar.id
+            retorno.tipo = expresionEvaluar.tipo
+            retorno.valor = expresionEvaluar.valor
+            retorno.clase = expresionEvaluar.clase
+            retorno.string = aproximar
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo    
+            return retorno
+        
+        elif self.tipoInstruccion == Expresion.TOEXPONENTIAL.value:
+            #Ejecutar la funcion. El numero de decimales es contenido y el valor que se trabaja es modificar
+            numero = float(expresionEvaluar.valor)
+            cifras = int(expresionContenido.valor)
+            exponencial = format(numero, f".{cifras}e")
+
+            retorno = valor()
+            retorno.id = expresionEvaluar.id
+            retorno.tipo = expresionEvaluar.tipo
+            retorno.valor = expresionEvaluar.valor
+            retorno.clase = expresionEvaluar.clase
+            retorno.string = exponencial
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo    
+            return retorno
+        
     def c3d(self):
         pass

@@ -50,6 +50,8 @@ class dato(instruccion):
         retorno.tipo = self.tipo
         retorno.clase = self.clase
         retorno.string = self.valor
+        retorno.valorClase = retorno.clase
+        retorno.valorTipo = retorno.tipo
         return retorno
 
     def c3d(self):

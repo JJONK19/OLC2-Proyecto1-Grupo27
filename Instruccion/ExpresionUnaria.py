@@ -110,6 +110,8 @@ class expresionUnaria(instruccion):
                 retorno.valor = "true"
             retorno.clase = expresion.clase
             retorno.string = retorno.valor
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo
             return retorno
             
         elif self.tipoOperacion == Expresion.UNARIO.value:
@@ -137,6 +139,8 @@ class expresionUnaria(instruccion):
             retorno.valor = str(numero)
             retorno.clase = expresion.clase
             retorno.string = retorno.valor
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo    
             return retorno
 
     def c3d(self):

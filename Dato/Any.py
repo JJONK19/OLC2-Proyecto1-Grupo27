@@ -12,11 +12,12 @@ class any(simbolo):
         - TipoValor: Al ser una clase any, se necesita saber el tipo de su contenido
         - ClaseValor: Al ser una clase any, se necesita saber la clase de su contenido
     '''
-    def __init__(self, ID, TIPO, CLASE, VALOR, TIPO_VALOR, CLASE_VALOR):
+    def __init__(self, ID, TIPO, CLASE, VALOR, TIPO_VALOR, CLASE_VALOR, CLASE_CONTENIDO):
         super().__init__(ID, TIPO, CLASE) 
         self.valor = VALOR
         self.tipoValor = TIPO_VALOR
         self.claseValor = CLASE_VALOR
+        self.claseContenido = CLASE_CONTENIDO
     
     def set(self, NUEVO, TIPO_VALOR, CLASE_VALOR):
         '''
@@ -38,6 +39,8 @@ class any(simbolo):
             retorno.valor = self.valor
             retorno.clase = self.claseValor
             retorno.string = self.valor
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo
             return retorno
             
         elif self.claseValor == Clases.VECTOR.value:
@@ -50,6 +53,8 @@ class any(simbolo):
                 retorno.clase = self.clase
                 retorno.claseContenido = self.claseContenido
                 retorno.string = self.getString(REPORTES, LINEA, COLUMNA)
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
 
             #Verificar que la posicion respete los limites

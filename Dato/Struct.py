@@ -39,6 +39,8 @@ class struct(simbolo):
             retorno.valor = self.valor
             retorno.clase = Clases.STRUCT.value
             retorno.string = self.getString(REPORTES, LINEA, COLUMNA)
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo
             return retorno
         
         #Buscar el atributo

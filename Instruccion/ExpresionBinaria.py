@@ -154,6 +154,8 @@ class expresionBinaria(instruccion):
                 retorno.valor = str(numero)
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
     
             elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
@@ -166,6 +168,8 @@ class expresionBinaria(instruccion):
                 retorno.valor = cadena
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
     
             else:
@@ -193,6 +197,8 @@ class expresionBinaria(instruccion):
                 retorno.valor = str(numero)
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
     
             else:
@@ -220,6 +226,8 @@ class expresionBinaria(instruccion):
                 retorno.valor = str(numero)
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
     
             else:
@@ -261,6 +269,8 @@ class expresionBinaria(instruccion):
                 retorno.valor = str(numero)
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
     
             else:
@@ -288,6 +298,8 @@ class expresionBinaria(instruccion):
                 retorno.valor = str(numero)
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
     
             else:
@@ -329,6 +341,8 @@ class expresionBinaria(instruccion):
                 retorno.valor = str(numero)
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
     
             else:
@@ -360,6 +374,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
@@ -375,6 +391,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             else:
@@ -405,6 +423,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
@@ -420,6 +440,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             else:
@@ -450,6 +472,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
@@ -465,6 +489,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             else:
@@ -495,6 +521,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
@@ -510,6 +538,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             else:
@@ -540,6 +570,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
@@ -555,6 +587,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             else:
@@ -585,6 +619,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
@@ -600,6 +636,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
             
             else:
@@ -628,6 +666,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
                 
             else:
@@ -655,6 +695,8 @@ class expresionBinaria(instruccion):
                     retorno.valor = "false"
                 retorno.clase = expresionIzquierda.clase
                 retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
                 return retorno
                 
             else:

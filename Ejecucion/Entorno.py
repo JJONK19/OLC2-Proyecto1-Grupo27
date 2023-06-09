@@ -69,7 +69,7 @@ class entorno:
             REPORTES.añadirSimbolo(CONTENIDO.id, CONTENIDO.tipo, var.string, self.nombre_entorno, CONTENIDO.linea, CONTENIDO.columna)
         
         elif CONTENIDO.clase == Clases.ANY.value:
-            self.variables[CONTENIDO.id] = any(CONTENIDO.id, CONTENIDO.tipo, CONTENIDO.clase, CONTENIDO.valor, CONTENIDO.valorTipo, CONTENIDO.valorClase)
+            self.variables[CONTENIDO.id] = any(CONTENIDO.id, CONTENIDO.tipo, CONTENIDO.clase, CONTENIDO.valor, CONTENIDO.valorTipo, CONTENIDO.valorClase, CONTENIDO.claseContenido)
             var = self.variables[CONTENIDO.id].get("", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
             REPORTES.añadirSimbolo(CONTENIDO.id, CONTENIDO.tipo, var.string, self.nombre_entorno, CONTENIDO.linea, CONTENIDO.columna)
         
@@ -216,6 +216,19 @@ class entorno:
                 
                 #Modificar valores
                 temp.set(CONTENIDO.valor)
+                var = temp.get("", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
+                REPORTES.actualizar(CONTENIDO.id, self.nombre_entorno, var.string)
+            
+            elif temp.clase == Clases.ANY.value:
+                #Comprobar clases
+                if CONTENIDO.clase == Clases.STRUCT.value:
+                    REPORTES.salida += "ERROR: La variable " + CONTENIDO.id + " no recibe structs. \n"
+                    mensaje = "La variable " + CONTENIDO.id + " no recibe structs. \n"
+                    REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
+                    return
+                
+                #Modificar valores
+                temp.set(CONTENIDO.valor, CONTENIDO.valorTipo, CONTENIDO.valorClase)
                 var = temp.get("", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
                 REPORTES.actualizar(CONTENIDO.id, self.nombre_entorno, var.string)
                 

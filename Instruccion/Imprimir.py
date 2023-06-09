@@ -5,7 +5,7 @@ class imprimir(instruccion):
     '''
         Añade texto a la variable "salida" de los reportes.
         Siempre retorna un primitivo al ejecutarse.
-        - Valor: Contiene el valor (5, true, false, etc).
+        - Valor: Contiene una lista de instrucciones de tipo expresion
         - TipoInstruccion: Indica que es una instruccion de tipo print
         - Linea: Linea de la instruccion. 
         - Columna: Posicion de la linea donde esta la instruccion.
@@ -55,6 +55,8 @@ class imprimir(instruccion):
 
         #Añadirlo al string de la consola (Salida)
         REPORTES.salida += expresion.string + "\n"
+
+        return None
 
     def c3d(self):
         pass

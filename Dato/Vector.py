@@ -40,6 +40,8 @@ class vector(simbolo):
             retorno.clase = self.clase
             retorno.claseContenido = self.claseContenido
             retorno.string = self.getString(REPORTES, LINEA, COLUMNA)
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo
             return retorno
 
         #Verificar que la posicion respete los limites

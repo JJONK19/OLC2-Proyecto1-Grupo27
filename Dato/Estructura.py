@@ -5,7 +5,7 @@ class atributo:
         Cuando clase es:
         - Primitivo: Valor almacena un string.
         - Struct: Valor almacena un array con instancias de ka clase atributo.
-        - Vector: Valor almacena un array con instancias de un tipo o varias
+        - Vector: Valor almacena un array con instancias de un tipo o varias 
     '''
     def __init__(self):
         self.id = ""            #Nombre del atributo

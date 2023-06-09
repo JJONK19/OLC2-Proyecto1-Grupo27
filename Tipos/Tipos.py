@@ -7,6 +7,7 @@ class Clases(Enum):
     PRIMITIVO = "PRIMITIVO"
     VECTOR = "VECTOR"
     STRUCT = "STRUCT"
+    ANY = "ANY"
     NULL = "NULL"
 
 class Tipo(Enum):
@@ -54,3 +55,10 @@ class Expresion(Enum):
     MENORIG = "MENORIG"
     OR = "OR"
     AND = "AND"
+    TOFIXED = "TOFIXED"
+    TOEXPONENTIAL = "TOEXPONENTIAL"
+    TOSTRING = "TOSTRING"
+    TOLOWERCASE = "TOLOWERCASE"
+    TOUPPERCASE = "TOUPPERCASE"
+    SPLIT = "SPLIT"
+    CONCAT = "CONCAT"

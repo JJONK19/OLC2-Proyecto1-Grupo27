@@ -21,6 +21,8 @@ class valor:
         self.accesos = []                                 #Arreglo de tipo acceso[]. Se usa para acceder a variables.
         self.claseContenido = ""                          #Usado en vectores. Indica que puede contener.
         self.string = ""                                  #Almacena el valor como string
+        self.valorClase = ""                              #Almacena la clase del contenido (ANY)
+        self.valorTipo = ""                               #ALmacena el tipo del contenido (ANY)
 
 class acceso:
     '''

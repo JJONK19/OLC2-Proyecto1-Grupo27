@@ -79,7 +79,6 @@ class ventana (QtWidgets.QMainWindow):
         Salida.Ejecucion()
 
         #--- MOSTRAR EL CONTENIDO EN LA CONSOLA
-        print(Salida.getConsola())
         self.Consola.setPlainText(Salida.getConsola())
 
         """

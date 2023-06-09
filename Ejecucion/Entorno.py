@@ -5,6 +5,7 @@ from Dato.Primitivo import primitivo
 from Dato.Struct import struct
 from Dato.Vector import vector
 from Dato.Estructura import estructura
+from Dato.Any import any
 
 class entorno:
     '''
@@ -67,6 +68,12 @@ class entorno:
             var = self.variables[CONTENIDO.id].get("", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
             REPORTES.añadirSimbolo(CONTENIDO.id, CONTENIDO.tipo, var.string, self.nombre_entorno, CONTENIDO.linea, CONTENIDO.columna)
         
+        elif CONTENIDO.clase == Clases.ANY.value:
+            self.variables[CONTENIDO.id] = any(CONTENIDO.id, CONTENIDO.tipo, CONTENIDO.clase, CONTENIDO.valor, CONTENIDO.valorTipo, CONTENIDO.valorClase)
+            var = self.variables[CONTENIDO.id].get("", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
+            REPORTES.añadirSimbolo(CONTENIDO.id, CONTENIDO.tipo, var.string, self.nombre_entorno, CONTENIDO.linea, CONTENIDO.columna)
+        
+        
     def asignarSimbolo(self, CONTENIDO, SIMBOLOS, REPORTES):
         '''
             Modifica una variable en el entorno inmediato. Esta se busca en todos los entornos de un ambito 
@@ -120,15 +127,30 @@ class entorno:
                         return 
 
                     temp = temp.get(CONTENIDO.atributoStruct, REPORTES, CONTENIDO.linea, CONTENIDO.columna)
+                
+                elif temp.clase == Clases.ANY.value:
+                    if temp.claseValor == Clases.PRIMITIVO.value:
+                        REPORTES.salida += "ERROR: Una variable primitiva no maneja posiciones o atributos. \n"
+                        mensaje = "Una variable primitiva no maneja posiciones o atributos. \n"
+                        REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
+                        return 
+
+                    elif temp.claseValor == Clases.VECTOR.value:
+                        if tempAcceso.tipo == Accesos.ATRIBUTO.value:
+                            REPORTES.salida += "ERROR: Una variable vector no maneja atributos. \n"
+                            mensaje = "Una variable vector no maneja atributos. \n"
+                            REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
+                            return 
+
+                        temp = temp.get(tempAcceso.valor, REPORTES, CONTENIDO.linea, CONTENIDO.columna)
 
             if temp.clase == Clases.PRIMITIVO.value:
                 #Comprobar tipos
                 if temp.tipo != CONTENIDO.tipo:
-                    if temp.tipo != Tipo.ANY.value:
-                        REPORTES.salida += "ERROR: La variable " + CONTENIDO.id + " no es de tipo " + CONTENIDO.tipo + ". \n"
-                        mensaje = "La variable " + CONTENIDO.id + " no es de tipo " + CONTENIDO.tipo + ". \n"
-                        REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
-                        return
+                    REPORTES.salida += "ERROR: La variable " + CONTENIDO.id + " no es de tipo " + CONTENIDO.tipo + ". \n"
+                    mensaje = "La variable " + CONTENIDO.id + " no es de tipo " + CONTENIDO.tipo + ". \n"
+                    REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
+                    return
         
                 #Comprobar clases
                 if temp.clase != CONTENIDO.clase:
@@ -165,11 +187,10 @@ class entorno:
             elif temp.clase == Clases.STRUCT.value:
                 #Comprobar tipos
                 if temp.tipo != CONTENIDO.tipo:
-                    if temp.tipo != Tipo.ANY.value:
-                        REPORTES.salida += "ERROR: La variable " + CONTENIDO.id + " no es de tipo " + CONTENIDO.tipo + ". \n"
-                        mensaje = "La variable " + CONTENIDO.id + " no es de tipo " + CONTENIDO.tipo + ". \n"
-                        REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
-                        return
+                    REPORTES.salida += "ERROR: La variable " + CONTENIDO.id + " no es de tipo " + CONTENIDO.tipo + ". \n"
+                    mensaje = "La variable " + CONTENIDO.id + " no es de tipo " + CONTENIDO.tipo + ". \n"
+                    REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
+                    return
                 
                 #Comprobar clases
                 if temp.clase != CONTENIDO.clase:
@@ -285,12 +306,30 @@ class entorno:
                         return retorno
 
                     temp = temp.get(CONTENIDO.atributoStruct, REPORTES, CONTENIDO.linea, CONTENIDO.columna)
+                
+                elif temp.clase == Clases.ANY.value:
+                    if temp.claseValor == Clases.PRIMITIVO.value:
+                        REPORTES.salida += "ERROR: Una variable primitiva no maneja posiciones o atributos. \n"
+                        mensaje = "Una variable primitiva no maneja posiciones o atributos. \n"
+                        REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
+                        return 
+
+                    elif temp.claseValor == Clases.VECTOR.value:
+                        if tempAcceso.tipo == Accesos.ATRIBUTO.value:
+                            REPORTES.salida += "ERROR: Una variable vector no maneja atributos. \n"
+                            mensaje = "Una variable vector no maneja atributos. \n"
+                            REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
+                            return 
+
+                        temp = temp.get(tempAcceso.valor, REPORTES, CONTENIDO.linea, CONTENIDO.columna)
 
             if temp.clase == Clases.PRIMITIVO.value:
                 return temp.get()
             elif temp.clase == Clases.VECTOR.value:
                 return temp.get("", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
             elif temp.clase == Clases.STRUCT.value:
+                return temp.get("", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
+            elif temp.clase == Clases.ANY.value:
                 return temp.get("", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
 
         #Si termina el for y no lo encuentra, es error y retorna Null

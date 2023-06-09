@@ -7,6 +7,9 @@ from Instruccion.Dato import dato
 from Instruccion.ExpresionBinaria import expresionBinaria
 from Instruccion.ExpresionUnaria import expresionUnaria
 from Instruccion.Imprimir import imprimir
+from Instruccion.NativasConEntrada import nativaConValor
+from Instruccion.NativasSinEntrada import nativaSinValor
+from Instruccion.NativasVector import nativasVector
 
 class Analizador:
     #-----------------------------------------------------------------------------------------
@@ -32,10 +35,16 @@ class Analizador:
         'boolean' : "RBOOLEAN",
         'string' : "RSTRING",
         'true' : "RTRUE",
-        'false' : "RFALSE"
-
+        'false' : "RFALSE",
+        'toFixed' : 'RFIXED',
+        'toExponential' : 'REXPONENTIAL',
+        'toString' : 'RTSTRING',
+        'toLowerCase' : 'RLC',
+        'toUpperCase' : 'RUC',
+        'split' : 'RSPLIT',
+        'concat' : 'RCONCAT'
     }
-
+    
     tokens = [
                 'PT',              # .
                 'PTCOMA',          # ;
@@ -434,9 +443,69 @@ class Analizador:
     def p_EXPRESION_CADENA(t):
         """expresion : CADENA"""
         t[0] = dato(t[1], Tipo.STRING.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+    
+    def p_EXPRESION_NATIVAS(t):
+        '''
+            expresion : nativa
+        '''
+        t[0] = t[1]
 
+    #Nativas-----------------------------------------------------------------------------------------
+    def p_NATIVA(t):
+        '''
+            nativa : tofixed
+                    | toexponential
+                    | tostring
+                    | tolowercase
+                    | touppercase
+                    | split
+                    | concat
+        '''
+        t[0] = t[1]
 
-     #Errores Sintaxis--------------------------------------------------------------------------------
+    def p_NATIVA_TOFIXED(t):
+        '''
+            tofixed : expresion PT RFIXED PARENI expresion PAREND 
+        '''
+        t[0] = nativaConValor(t[1], t[5], Expresion.TOFIXED.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_NATIVA_TOEXPONENTIAL(t):
+        '''
+            toexponential : expresion PT REXPONENTIAL PARENI expresion PAREND 
+        '''
+        t[0] = nativaConValor(t[1], t[5], Expresion.TOEXPONENTIAL.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_NATIVA_TOSTRING(t):
+        '''
+            tostring : expresion PT RTSTRING PARENI PAREND 
+        '''
+        t[0] = nativaSinValor(t[1], Expresion.TOSTRING.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_NATIVA_TOLOWERCASE(t):
+        '''
+            tolowercase : expresion PT RLC PARENI PAREND 
+        '''
+        t[0] = nativaSinValor(t[1], Expresion.TOLOWERCASE, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_NATIVA_TOUPPERCASE(t):
+        '''
+            touppercase : expresion PT RUC PARENI PAREND 
+        '''
+        t[0] = nativaSinValor(t[1], Expresion.TOUPPERCASE, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_NATIVA_SPLIT(t):
+        '''
+            split : expresion PT RSPLIT PARENI expresion PAREND 
+        '''
+        t[0] = nativasVector(t[1], t[5], Expresion.SPLIT, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_NATIVA_CONCAT(t):
+        '''
+            concat : expresion PT RCONCAT PARENI expresion PAREND
+        '''
+        t[0] = nativasVector(t[1], t[5], Expresion.CONCAT, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    #Errores Sintaxis--------------------------------------------------------------------------------
     def p_error(t):
         mensaje = "Token Inesperado: " + t.value
         Analizador.arbol.añadirError("Sintaxis", mensaje, t.lineno, t.lexpos)    

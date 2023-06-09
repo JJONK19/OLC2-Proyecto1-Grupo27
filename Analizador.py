@@ -255,11 +255,11 @@ class Analizador:
             sentencia : RLET ID DOSPTS tipo IGUAL expresion PTCOMA
                     | RLET ID PTCOMA
         '''
-        if len(t) == 8 :
+        if len(t) == 8:
             t[0] = DeclaracionPrimitiva(t[2],t[4],t[6],t.lineno(1),
                                         Analizador.find_column(Analizador.input, t.lexpos(1)))
         else:
-            t[0] = DeclaracionPrimitiva(t[2], Tipo.ANY.value, "", t.lineno(1),
+            t[0] = DeclaracionPrimitiva(t[2], Tipo.ANY.value, "None", t.lineno(1),
                                         Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_DECLARACION_PRIMITIVA2(t):

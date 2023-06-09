@@ -27,7 +27,7 @@ class DeclaracionPrimitiva(instruccion):
         '''
         # Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Declaración\" ];\n"
+        REPORTES.dot += padre + "[ label = \"Declaracion Primitiva\" ];\n"
         REPORTES.cont += 1
 
         #Declarar palabra reservada Let
@@ -68,7 +68,13 @@ class DeclaracionPrimitiva(instruccion):
         REPORTES.dot += nodoIgual + "[ label = \"=\" ];\n"
         REPORTES.cont += 1
 
-        nodoExp = self.expresion.grafo(REPORTES)
+        if tipado == "Any":
+            # Nodo complementario Any
+            nodoExp = "NODO" + str(REPORTES.cont)
+            REPORTES.dot += nodoExp + "[ label = \"None\" ];\n"
+            REPORTES.cont += 1
+        else:
+            nodoExp = self.expresion.grafo(REPORTES)
 
         # Nodo complementario ;
         nodoPtcoma = "NODO" + str(REPORTES.cont)

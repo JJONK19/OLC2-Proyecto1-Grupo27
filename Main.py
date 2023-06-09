@@ -65,24 +65,22 @@ class ventana (QtWidgets.QMainWindow):
             print(i.descripcion)
 
         #Instrucciones
-        '''
+
         for i in Salida.instrucciones: 
             print(i)
 
-        '''        
+
         #AST
-<<<<<<< Updated upstream
-        print("//////////////////////////////////////////////////")
+
+        print("AST//////////////////////////////////////////////////")
         print(Salida.Grafo())
-        print("//////////////////////////////////////////////////")
-=======
-        #print("//////////////////////////////////////////////////")
-        print(Salida.Grafo())
-        #print("//////////////////////////////////////////////////")
->>>>>>> Stashed changes
+        print("AST//////////////////////////////////////////////////")
+
+
+
         
         #EJECUTAR
-        Salida.Ejecucion()
+        #Salida.Ejecucion()
 
         #--- MOSTRAR EL CONTENIDO EN LA CONSOLA
         self.Consola.setPlainText(Salida.getConsola())

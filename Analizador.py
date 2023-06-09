@@ -10,7 +10,7 @@ from Instruccion.Imprimir import imprimir
 from Instruccion.NativasConEntrada import nativaConValor
 from Instruccion.NativasSinEntrada import nativaSinValor
 from Instruccion.NativasVector import nativasVector
-
+from Instruccion.DeclaracionPrimitiva import DeclaracionPrimitiva
 class Analizador:
     #-----------------------------------------------------------------------------------------
 
@@ -31,11 +31,12 @@ class Analizador:
         'let': 'RLET',
         'null' : "RNULL",
         'any' : "RANY",
-        'number' : "RNUMBER",
+        'number' : "RNUMBER",#
         'boolean' : "RBOOLEAN",
         'string' : "RSTRING",
         'true' : "RTRUE",
         'false' : "RFALSE",
+        'interface' : "RINTERFACE",
         'toFixed' : 'RFIXED',
         'toExponential' : 'REXPONENTIAL',
         'toString' : 'RTSTRING',
@@ -254,10 +255,12 @@ class Analizador:
             sentencia : RLET ID DOSPTS tipo IGUAL expresion PTCOMA
                     | RLET ID PTCOMA
         '''
-        if len(t) == 7 :
-            t[0] = t[1]
+        if len(t) == 8 :
+            t[0] = DeclaracionPrimitiva(t[2],t[4],t[6],t.lineno(1),
+                                        Analizador.find_column(Analizador.input, t.lexpos(1)))
         else:
-            t[0] = t[1]
+            t[0] = DeclaracionPrimitiva(t[2], Tipo.ANY.value, "", t.lineno(1),
+                                        Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_DECLARACION_PRIMITIVA2(t):
         '''
@@ -269,6 +272,19 @@ class Analizador:
         '''
             sentencia : RLET ID DOSPTS tipo PTCOMA
         '''
+        t[0] = t[1]
+
+    def p_DECLARACION_INTERFACE(t):
+        """
+            sentencia : RINTERFACE ID LLAVEI atributos LLAVED
+        """
+        t[0] = t[2]
+
+    def p_DECLARACION_INTERFACE_ATRIBUTOS(t):
+        """
+            atributos : ID DOSPTS tipo PTCOMA atributos
+                    | ID DOSPTS tipo PTCOMA
+        """
         t[0] = t[1]
 
     #Tipo ----------------------------------------------------------------------------------
@@ -450,6 +466,19 @@ class Analizador:
         '''
         t[0] = t[1]
 
+    def p_EXPRESION_ARRAY_BODY(t):
+        """
+            expresion : CORI valores CORD
+        """
+        t[0] = t[2]
+
+    def p_EXPRESION_ARRAY_CONTENT(t):
+        """
+            valores : expresion COMA valores
+                    | expresion
+        """
+        t[0] = t[1]
+
     #Nativas-----------------------------------------------------------------------------------------
     def p_NATIVA(t):
         '''
@@ -504,6 +533,8 @@ class Analizador:
             concat : expresion PT RCONCAT PARENI expresion PAREND
         '''
         t[0] = nativasVector(t[1], t[5], Expresion.CONCAT, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+
 
     #Errores Sintaxis--------------------------------------------------------------------------------
     def p_error(t):

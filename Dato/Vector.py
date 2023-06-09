@@ -1,4 +1,4 @@
-from Simbolo import simbolo
+from Dato.Simbolo import simbolo
 from Ejecucion.Valor import valor
 from Tipos.Tipos import *
 from Reporte.Reporte import *

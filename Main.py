@@ -71,9 +71,15 @@ class ventana (QtWidgets.QMainWindow):
 
         '''        
         #AST
+<<<<<<< Updated upstream
         print("//////////////////////////////////////////////////")
         print(Salida.Grafo())
         print("//////////////////////////////////////////////////")
+=======
+        #print("//////////////////////////////////////////////////")
+        print(Salida.Grafo())
+        #print("//////////////////////////////////////////////////")
+>>>>>>> Stashed changes
         
         #EJECUTAR
         Salida.Ejecucion()

@@ -83,7 +83,7 @@ class vector(simbolo):
             else:
                 cadena += " ]"
 
-            return cadena
+        return cadena
 
 
 

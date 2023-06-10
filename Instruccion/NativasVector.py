@@ -31,25 +31,29 @@ class nativasVector(instruccion):
 
         #Declarar el valor a operar
         nodoModificar = self.modificar.grafo(REPORTES)
+        REPORTES.dot += padre + "->" + nodoModificar + ";\n"
 
         # Declarar funcion
         nodoFuncion = "NODO" + str(REPORTES.cont)
         REPORTES.dot += nodoFuncion + "[ label = \"." + self.tipoInstruccion +" (\" ];\n"
         REPORTES.cont += 1
+        REPORTES.dot += padre + "->" + nodoFuncion + ";\n"
 
         # Declarar operacion
-        nodoContenido = self.contenido.grafo(REPORTES)
+        if self.tipoInstruccion == Expresion.SPLIT.value:
+            nodoContenido = self.contenido.grafo(REPORTES)
+            REPORTES.dot += padre + "->" + nodoContenido + ";\n"
+        elif self.tipoInstruccion == Expresion.CONCAT.value:
+            for i in self.contenido:
+                nodoContenido = i.grafo(REPORTES)
+                REPORTES.dot += padre + "->" + nodoContenido + ";\n"
 
         # Declarar cierre de funcion
         nodoFuncionC = "NODO" + str(REPORTES.cont)
         REPORTES.dot += nodoFuncionC + "[ label = \")\" ];\n"
         REPORTES.cont += 1
-
-        # Conectar con el padre
-        REPORTES.dot += padre + "->" + nodoModificar + ";\n"
-        REPORTES.dot += padre + "->" + nodoFuncion + ";\n"
-        REPORTES.dot += padre + "->" + nodoContenido + ";\n"
         REPORTES.dot += padre + "->" + nodoFuncionC + ";\n"
+        
         return padre
 
     def analisis(self, SIMBOLOS, REPORTES):
@@ -164,7 +168,7 @@ class nativasVector(instruccion):
 
             for i in self.contenido:
                 #Extraer valor
-                expresionContenido = self.i.analisis(SIMBOLOS, REPORTES)
+                expresionContenido = i.analisis(SIMBOLOS, REPORTES)
 
                 #Verificar que no sea nulo
                 if expresionContenido.tipo == Tipo.NULL.value:
@@ -213,10 +217,11 @@ class nativasVector(instruccion):
             
             #Ejecutar la funcion
             concatenar = expresionEvaluar.valor.copy()
-            tempVector = vector("", Tipo.ANY.value, Clases.VECTOR.value, Clases.ANY, temp)
 
             for i in contenido:
                 concatenar += i
+
+            tempVector = vector("", Tipo.ANY.value, Clases.VECTOR.value, Clases.ANY, concatenar)
 
             #Retorno           
             retorno = valor()

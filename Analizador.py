@@ -11,6 +11,8 @@ from Instruccion.NativasConEntrada import nativaConValor
 from Instruccion.NativasSinEntrada import nativaSinValor
 from Instruccion.NativasVector import nativasVector
 from Instruccion.DeclaracionPrimitiva import DeclaracionPrimitiva
+from Instruccion.DatoVector import datoVector
+
 class Analizador:
     #-----------------------------------------------------------------------------------------
 
@@ -209,18 +211,18 @@ class Analizador:
 
     #-----------------------------------------------------------------------------------------
     precedence = (
+        ('left', 'COMA'),
         ('left', 'OR'),
         ('left', 'AND'),
         ('right', 'NOT'),
         ('left', 'IGUALACION', 'DISTINTO'),
         ('left', 'MENORQ', 'MAYORQ', 'MAYORIG', 'MENORIG'),
-        ('left', 'MAS', 'MENOS', 'COMA'),
+        ('left', 'MAS', 'MENOS'),
         ('left', 'MUL', 'DIV', 'MOD'),
         ('left', 'PARENI', 'PAREND'),
         ('left', 'POT'),
         ('right', 'UNARIO'),
     )
-
 
     # Definicion de la Gramatica
     def p_INICIO(t):
@@ -246,14 +248,21 @@ class Analizador:
     def p_SENTENCIAS_PRINT(t): #QUITAR
         '''
             sentencia : print PTCOMA
+                        | expresion PTCOMA
+        '''
+        t[0] = t[1]
+
+    def p_SENTENCIAS_DECLARACIONES(t): #QUITAR
+        '''
+            sentencia : declaraciones PTCOMA
         '''
         t[0] = t[1]
 
     #Declaraciones----------------------------------------------------------------------------------
     def p_DECLARACION_PRIMITIVA1(t):
         '''
-            sentencia : RLET ID DOSPTS tipo IGUAL expresion PTCOMA
-                    | RLET ID PTCOMA
+            declaraciones : RLET ID DOSPTS tipo IGUAL expresion 
+                    | RLET ID 
         '''
         if len(t) == 8:
             t[0] = DeclaracionPrimitiva(t[2],t[4],t[6],t.lineno(1),
@@ -264,26 +273,36 @@ class Analizador:
 
     def p_DECLARACION_PRIMITIVA2(t):
         '''
-            sentencia : RLET ID IGUAL expresion PTCOMA
+            declaraciones : RLET ID IGUAL expresion 
         '''
         t[0] = t[1]
 
     def p_DECLARACION_PRIMITIVA3(t):
         '''
-            sentencia : RLET ID DOSPTS tipo PTCOMA
+            declaraciones : RLET ID DOSPTS tipo 
         '''
         t[0] = t[1]
 
     def p_DECLARACION_INTERFACE(t):
         """
-            sentencia : RINTERFACE ID LLAVEI atributos LLAVED
+            declaraciones : RINTERFACE ID LLAVEI atributos LLAVED
         """
         t[0] = t[2]
 
     def p_DECLARACION_INTERFACE_ATRIBUTOS(t):
         """
-            atributos : ID DOSPTS tipo PTCOMA atributos
-                    | ID DOSPTS tipo PTCOMA
+            atributos : atributos atributo
+                    | atributo
+        """
+        if(len(t) == 3):
+            t[1].append(t[2])
+            t[0] = t[1]
+        else:
+            t[0] = [t[1]]
+
+    def p_DECLARACION_INTERFACE_ATRIBUTO(t):
+        """
+            atributo : ID DOSPTS tipo PTCOMA 
         """
         t[0] = t[1]
 
@@ -316,14 +335,24 @@ class Analizador:
 
         t[0] = Tipo.BOOLEAN.value
 
-    #Instrucciones----------------------------------------------------------------------------------
-
     #Print-------------------------------------------------------------------------------------------
     def p_PRINT_SIMPLE(t):
         """
-            print : RCONSOLE PT RLOG PARENI expresion PAREND
+            print : RCONSOLE PT RLOG PARENI listaExpresiones PAREND
         """
         t[0] = imprimir(t[5], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+    
+    #Lista de Expresiones----------------------------------------------------------------------------
+    def p_LISTA_EXPRESIONES(t):
+        """
+            listaExpresiones : listaExpresiones COMA expresion  
+                            | expresion 
+        """
+        if(len(t) == 4):
+            t[1].append(t[3])
+            t[0] = t[1]
+        else:
+            t[0] = [t[1]]
 
     #Expresiones-------------------------------------------------------------------------------------
     def p_EXPRESION_SUMA(p):
@@ -457,7 +486,9 @@ class Analizador:
         t[0] = dato(t[1], Tipo.NUMBER.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
 
     def p_EXPRESION_CADENA(t):
-        """expresion : CADENA"""
+        """
+            expresion : CADENA
+        """
         t[0] = dato(t[1], Tipo.STRING.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
     
     def p_EXPRESION_NATIVAS(t):
@@ -466,18 +497,11 @@ class Analizador:
         '''
         t[0] = t[1]
 
-    def p_EXPRESION_ARRAY_BODY(t):
+    def p_EXPRESION_ARRAY(t):
         """
-            expresion : CORI valores CORD
+            expresion : CORI listaExpresiones CORD
         """
-        t[0] = t[2]
-
-    def p_EXPRESION_ARRAY_CONTENT(t):
-        """
-            valores : expresion COMA valores
-                    | expresion
-        """
-        t[0] = t[1]
+        t[0] = datoVector(t[2], Tipo.ANY.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     #Nativas-----------------------------------------------------------------------------------------
     def p_NATIVA(t):
@@ -530,7 +554,7 @@ class Analizador:
 
     def p_NATIVA_CONCAT(t):
         '''
-            concat : expresion PT RCONCAT PARENI expresion PAREND
+            concat : expresion PT RCONCAT PARENI listaExpresiones PAREND
         '''
         t[0] = nativasVector(t[1], t[5], Expresion.CONCAT.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 

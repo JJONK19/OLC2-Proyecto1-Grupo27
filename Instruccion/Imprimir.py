@@ -5,7 +5,7 @@ class imprimir(instruccion):
     '''
         Añade texto a la variable "salida" de los reportes.
         Siempre retorna un primitivo al ejecutarse.
-        - Valor: Contiene una lista de instrucciones de tipo expresion
+        - Expresion: Contiene una lista de instrucciones de tipo expresion
         - TipoInstruccion: Indica que es una instruccion de tipo print
         - Linea: Linea de la instruccion. 
         - Columna: Posicion de la linea donde esta la instruccion.
@@ -24,23 +24,22 @@ class imprimir(instruccion):
         padre = "NODO" + str(REPORTES.cont)
         REPORTES.dot += padre + "[ label = \"Impresion\" ];\n"
         REPORTES.cont += 1
-
+    
         #Declarar funcion
         nodoFuncionA = "NODO" + str(REPORTES.cont)
         REPORTES.dot += nodoFuncionA + "[ label = \"Console.log (\" ];\n"
         REPORTES.cont += 1
+        REPORTES.dot += padre + "->" + nodoFuncionA + ";\n"
 
-        #Declarar operacion
-        nodoExpresion = self.expresion.grafo(REPORTES)
+        #Declarar operaciones
+        for i in self.expresion:
+            nodoExpresion = i.grafo(REPORTES)
+            REPORTES.dot += padre + "->" + nodoExpresion + ";\n"
 
         #Declarar cierre de funcion
         nodoFuncionC = "NODO" + str(REPORTES.cont)
         REPORTES.dot += nodoFuncionC + "[ label = \")\" ];\n"
         REPORTES.cont += 1
-
-        #Conectar con el padre
-        REPORTES.dot += padre + "->" + nodoFuncionA + ";\n"
-        REPORTES.dot += padre + "->" + nodoExpresion + ";\n"
         REPORTES.dot += padre + "->" + nodoFuncionC + ";\n"
         return padre    
 
@@ -51,12 +50,15 @@ class imprimir(instruccion):
             - Reportes: Almacena un resumen de la ejecucion. 
         '''
         #Obtener el valor de la expresion
-        expresion = self.expresion.analisis(SIMBOLOS, REPORTES)
+        for i in self.expresion:
+            expresion = i.analisis(SIMBOLOS, REPORTES)
 
-        #Añadirlo al string de la consola (Salida)
-        REPORTES.salida += expresion.string + "\n"
+            #Añadirlo al string de la consola (Salida)
+            REPORTES.salida += expresion.string + " "
+        REPORTES.salida += "\n"
 
-        return None
+        #Retornar none porque la instruccion no retorna nada
+        return None     
 
     def c3d(self):
         pass

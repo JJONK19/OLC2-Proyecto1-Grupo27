@@ -92,6 +92,9 @@ class AST:
             Se llama el metodo de ejecución y se le manda el arreglo de instrucciones. Este llena las variables 
             con los resulatdos de la ejecución. 
         '''
+        #Limpiar reportes
+        self.reporte.limpiar()
+        
         #Se crea la lista de entornos y se añade el entorno global
         entornos = []
         entornos.append(entorno("Global"))  

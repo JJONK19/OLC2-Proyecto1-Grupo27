@@ -60,7 +60,7 @@ class nativaConValor(instruccion):
         expresionEvaluar = self.modificar.analisis(SIMBOLOS, REPORTES)
         expresionContenido = self.contenido.analisis(SIMBOLOS, REPORTES)
 
-        #VErificar que no sea nulo
+        #Verificar que no sea nulo
         if expresionEvaluar.tipo == Tipo.NULL.value:
             retorno = valor()
             retorno.id = "NULL"

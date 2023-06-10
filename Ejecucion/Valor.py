@@ -23,6 +23,7 @@ class valor:
         self.string = ""                                  #Almacena el valor como string
         self.valorClase = ""                              #Almacena la clase del contenido (ANY)
         self.valorTipo = ""                               #ALmacena el tipo del contenido (ANY)
+        self.regreso = False                              #Indica 
 
 class acceso:
     '''

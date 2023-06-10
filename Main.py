@@ -82,7 +82,7 @@ class ventana (QtWidgets.QMainWindow):
         
         #EJECUTAR
         Salida.Ejecucion()
-
+        
         #--- MOSTRAR EL CONTENIDO EN LA CONSOLA
         self.Consola.setPlainText(Salida.getConsola())
 

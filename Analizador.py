@@ -12,6 +12,7 @@ from Instruccion.NativasSinEntrada import nativaSinValor
 from Instruccion.NativasVector import nativasVector
 from Instruccion.DeclaracionPrimitiva import DeclaracionPrimitiva
 from Instruccion.DatoVector import datoVector
+from Instruccion.Si import si
 
 class Analizador:
     #-----------------------------------------------------------------------------------------
@@ -45,7 +46,9 @@ class Analizador:
         'toLowerCase' : 'RLC',
         'toUpperCase' : 'RUC',
         'split' : 'RSPLIT',
-        'concat' : 'RCONCAT'
+        'concat' : 'RCONCAT',
+        'if' : 'RIF',
+        'else': 'RELSE'
     }
     
     tokens = [
@@ -245,19 +248,54 @@ class Analizador:
             t[0] = [t[1]]
 
     #Sentencias-------------------------------------------------------------------------------------
-    def p_SENTENCIAS_PRINT(t): #QUITAR
+    def p_SENTENCIAS_1(t): #QUITAR
         '''
             sentencia : print PTCOMA
                         | expresion PTCOMA
+                        | declaraciones PTCOMA
+                        | if PTCOMA
         '''
         t[0] = t[1]
 
-    def p_SENTENCIAS_DECLARACIONES(t): #QUITAR
+    #If--------------------------------------------------------------------------------------------
+    def p_IF(t):
         '''
-            sentencia : declaraciones PTCOMA
+            if : RIF PARENI expresion PAREND LLAVEI sentencias LLAVED elseif RELSE LLAVEI sentencias LLAVED
+                | RIF PARENI expresion PAREND LLAVEI sentencias LLAVED RELSE LLAVEI sentencias LLAVED
+                | RIF PARENI expresion PAREND LLAVEI sentencias LLAVED elseif
+                | RIF PARENI expresion PAREND LLAVEI sentencias LLAVED
+                
         '''
-        t[0] = t[1]
+        if(len(t) == 13):
+            t[8][0].insert(0, t[3])
+            t[8][1].insert(0, t[6])
+            t[0] = si(t[8][0], t[8][1], t[11], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
+        elif(len(t) == 12):
+            t[0] = si([t[3]], [t[6]], t[10], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        
+        elif(len(t) == 9):
+            t[8][0].insert(0, t[3])
+            t[8][1].insert(0, t[6])
+            t[0] = si(t[8][0], t[8][1], [], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+        else:
+            t[0] = si([t[3]], [t[6]], [], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_IF_ELSE(t):
+        '''
+            elseif : elseif RELSE RIF PARENI expresion PAREND LLAVEI sentencias LLAVED 
+                | RELSE RIF PARENI expresion PAREND LLAVEI sentencias LLAVED
+        '''
+        if(len(t) == 10):
+            t[1][0].append(t[5])
+            t[1][1].append(t[8])
+            t[0] = t[1]
+        else:
+            condicion = [t[4]]
+            listaSentencia = [t[7]]
+            t[0] = [condicion, listaSentencia]
+    
     #Declaraciones----------------------------------------------------------------------------------
     def p_DECLARACION_PRIMITIVA1(t):
         '''

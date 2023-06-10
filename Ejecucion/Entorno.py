@@ -20,6 +20,7 @@ class entorno:
         self.variables = {}                 #Almacena variables 
         self.metodos = {}                   #Acceso a los metodos declarados
         self.estructuras = {}               #Guarda la estructura de los structs que se pueden crear
+        self.contador = 0                   #Sirve para crear nombres unicos para los entornos 
 
     #========================================== VARIABLES ===============================================================
     def insertarSimbolo(self, CONTENIDO, REPORTES):

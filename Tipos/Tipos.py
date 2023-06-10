@@ -35,6 +35,7 @@ class Instrucciones(Enum):
     OPERACION = "OPERACION"
     DATO = "DATO"
     DECLARACION_PRIMITIVA = "DECLARACION_PRIMITIVA"
+    SI = "SI"
 
 class Expresion(Enum):
     '''

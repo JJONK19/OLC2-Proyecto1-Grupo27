@@ -48,8 +48,8 @@ class struct(simbolo):
         for i in range(len(self.valor)):
             atributo_temp = self.valor[i]
 
-            if ATRIBUTO == atributo_temp.nombre:
-                posicion == i
+            if ATRIBUTO == atributo_temp.id:
+                posicion = i
                 break
 
         if posicion == -1:
@@ -60,11 +60,10 @@ class struct(simbolo):
             retorno.string = "NULL"
             
             REPORTES.salida += "ERROR: El atributo " + ATRIBUTO + " no existe. \n"
-            mensaje = "El atributo " + ATRIBUTO + " no existe. \n"
+            mensaje = "El atributo " + ATRIBUTO + " no existe."
             REPORTES.añadirError("Semantico", mensaje, LINEA, COLUMNA)
             return retorno
         
-
         #Retornar el valor. 
         return self.valor[posicion]
     
@@ -75,21 +74,23 @@ class struct(simbolo):
         cadena = "[ "
         for i in range(len(self.valor)):
             temp = self.valor[i]
-            valor = ""
+            salida = ""
             cadena += "{ "
             
             if temp.clase == Clases.PRIMITIVO.value:
-                valor = temp.get()
+                salida = temp.get()
             elif temp.clase == Clases.VECTOR.value:
-                valor = temp.get("", REPORTES, LINEA, COLUMNA)
+                salida = temp.get("", REPORTES, LINEA, COLUMNA)
             elif temp.clase == Clases.STRUCT.value:
-                valor = temp.get("", REPORTES, LINEA, COLUMNA)
+                salida = temp.get("", REPORTES, LINEA, COLUMNA)
+            elif temp.clase == Clases.ANY.value:
+                salida = temp.get("", "", REPORTES, LINEA, COLUMNA)
 
-            cadena += valor.id + " : " + valor.string
+            cadena += salida.id + " : " + salida.string
 
             if i != len(self.valor) - 1:
                 cadena += " }, "
             else:
                 cadena += " ]"
 
-            return cadena
+        return cadena

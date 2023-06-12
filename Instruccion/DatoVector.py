@@ -100,6 +100,7 @@ class datoVector(instruccion):
         retorno.valor = contenido
         retorno.clase = self.clase
         retorno.string = tempVector.getString(REPORTES, self.linea, self.columna)
+        retorno.claseContenido = Clases.ANY.value
         retorno.valorClase = retorno.clase
         retorno.valorTipo = retorno.tipo    
         return retorno     

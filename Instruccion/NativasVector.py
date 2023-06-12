@@ -157,6 +157,7 @@ class nativasVector(instruccion):
             retorno.tipo = Tipo.STRING.value
             retorno.valor = temp
             retorno.clase = Clases.VECTOR.value
+            retorno.claseContenido = Clases.PRIMITIVO.value
             retorno.string = tempVector.getString(REPORTES, self.linea, self.columna)
             retorno.valorClase = retorno.clase
             retorno.valorTipo = retorno.tipo    
@@ -229,6 +230,7 @@ class nativasVector(instruccion):
             retorno.tipo = Tipo.ANY.value
             retorno.valor = concatenar
             retorno.clase = Clases.VECTOR.value
+            retorno.claseContenido = Clases.ANY.value
             retorno.string = tempVector.getString(REPORTES, self.linea, self.columna)
             retorno.valorClase = retorno.clase
             retorno.valorTipo = retorno.tipo    

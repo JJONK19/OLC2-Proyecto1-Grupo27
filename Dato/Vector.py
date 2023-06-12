@@ -17,12 +17,13 @@ class vector(simbolo):
         self.valor = VALOR
         self.claseContenido = CLASE_CONTENIDO
     
-    def set(self, NUEVO):
+    def set(self, NUEVO, CLASE_CONTENIDO):
         '''
             Asigna un nuevo vector a la variable.
             - Nuevo: Es un vector con los contenidos de la variable
         '''
         self.valor = NUEVO
+        self.claseContenido = CLASE_CONTENIDO
 
     def get(self, POSICION, REPORTES, LINEA, COLUMNA):
         '''
@@ -65,6 +66,7 @@ class vector(simbolo):
             Retorna la variable como un string.
         '''
         cadena = "[ "
+        vacio = True
         for i in range(len(self.valor)):
             temp = self.valor[i]
             valor = ""
@@ -82,6 +84,10 @@ class vector(simbolo):
                 cadena += ", "
             else:
                 cadena += " ]"
+                vacio = False
+        
+        if vacio:
+            cadena += " ]"
 
         return cadena
 

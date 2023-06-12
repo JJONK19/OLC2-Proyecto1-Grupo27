@@ -63,9 +63,12 @@ class ventana (QtWidgets.QMainWindow):
         #Errores
         for i in Salida.getErrores(): 
             print(i.descripcion)
-
+    
+        #SImbolos
+        a = Salida.getSimbolos()
+        for clave, valor in a.items():
+            print(clave, ":", valor)
         #Instrucciones
-
         for i in Salida.instrucciones: 
             print(i)
 
@@ -82,7 +85,7 @@ class ventana (QtWidgets.QMainWindow):
         
         #EJECUTAR
         Salida.Ejecucion()
-        
+
         #--- MOSTRAR EL CONTENIDO EN LA CONSOLA
         self.Consola.setPlainText(Salida.getConsola())
 

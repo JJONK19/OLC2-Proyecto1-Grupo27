@@ -8,7 +8,7 @@ class si(instruccion):
         - Condiciones: Array con las condiciones en orden del if 
         - Instrucciones: Array con arrays de instrucciones en orden del if
         - Sino: Array de instrucciones que se ejecutan en el else
-        - TipoInstruccion: Indica que es una instruccion de tipo print
+        - TipoInstruccion: Indica que es una instruccion de tipo si
         - Linea: Linea de la instruccion. 
         - Columna: Posicion de la linea donde esta la instruccion.
     '''
@@ -127,7 +127,7 @@ class si(instruccion):
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                 return -1
             
-            #VErificar que sea primitivo
+            #VErificar que sea boolean
             if valorCondicion.tipo != Tipo.BOOLEAN.value:
                 REPORTES.salida += "ERROR: La condicion no retorna un bool. \n"
                 mensaje = "La condicion no retorna un bool."

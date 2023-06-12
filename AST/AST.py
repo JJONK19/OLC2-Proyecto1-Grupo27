@@ -101,4 +101,28 @@ class AST:
 
         #Se recorre y ejecutan las instrucciones
         for instruccion in self.instrucciones:
-            instruccion.analisis(entornos, self.reporte)
+            retorno = instruccion.analisis(entornos, self.reporte)
+
+            if retorno == None:             #Instruccion sin return. Se ignora.
+                pass
+            elif retorno == 1:              #Break
+                self.reporte.salida += "ERROR: No se puede usar break fuera de un ciclo. \n"
+                mensaje = "No se puede usar break fuera de un ciclo."
+                self.reporte.añadirError("Semantico", mensaje, instruccion.linea, instruccion.columna)
+                break
+            elif retorno == 0:              #Continue
+                self.reporte.salida += "ERROR: No se puede usar continue fuera de un ciclo. \n"
+                mensaje = "No se puede usar continue fuera de un ciclo."
+                self.reporte.añadirError("Semantico", mensaje, instruccion.linea, instruccion.columna)
+                break
+            elif retorno == -1:             #Error
+                self.reporte.salida += "ERROR: La ejecucion acabo por un error en la linea " + str(instruccion.linea) + ". \n"
+                break
+            else:  
+                #Si viene un objeto con regreso = true, es porque se llamo un return en el entorno
+                if retorno.regreso:         #Una funcion/metodo retorna el objeto en false para evtar conflictos
+                    self.reporte.salida += "ERROR: No se puede usar return fuera de una funcion. \n"
+                    mensaje = "No se puede usar return fuera de una funcion."
+                    self.reporte.añadirError("Semantico", mensaje, instruccion.linea, instruccion.columna)
+                    break     
+            

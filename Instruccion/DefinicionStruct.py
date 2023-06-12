@@ -1,22 +1,21 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
-from Ejecucion.Valor import valor
 
-
-class DeclaracionStruct(instruccion):
+class DefinicionStruct(instruccion):
     '''
-        Declara el struct. Almacena una lista con los valores y los nombres
-        - Valor: Contiene el valor (5, true, false, etc).
-        - TipoInstruccion: Indica que es una instruccion de tipo print
+        Define como viene un struct.
+        - ID: Nombre del struct
+        - ListaAtributos: Lista de atributos del struct 
+        - TipoInstruccion: Indica que es una instruccion de tipo declaracion primitiva
         - Linea: Linea de la instruccion.
         - Columna: Posicion de la linea donde esta la instruccion.
     '''
 
-    def __init__(self, ID, TIPO, LISTA_VALORES, LINEA, COLUMNA):
+    #todo cambiar constructores
+    def __init__(self, ID, LISTA_ATRIBUTOS, LINEA, COLUMNA):
         super().__init__(LINEA, COLUMNA)
         self.id = ID
-        self.tipo = TIPO
-        self.listaValores = LISTA_VALORES
+        self.listaAtributos = LISTA_ATRIBUTOS
         self.tipoInstruccion = Instrucciones.DECLARACION_STRUCT.value
 
     def grafo(self, REPORTES):
@@ -26,12 +25,12 @@ class DeclaracionStruct(instruccion):
         '''
         # Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Declaracion Struct\" ];\n"
+        REPORTES.dot += padre + "[ label = \"Definicion Struct\" ];\n"
         REPORTES.cont += 1
 
-        #Declarar palabra reservada Let
+        #Declarar palabra reservada interface
         nodoLet = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += nodoLet + "[ label = \"Let\" ];\n"
+        REPORTES.dot += nodoLet + "[ label = \"Interface\" ];\n"
         REPORTES.cont += 1
         REPORTES.dot += padre + "->" + nodoLet + ";\n"
 
@@ -41,25 +40,13 @@ class DeclaracionStruct(instruccion):
         REPORTES.dot += padre + "->" + nodoID + ";\n"
 
         #Nodo complementario :
-        nodoDospts = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += nodoDospts + "[ label = \":\" ];\n"
-        REPORTES.cont += 1
-        REPORTES.dot += padre + "->" + nodoDospts + ";\n"
-
-        #Declarar Tipado
-        nodoTipado = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += nodoTipado + "[ label = \"" + self.tipo + "\" ];\n"
-        REPORTES.cont += 1
-        REPORTES.dot += padre + "->" + nodoTipado + ";\n"
-
-        #Nodo complementario :
         nodoLlA = "NODO" + str(REPORTES.cont)
         REPORTES.dot += nodoLlA + "[ label = \"{\" ];\n"
         REPORTES.cont += 1
         REPORTES.dot += padre + "->" + nodoLlA + ";\n"
 
         #Declarar atributos
-        for i in self.listaValores:
+        for i in self.listaAtributos:
             nodoAtributo = i.grafo(REPORTES)
             REPORTES.dot += padre + "->" + nodoAtributo + ";\n"
 
@@ -76,7 +63,7 @@ class DeclaracionStruct(instruccion):
         REPORTES.dot += padre + "->" + nodoPtcoma + ";\n"
 
         return padre
-
+    
     def analisis(self, SIMBOLOS, REPORTES):
         '''
             Se encarga de ejecutar la instruccion.
@@ -85,24 +72,12 @@ class DeclaracionStruct(instruccion):
         '''
         atributos = []
         #Crear la lista de atributos
-        for i in self.listaValores:
+        for i in self.listaAtributos:
             atributos.append(i.analisis(SIMBOLOS, REPORTES))
-
-        nuevo = valor()
-        nuevo.tipo = self.tipo
-        nuevo.valor = atributos
-        nuevo.clase = Clases.STRUCT.value
-        nuevo.valorClase = nuevo.clase
-        nuevo.valorTipo = nuevo.tipo
-
-        #Añadir el id de la variable a valor
-        nuevo.id = self.id
-        nuevo.linea = self.linea
-        nuevo.columna = self.columna
-
-        #Enviar al entorno local
-        local = SIMBOLOS[-1]
-        error = local.insertarSimbolo(nuevo, REPORTES)
+        
+        #Enviar al entorno global la estructura
+        entornoGlobal = SIMBOLOS[0]
+        error = entornoGlobal.insertarEstructura(self.id, atributos, REPORTES, self.linea, self.columna)
         
         if error == -1:
             return -1

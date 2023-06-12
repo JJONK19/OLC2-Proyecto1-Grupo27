@@ -34,3 +34,4 @@ class primitivo(simbolo):
         retorno.valorClase = retorno.clase
         retorno.valorTipo = retorno.tipo
         return retorno
+    

@@ -11,8 +11,20 @@ from Instruccion.NativasConEntrada import nativaConValor
 from Instruccion.NativasSinEntrada import nativaSinValor
 from Instruccion.NativasVector import nativasVector
 from Instruccion.DeclaracionPrimitiva import DeclaracionPrimitiva
+from Instruccion.DeclaracionVector import DeclaracionVector
+from Instruccion.DeclaracionStruct import DeclaracionStruct
+from Instruccion.DefinicionStruct import DefinicionStruct
+from Instruccion.DefinicionAtributo import DefinicionAtributo
+from Instruccion.DeclaracionAtributo import DeclaracionAtributo
+from Instruccion.DeclaracionAny import DeclaracionAny
 from Instruccion.DatoVector import datoVector
 from Instruccion.Si import si
+from Instruccion.Break import sentenciaBreak
+from Instruccion.Continue import sentenciaContinue
+from Instruccion.Return import sentenciaReturn
+from Instruccion.Mientras import sentenciaWhile
+from Instruccion.Accesos import accesos
+from Instruccion.Llamada import llamada
 
 class Analizador:
     #-----------------------------------------------------------------------------------------
@@ -48,7 +60,11 @@ class Analizador:
         'split' : 'RSPLIT',
         'concat' : 'RCONCAT',
         'if' : 'RIF',
-        'else': 'RELSE'
+        'else': 'RELSE',
+        'break': 'RBREAK',
+        'continue': 'RCONTINUE',
+        'return': 'RRETURN',
+        'while': 'RWHILE'
     }
     
     tokens = [
@@ -214,6 +230,7 @@ class Analizador:
 
     #-----------------------------------------------------------------------------------------
     precedence = (
+        ('left', 'PTCOMA'),
         ('left', 'COMA'),
         ('left', 'OR'),
         ('left', 'AND'),
@@ -224,7 +241,7 @@ class Analizador:
         ('left', 'MUL', 'DIV', 'MOD'),
         ('left', 'PARENI', 'PAREND'),
         ('left', 'POT'),
-        ('right', 'UNARIO'),
+        ('right', 'UNARIO')
     )
 
     # Definicion de la Gramatica
@@ -248,14 +265,49 @@ class Analizador:
             t[0] = [t[1]]
 
     #Sentencias-------------------------------------------------------------------------------------
-    def p_SENTENCIAS_1(t): #QUITAR
+    def p_SENTENCIA(t): #QUITAR
         '''
             sentencia : print PTCOMA
                         | expresion PTCOMA
-                        | declaraciones PTCOMA
+                        | declaracion PTCOMA
                         | if PTCOMA
+                        | Sreturn PTCOMA
+                        | Scontinue PTCOMA
+                        | Sbreak PTCOMA
+                        | Swhile PTCOMA
+                       
         '''
         t[0] = t[1]
+
+    #Print-------------------------------------------------------------------------------------------
+    def p_PRINT_SIMPLE(t):
+        """
+            print : RCONSOLE PT RLOG PARENI listaExpresiones PAREND
+        """
+        t[0] = imprimir(t[5], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+    
+    #Sentencias de control-------------------------------------------------------------------------
+    def p_BREAK(t):
+        """
+            Sbreak : RBREAK
+        """
+        t[0] = sentenciaBreak(t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+    
+    def p_CONTINUE(t):
+        """
+            Scontinue : RCONTINUE
+        """
+        t[0] = sentenciaContinue(t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+    
+    def p_RETURN(t):
+        """
+            Sreturn : RRETURN expresion
+                    | RRETURN
+        """
+        if len(t) == 3:
+            t[0] = sentenciaReturn(t[2], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+        else:
+            t[0] = sentenciaReturn(None, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     #If--------------------------------------------------------------------------------------------
     def p_IF(t):
@@ -295,37 +347,60 @@ class Analizador:
             condicion = [t[4]]
             listaSentencia = [t[7]]
             t[0] = [condicion, listaSentencia]
+
+    #While-----------------------------------------------------------------------------------------
+    def p_WHILE_A(t):
+        """
+            Swhile : RWHILE PARENI expresion PAREND LLAVEI sentencias LLAVED
+        """
+        t[0] = sentenciaWhile(t[3], t[6], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
     
     #Declaraciones----------------------------------------------------------------------------------
-    def p_DECLARACION_PRIMITIVA1(t):
+    def p_DECLARACION_PRIMITIVA(t):
         '''
-            declaraciones : RLET ID DOSPTS tipo IGUAL expresion 
-                    | RLET ID 
+            declaracion : RLET ID DOSPTS tiposNoAny IGUAL expresion 
+                    | RLET ID DOSPTS tiposNoAny
         '''
-        if len(t) == 8:
-            t[0] = DeclaracionPrimitiva(t[2],t[4],t[6],t.lineno(1),
-                                        Analizador.find_column(Analizador.input, t.lexpos(1)))
+        if len(t) == 7:
+            t[0] = DeclaracionPrimitiva(t[2],t[4],t[6],t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
         else:
-            t[0] = DeclaracionPrimitiva(t[2], Tipo.ANY.value, "None", t.lineno(1),
-                                        Analizador.find_column(Analizador.input, t.lexpos(1)))
+            t[0] = DeclaracionPrimitiva(t[2], t[4], None, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
-    def p_DECLARACION_PRIMITIVA2(t):
+    def p_DECLARACION_VECTOR(t):
         '''
-            declaraciones : RLET ID IGUAL expresion 
+            declaracion : RLET ID DOSPTS tiposAny CORI CORD IGUAL expresion 
+                    | RLET ID DOSPTS tiposAny CORI CORD
         '''
-        t[0] = t[1]
+        if len(t) == 9:
+            t[0] = DeclaracionVector(t[2],t[4],t[8],t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        else:
+            t[0] = DeclaracionVector(t[2], t[4], None, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
-    def p_DECLARACION_PRIMITIVA3(t):
+    def p_DECLARACION_ANY_TIPADO(t):
         '''
-            declaraciones : RLET ID DOSPTS tipo 
+            declaracion : RLET ID DOSPTS RANY IGUAL expresion
+                    | RLET ID DOSPTS RANY  
         '''
-        t[0] = t[1]
+        if len(t) == 7:
+            t[0] = DeclaracionAny(t[2], t[6],t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        else:
+            t[0] = DeclaracionAny(t[2], None, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+    
+    def p_DECLARACION_ANY_NOTIPADO(t):
+        '''
+            declaracion : RLET ID IGUAL expresion
+                    | RLET ID
+        '''
+        if len(t) == 5:
+            t[0] = DeclaracionAny(t[2],t[4],t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        else:
+            t[0] = DeclaracionAny(t[2], None, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_DECLARACION_INTERFACE(t):
         """
-            declaraciones : RINTERFACE ID LLAVEI atributos LLAVED
+            declaracion : RINTERFACE ID LLAVEI atributos LLAVED
         """
-        t[0] = t[2]
+        t[0] = DefinicionStruct(t[2], t[4], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_DECLARACION_INTERFACE_ATRIBUTOS(t):
         """
@@ -338,48 +413,115 @@ class Analizador:
         else:
             t[0] = [t[1]]
 
-    def p_DECLARACION_INTERFACE_ATRIBUTO(t):
+    def p_DECLARACION_INTERFACE_ATRIBUTOPRIMITVO(t):
         """
-            atributo : ID DOSPTS tipo PTCOMA 
+            atributo : ID DOSPTS tiposAny PTCOMA 
         """
-        t[0] = t[1]
+        t[0] = DefinicionAtributo(t[1], t[3], Clases.PRIMITIVO.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_DECLARACION_INTERFACE_ATRIBUTOVECTOR(t):
+        """
+            atributo : ID DOSPTS tiposAny CORI CORD PTCOMA 
+        """
+        t[0] = DefinicionAtributo(t[1], t[3], Clases.VECTOR.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_DECLARACION_INTERFACE_ATRIBUTOSTRUCT(t):
+        """
+            atributo : ID DOSPTS ID PTCOMA
+        """
+        t[0] = DefinicionAtributo(t[1], t[3], Clases.STRUCT.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_DECLARACION_STRUCT(t):
+        """
+            declaracion : RLET ID DOSPTS ID IGUAL LLAVEI valoresStruct LLAVED 
+        """
+        t[0] = DeclaracionStruct(t[2], t[4], t[7], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+    
+    def p_DECLARACION_STRUCT_VALORES(t):
+        """
+            valoresStruct : valoresStruct COMA valorStruct 
+                    | valorStruct
+        """
+        if(len(t) == 4):
+            t[1].append(t[3])
+            t[0] = t[1]
+        else:
+            t[0] = [t[1]]
+
+    def p_DECLARACION_STRUCT_VALOR(t):
+        """
+            valorStruct : ID DOSPTS expresion
+        """
+        t[0] = DeclaracionAtributo(t[1], t[3], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     #Tipo ----------------------------------------------------------------------------------
+    def p_TIPOS_NOANY(t):
+        '''
+            tiposNoAny : tipoString
+                        | tipoNumber
+                        | tipoBoolean
+        '''
+        t[0] = t[1]
+
+    def p_TIPOS_ANY(t):
+        '''
+            tiposAny : tipoString
+                        | tipoNumber
+                        | tipoBoolean
+                        | tipoAny
+        '''
+        t[0] = t[1]
+        
     def p_TIPO_STRING(t):
         '''
-            tipo : RSTRING
+            tipoString : RSTRING
         '''
 
         t[0] = Tipo.STRING.value
 
     def p_TIPO_ANY(t):
         '''
-            tipo : RANY
+            tipoAny : RANY
         '''
 
         t[0] = Tipo.ANY.value
 
     def p_TIPO_NUMBER(t):
         '''
-            tipo : RNUMBER
+            tipoNumber : RNUMBER
         '''
 
         t[0] = Tipo.NUMBER.value
 
     def p_TIPO_BOOLEAN(t):
         '''
-            tipo : RBOOLEAN
+            tipoBoolean : RBOOLEAN
         '''
 
         t[0] = Tipo.BOOLEAN.value
 
-    #Print-------------------------------------------------------------------------------------------
-    def p_PRINT_SIMPLE(t):
+    #Lista de Accesos----------------------------------------------------------------------------
+    def p_LISTA_ACCESOS(t):
         """
-            print : RCONSOLE PT RLOG PARENI listaExpresiones PAREND
+            listaAccesos : listaAccesos acceso  
+                            | acceso
         """
-        t[0] = imprimir(t[5], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
-    
+        if(len(t) == 3):
+            t[1].append(t[2])
+            t[0] = t[1]
+        else:
+            t[0] = [t[1]]
+
+    def p_ACCESOS(t):
+        """
+            acceso : CORI expresion CORD
+                    | PT ID
+        """
+        if(len(t) == 4):
+            t[0] = accesos(Accesos.POSICION.value, t[2], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        else:
+            t[0] = accesos(Accesos.ATRIBUTO.value, t[2], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
     #Lista de Expresiones----------------------------------------------------------------------------
     def p_LISTA_EXPRESIONES(t):
         """
@@ -540,6 +682,23 @@ class Analizador:
             expresion : CORI listaExpresiones CORD
         """
         t[0] = datoVector(t[2], Tipo.ANY.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+    
+    def p_EXPRESION_LLAMADAS(t):
+        '''
+            expresion : llamada
+        '''
+        t[0] = t[1]
+    
+    #Llamada----------------------------------------------------------------------------------------
+    def p_LLAMADAS(t):
+        '''
+            llamada : ID listaAccesos
+                    | ID
+        '''
+        if(len(t) == 3):
+            t[0] = llamada(t[1], t[2], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        else:
+            t[0] = llamada(t[1], [], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     #Nativas-----------------------------------------------------------------------------------------
     def p_NATIVA(t):
@@ -613,7 +772,7 @@ class Analizador:
                 break
         Analizador.parser.restart()
 
-    parser = yacc.yacc()
+    parser = yacc.yacc(debug=True)
 
     def analizar(self, Entrada):
         Analizador.lexer.lineno = 1

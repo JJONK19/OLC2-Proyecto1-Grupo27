@@ -2,23 +2,22 @@ from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
 
-class DeclaracionPrimitiva(instruccion):
+class DeclaracionVector(instruccion):
     '''
         Declara un primitivo.
         - ID: Nombre de la variable
-        - Tipo: Tipo del primitivo
-        - Expresion: Contiene el valor (5, true, false, etc).
-        - TipoInstruccion: Indica que es una instruccion de tipo declaracion primitiva
+        - Tipo: Tipo del vector
+        - Expresion: Contiene el vector
+        - TipoInstruccion: Indica que es una instruccion de tipo declaracion vector
         - Linea: Linea de la instruccion.
         - Columna: Posicion de la linea donde esta la instruccion.
     '''
-
     def __init__(self, ID, TIPO, EXPRESION, LINEA, COLUMNA):
         super().__init__(LINEA, COLUMNA)
         self.id = ID
         self.tipo = TIPO
         self.expresion = EXPRESION
-        self.tipoInstruccion = Instrucciones.DECLARACION_PRIMITIVA.value
+        self.tipoInstruccion = Instrucciones.DECLARACION_VECTOR.value
 
     def grafo(self, REPORTES):
         '''
@@ -27,7 +26,7 @@ class DeclaracionPrimitiva(instruccion):
         '''
         # Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Declaracion Primitiva\" ];\n"
+        REPORTES.dot += padre + "[ label = \"Declaracion Vector\" ];\n"
         REPORTES.cont += 1
 
         #Declarar palabra reservada Let
@@ -63,6 +62,12 @@ class DeclaracionPrimitiva(instruccion):
         REPORTES.cont += 1
         REPORTES.dot += padre + "->" + nodoTipado + ";\n"
 
+        #Nodo complementario :
+        nodoCorA = "NODO" + str(REPORTES.cont)
+        REPORTES.dot += nodoCorA + "[ label = \"[ ]\" ];\n"
+        REPORTES.cont += 1
+        REPORTES.dot += padre + "->" + nodoCorA + ";\n"
+
         if self.expresion != None:
             nodoIgual = "NODO" + str(REPORTES.cont)
             REPORTES.dot += nodoIgual + "[ label = \"=\" ];\n"
@@ -88,22 +93,17 @@ class DeclaracionPrimitiva(instruccion):
         '''
         #TRABAJAR CON LA EXPRESION Y CREAR EL VALOR
         nuevo = ""
-       
         if self.expresion == None:
             nuevo = valor()
             nuevo.tipo = self.tipo
-
-            #Definir valor por defecto
-            if self.tipo == Tipo.BOOLEAN.value:
-                nuevo.valor = "false"
-            elif self.tipo == Tipo.STRING.value:
-                nuevo.valor = ""
-            elif self.tipo == Tipo.NUMBER.value:
-                nuevo.valor = "0"
-
-            nuevo.clase = Clases.PRIMITIVO.value
+            nuevo.valor = []
+            nuevo.clase = Clases.VECTOR.value
             nuevo.valorClase = nuevo.clase
             nuevo.valorTipo = nuevo.tipo
+            if self.tipo != Tipo.ANY.value:
+                nuevo.claseContenido = Clases.PRIMITIVO.value
+            else: 
+                nuevo.claseContenido = Clases.ANY.value
 
         else:
             #Extraer valores
@@ -111,25 +111,33 @@ class DeclaracionPrimitiva(instruccion):
             
             #Verificar que no sea nulo
             if expresionEvaluar.tipo == Tipo.NULL.value:
-                REPORTES.salida += "ERROR: No se puede asignar NULL a un primitivo. \n"
-                mensaje = "No se puede asignar NULL a un primitivo."
+                REPORTES.salida += "ERROR: No se puede asignar NULL a un vector. \n"
+                mensaje = "No se puede asignar NULL a un vector."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                 return -1
             
-            #Comprobar que sea primitivo
-            if expresionEvaluar.clase != Clases.PRIMITIVO.value:
-                REPORTES.salida += "ERROR: Una variable primitiva solo recibe primitivos. \n"
-                mensaje = "Una variable primitiva solo recibe primitivos."
+            #Comprobar que sea vector
+            if expresionEvaluar.clase != Clases.VECTOR.value:
+                REPORTES.salida += "ERROR: Una variable vector solo recibe vectores. \n"
+                mensaje = "Una variable vector solo recibe vectores."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                 return -1
             
-            #Comprobar que el tipo sea el mismo que la variable
-            if expresionEvaluar.tipo != self.tipo:
-                REPORTES.salida += "ERROR: Primitivo " + self.tipo + " no recibe " + expresionEvaluar.tipo + ". \n"
-                mensaje = "Primitivo " + self.tipo + " no recibe " + expresionEvaluar.tipo + "."
-                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
-                return -1
+            #Si tipo no es ANY, comparar contenido con el tipo del vector
+            if self.tipo != Tipo.ANY.value:
+                for i in expresionEvaluar.valor:
+                    if i.tipo != self.tipo or i.clase != Clases.PRIMITIVO.value:
+                        REPORTES.salida += "ERROR: Uno o mas valores del vector no cumple con el tipo o no son primitivos. \n"
+                        mensaje = "Uno o mas valores del vector no cumple con el tipo o no son primitivos."
+                        REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                        return -1
             
+            #Asignar la clase del contenido
+            if self.tipo != Tipo.ANY.value:
+                expresionEvaluar.claseContenido = Clases.PRIMITIVO.value
+            else: 
+                expresionEvaluar.claseContenido = Clases.ANY.value
+
             nuevo = expresionEvaluar
 
         #Añadir el id de la variable a valor

@@ -1,6 +1,7 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
+from Ejecucion.Entorno import entorno
 
 class expresionUnaria(instruccion):
     '''
@@ -36,15 +37,25 @@ class expresionUnaria(instruccion):
             operador = "-"
         elif self.tipoOperacion == Expresion.NOT.value:
             operador = "!"
+        elif self.tipoOperacion == Expresion.DECREMENTO.value:
+            operador = "--"
+        elif self.tipoOperacion == Expresion.INCREMENTO.value:
+            operador = "++"
         REPORTES.dot += nodoOperador + "[ label = \"" +  operador + "\" ];\n"
         REPORTES.cont += 1
 
         #Declarar operacion
         nodoExpresion = self.expresion.grafo(REPORTES)
 
-        #Conectar con el padre
-        REPORTES.dot += padre + "->" + nodoOperador + ";\n"
-        REPORTES.dot += padre + "->" + nodoExpresion + ";\n"
+        if self.tipoOperacion == Expresion.UNARIO.value or self.tipoOperacion == Expresion.NOT.value:
+            #Conectar con el padre
+            REPORTES.dot += padre + "->" + nodoOperador + ";\n"
+            REPORTES.dot += padre + "->" + nodoExpresion + ";\n"
+        else: 
+            #Conectar con el padre
+            REPORTES.dot += padre + "->" + nodoExpresion + ";\n"
+            REPORTES.dot += padre + "->" + nodoOperador + ";\n"
+            
         return padre    
 
     def analisis(self, SIMBOLOS, REPORTES):
@@ -113,7 +124,7 @@ class expresionUnaria(instruccion):
             retorno.valorClase = retorno.clase
             retorno.valorTipo = retorno.tipo
             return retorno
-            
+        
         elif self.tipoOperacion == Expresion.UNARIO.value:
             #Evaluar que el valor sea booleano
             if expresion.tipo != Tipo.NUMBER.value:
@@ -130,8 +141,8 @@ class expresionUnaria(instruccion):
                 return retorno
             
             #Convertir el numero
-            numero = float(expresion.valor) * -1
-            
+            numero = float(expresion.valor) * - 1
+
             #Retorno
             retorno = valor()
             retorno.id = expresion.id
@@ -141,6 +152,99 @@ class expresionUnaria(instruccion):
             retorno.string = retorno.valor
             retorno.valorClase = retorno.clase
             retorno.valorTipo = retorno.tipo    
+            
+            return retorno
+            
+        elif self.tipoOperacion == Expresion.INCREMENTO.value:
+            #Evaluar que el valor sea booleano
+            if expresion.tipo != Tipo.NUMBER.value:
+                retorno = valor()
+                retorno.id = "NULL"
+                retorno.tipo = Tipo.NULL.value
+                retorno.valor = "NULL"
+                retorno.clase = Clases.NULL.value
+                retorno.string = "NULL"
+                
+                REPORTES.salida += "ERROR: La negacion unaria solo recibe numbers. \n"
+                mensaje = "La negacion unaria solo recibe numbers."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                return retorno
+            
+            #Convertir el numero
+            numero = float(expresion.valor) + 1
+
+            #Retorno
+            retorno = valor()
+            retorno.id = expresion.id
+            retorno.tipo = expresion.tipo
+            retorno.valor = str(numero)
+            retorno.clase = expresion.clase
+            retorno.string = retorno.valor
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo    
+            
+            #Actualizar en la tabla de simbolos
+            salida = entorno.asignarSimbolo(retorno, SIMBOLOS, REPORTES) 
+
+            if salida == -1:
+                retorno = valor()
+                retorno.id = "NULL"
+                retorno.tipo = Tipo.NULL.value
+                retorno.valor = "NULL"
+                retorno.clase = Clases.NULL.value
+                retorno.string = "NULL"
+                
+                REPORTES.salida += "ERROR: Ocurrio un error al reasignar la variable. \n"
+                mensaje = "Ocurrio un error al reasignar la variable."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                return retorno
+            
+            return retorno
+        
+        elif self.tipoOperacion == Expresion.DECREMENTO.value:
+            #Evaluar que el valor sea booleano
+            if expresion.tipo != Tipo.NUMBER.value:
+                retorno = valor()
+                retorno.id = "NULL"
+                retorno.tipo = Tipo.NULL.value
+                retorno.valor = "NULL"
+                retorno.clase = Clases.NULL.value
+                retorno.string = "NULL"
+                
+                REPORTES.salida += "ERROR: La negacion unaria solo recibe numbers. \n"
+                mensaje = "La negacion unaria solo recibe numbers."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                return retorno
+            
+            #Convertir el numero
+            numero = float(expresion.valor) - 1
+
+            #Retorno
+            retorno = valor()
+            retorno.id = expresion.id
+            retorno.tipo = expresion.tipo
+            retorno.valor = str(numero)
+            retorno.clase = expresion.clase
+            retorno.string = retorno.valor
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo    
+            
+            #Actualizar en la tabla de simbolos
+            salida = entorno.asignarSimbolo(retorno, SIMBOLOS, REPORTES) 
+
+            if salida == -1:
+                retorno = valor()
+                retorno.id = "NULL"
+                retorno.tipo = Tipo.NULL.value
+                retorno.valor = "NULL"
+                retorno.clase = Clases.NULL.value
+                retorno.string = "NULL"
+                
+                REPORTES.salida += "ERROR: Ocurrio un error al reasignar la variable. \n"
+                mensaje = "Ocurrio un error al reasignar la variable."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                return retorno
+            
             return retorno
 
     def c3d(self):

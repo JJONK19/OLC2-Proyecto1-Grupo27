@@ -75,3 +75,6 @@ class Expresion(Enum):
     SPLIT = "SPLIT"
     CONCAT = "CONCAT"
     PUSH = "PUSH"
+    INCREMENTO = "INCREMENTO"
+    DECREMENTO = "DECREEMENTO"
+    

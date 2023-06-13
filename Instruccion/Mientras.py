@@ -66,7 +66,7 @@ class sentenciaWhile(instruccion):
         while True:
 
             salir = False                #Indica al while si hace un break
-
+            siguiente = False            #Indica al while si viene un continue
             #Condicion
             valorCondicion = self.condicion.analisis(SIMBOLOS, REPORTES)
 
@@ -107,11 +107,10 @@ class sentenciaWhile(instruccion):
                 if retorno == None:             #Instruccion sin return. Se ignora.
                     pass
                 elif retorno == 1:              #Instruccion break. Termina la ejecucion y asigna a la variable de salida true.
-                    SIMBOLOS.pop()
                     salir = True
                     break
                 elif retorno == 0:              #Instruccion continue. El break termina la ejecucion.
-                    SIMBOLOS.pop()
+                    siguiente = True
                     break
                 elif retorno == -1:             #Es un error. Se sigue arrastrando para detener la ejecucion.
                     SIMBOLOS.pop()
@@ -123,7 +122,12 @@ class sentenciaWhile(instruccion):
 
             #Si pasa por aca es que se aplica el break a la ejecion.
             if salir:
+                SIMBOLOS.pop()
                 break 
+            #Si pasa por aca es que se aplica el continue a la ejecion.
+            if salir:
+                SIMBOLOS.pop()
+                continue
             
             #Al terminar de ejecutar, si no ha retornado se asume que cumplio las instrucciones. SOlo se saca el entorno.
             SIMBOLOS.pop()

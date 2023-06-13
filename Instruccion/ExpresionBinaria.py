@@ -723,7 +723,7 @@ class expresionBinaria(instruccion):
                 #Retorno
                 retorno = valor()
                 retorno.tipo = Tipo.BOOLEAN.value
-                if expresionIzquierda.valor == "true" and expresionDerecha.valor == "true":
+                if expresionIzquierda.valor == "true" or expresionDerecha.valor == "true":
                     retorno.valor = "true"
                 else:
                     retorno.valor = "false"

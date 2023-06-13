@@ -81,6 +81,9 @@ class Analizador:
                 'CORI',            # [
                 'CORD',            # ]
 
+                
+                'INCREMENTO',      # ++
+                'DECREMENTO',      # --
                 'MAS',             # +
                 'MENOS',           # -
                 'MUL',             # *
@@ -120,6 +123,8 @@ class Analizador:
     t_CORI = r'\['
     t_CORD = r'\]'
 
+    t_INCREMENTO = r'\+\+'
+    t_DECREMENTO = r'\-\-'
     t_MAS = r'\+'
     t_MENOS = r'\-'
     t_MUL = r'\*'
@@ -242,7 +247,8 @@ class Analizador:
         ('left', 'MUL', 'DIV', 'MOD'),
         ('left', 'PARENI', 'PAREND'),
         ('left', 'POT'),
-        ('right', 'UNARIO'),
+        ('right', 'INCREMENTO', 'DECREMENTO'),
+        ('right', 'UNARIO')
     )
 
 
@@ -652,6 +658,18 @@ class Analizador:
         """
         p[0] = expresionUnaria(p[2], Expresion.UNARIO.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
 
+    def p_EXPRESION_INCREMENTO(p):
+        """
+            expresion : llamada INCREMENTO
+        """
+        p[0] = expresionUnaria(p[1], Expresion.INCREMENTO.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+
+    def p_EXPRESION_DECREMENTO(p):
+        """
+            expresion : llamada DECREMENTO
+        """
+        p[0] = expresionUnaria(p[1], Expresion.DECREMENTO.value, p.lineno(1), Analizador.find_column(Analizador.input, p.lexpos(1)))
+
 
     def p_EXPRESION_PARENTESIS(p):
         """
@@ -724,9 +742,6 @@ class Analizador:
             t[0] = t[3]
         else:
             t[0] = llamada(t[1], [], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
-
-
-
 
     #Nativas-----------------------------------------------------------------------------------------
     def p_NATIVA(t):

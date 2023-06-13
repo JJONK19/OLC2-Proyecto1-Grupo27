@@ -1,6 +1,7 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
+from Dato.Any import any
 
 class DeclaracionVector(instruccion):
     '''
@@ -138,6 +139,19 @@ class DeclaracionVector(instruccion):
             else: 
                 expresionEvaluar.claseContenido = Clases.ANY.value
 
+            #Convertir todos los objetos a Anys en caso sea de tipo any
+            anyLista = []
+            if self.tipo == Tipo.ANY.value:
+                for i in expresionEvaluar.valor:
+
+                    if i.clase == Clases.PRIMITIVO.value:
+                        anyLista.append(any(i.id, Tipo.ANY.value, Clases.ANY.value, i.valor, i.tipo, i.clase, ""))    
+                    elif i.clase == Clases.VECTOR.value:
+                        anyLista.append(any(i.id, Tipo.ANY.value, Clases.ANY.value, i.valor, i.tipo, i.clase, i.claseContenido))
+                    elif i.clase == Clases.STRUCT.value:
+                        anyLista.append(any(i.id, Tipo.ANY.value, Clases.ANY.value, i.valor, i.tipo, i.clase, "")) 
+                
+                expresionEvaluar.valor = anyLista
             nuevo = expresionEvaluar
 
         #Añadir el id de la variable a valor
@@ -147,9 +161,9 @@ class DeclaracionVector(instruccion):
 
         #Enviar al entorno local
         local = SIMBOLOS[-1]
-        error = local.insertarSimbolo(nuevo, REPORTES)
+        salida = local.insertarSimbolo(nuevo, REPORTES)
         
-        if error == -1:
+        if salida == -1:
             return -1
         else:
             return None

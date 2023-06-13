@@ -33,7 +33,7 @@ class entorno:
         '''
         #Verificar que no exista
         if self.existeSimbolo(CONTENIDO.id):
-            REPORTES.salida += "ERROR: La variable" + CONTENIDO.id + " ya existe en este entorno. \n"
+            REPORTES.salida += "ERROR: La variable " + CONTENIDO.id + " ya existe en este entorno. \n"
             mensaje = "La variable " + CONTENIDO.id + " ya existe en este entorno."
             REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
             return -1
@@ -172,6 +172,7 @@ class entorno:
                 #Modificar valores
                 temp.set(CONTENIDO.valor)
                 REPORTES.actualizar(CONTENIDO.id, entornoTemp.nombre_entorno, CONTENIDO.valor)
+                return None
                 
             elif temp.clase == Clases.VECTOR.value:
                 #Comprobar tipos
@@ -193,6 +194,7 @@ class entorno:
                 temp.set(CONTENIDO.valor, CONTENIDO.claseContenido)
                 var = temp.get("", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
                 REPORTES.actualizar(CONTENIDO.id, entornoTemp.nombre_entorno, var.string)
+                return None
                 
             elif temp.clase == Clases.STRUCT.value:
                 #Comprobar tipos
@@ -228,12 +230,14 @@ class entorno:
                 temp.set(CONTENIDO.valor)
                 var = temp.get("", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
                 REPORTES.actualizar(CONTENIDO.id, entornoTemp.nombre_entorno, var.string)
+                return None
             
             elif temp.clase == Clases.ANY.value:
                 #Modificar valores
                 temp.set(CONTENIDO.valor, CONTENIDO.valorTipo, CONTENIDO.valorClase, CONTENIDO.claseContenido)
                 var = temp.get("", "", REPORTES, CONTENIDO.linea, CONTENIDO.columna)
                 REPORTES.actualizar(CONTENIDO.id, entornoTemp.nombre_entorno, var.string)
+                return None
                 
         REPORTES.salida += "ERROR: La variable " + CONTENIDO.id + " no existe en ningun entorno. \n"
         mensaje = "La variable " + CONTENIDO.id + " no existe en ningun entorno."

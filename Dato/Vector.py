@@ -77,6 +77,8 @@ class vector(simbolo):
                 valor = temp.get("", REPORTES, LINEA, COLUMNA)
             elif temp.clase == Clases.STRUCT.value:
                 valor = temp.get("", REPORTES, LINEA, COLUMNA)
+            elif temp.clase == Clases.ANY.value:
+                valor = temp.get("", "", REPORTES, LINEA, COLUMNA)
 
             cadena += valor.string
 

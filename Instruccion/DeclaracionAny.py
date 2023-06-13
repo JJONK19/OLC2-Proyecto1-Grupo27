@@ -88,9 +88,9 @@ class DeclaracionAny(instruccion):
       
         #Enviar al entorno local
         local = SIMBOLOS[-1]
-        error = local.insertarSimbolo(nuevo, REPORTES)
+        salida = local.insertarSimbolo(nuevo, REPORTES)
         
-        if error == -1:
+        if salida == -1:
             return -1
         else:
             return None

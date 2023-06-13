@@ -591,6 +591,23 @@ class expresionBinaria(instruccion):
                 retorno.valorTipo = retorno.tipo
                 return retorno
             
+            elif expresionIzquierda.tipo == Tipo.BOOLEAN.value and expresionDerecha.tipo == Tipo.BOOLEAN.value:
+                #Evaluar los strings
+                booleano = expresionIzquierda.valor == expresionDerecha.valor 
+                
+                #Retorno
+                retorno = valor()
+                retorno.tipo = Tipo.BOOLEAN.value
+                if booleano:
+                    retorno.valor = "true"
+                else:
+                    retorno.valor = "false"
+                retorno.clase = expresionIzquierda.clase
+                retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
+                return retorno
+            
             else:
                 retorno = valor()
                 retorno.id = "NULL"
@@ -626,6 +643,23 @@ class expresionBinaria(instruccion):
             elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
                 #Evaluar los strings
                 booleano = expresionIzquierda.valor != expresionDerecha.valor 
+                
+                #Retorno
+                retorno = valor()
+                retorno.tipo = Tipo.BOOLEAN.value
+                if booleano:
+                    retorno.valor = "true"
+                else:
+                    retorno.valor = "false"
+                retorno.clase = expresionIzquierda.clase
+                retorno.string = retorno.valor
+                retorno.valorClase = retorno.clase
+                retorno.valorTipo = retorno.tipo
+                return retorno
+            
+            elif expresionIzquierda.tipo == Tipo.BOOLEAN.value and expresionDerecha.tipo == Tipo.BOOLEAN.value:
+                #Evaluar los strings
+                booleano = expresionIzquierda.valor == expresionDerecha.valor 
                 
                 #Retorno
                 retorno = valor()

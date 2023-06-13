@@ -25,6 +25,7 @@ from Instruccion.Return import sentenciaReturn
 from Instruccion.Mientras import sentenciaWhile
 from Instruccion.Accesos import accesos
 from Instruccion.Llamada import llamada
+from Instruccion.Asignacion import asignacion
 
 class Analizador:
     #-----------------------------------------------------------------------------------------
@@ -276,6 +277,7 @@ class Analizador:
                         | Scontinue PTCOMA
                         | Sbreak PTCOMA
                         | Swhile PTCOMA
+                        | asignacion PTCOMA
                        
         '''
         t[0] = t[1]
@@ -454,6 +456,17 @@ class Analizador:
             valorStruct : ID DOSPTS expresion
         """
         t[0] = DeclaracionAtributo(t[1], t[3], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    #Asignacion----------------------------------------------------------------------------------
+    def p_ASIGNACION(t):
+        '''
+            asignacion : ID listaAccesos IGUAL expresion
+                        | ID IGUAL expresion 
+        '''
+        if(len(t) == 5):
+             t[0] = asignacion(t[1],t[2],t[4],t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        else:
+             t[0] = asignacion(t[1],[],t[3],t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     #Tipo ----------------------------------------------------------------------------------
     def p_TIPOS_NOANY(t):

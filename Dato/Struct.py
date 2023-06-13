@@ -91,6 +91,6 @@ class struct(simbolo):
             if i != len(self.valor) - 1:
                 cadena += " }, "
             else:
-                cadena += " ]"
+                cadena += "} ]"
 
         return cadena

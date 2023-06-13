@@ -77,9 +77,9 @@ class DefinicionStruct(instruccion):
         
         #Enviar al entorno global la estructura
         entornoGlobal = SIMBOLOS[0]
-        error = entornoGlobal.insertarEstructura(self.id, atributos, REPORTES, self.linea, self.columna)
+        salida = entornoGlobal.insertarEstructura(self.id, atributos, REPORTES, self.linea, self.columna)
         
-        if error == -1:
+        if salida == -1:
             return -1
         else:
             return None

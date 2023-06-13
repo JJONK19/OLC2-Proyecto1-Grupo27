@@ -27,6 +27,7 @@ class nativaSinValor(instruccion):
         REPORTES.cont += 1
 
         #Declarar el valor a operar
+
         nodoModificar = self.modificar.grafo(REPORTES)
 
         # Declarar funcion

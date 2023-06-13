@@ -229,20 +229,21 @@ class Analizador:
     #                           ANALISIS SINTACTICO
 
     #-----------------------------------------------------------------------------------------
+
+
     precedence = (
-        ('left', 'PTCOMA'),
-        ('left', 'COMA'),
         ('left', 'OR'),
         ('left', 'AND'),
         ('right', 'NOT'),
         ('left', 'IGUALACION', 'DISTINTO'),
         ('left', 'MENORQ', 'MAYORQ', 'MAYORIG', 'MENORIG'),
-        ('left', 'MAS', 'MENOS'),
+        ('left', 'MAS', 'MENOS', 'COMA'),
         ('left', 'MUL', 'DIV', 'MOD'),
         ('left', 'PARENI', 'PAREND'),
         ('left', 'POT'),
-        ('right', 'UNARIO')
+        ('right', 'UNARIO'),
     )
+
 
     # Definicion de la Gramatica
     def p_INICIO(t):
@@ -692,13 +693,27 @@ class Analizador:
     #Llamada----------------------------------------------------------------------------------------
     def p_LLAMADAS(t):
         '''
-            llamada : ID listaAccesos
+            llamada : ID listaAccesos PT nativa
+                    | ID listaAccesos
+                    | ID PT nativa
                     | ID
         '''
-        if(len(t) == 3):
+
+        if len(t) == 5:
+            temp_llamada = llamada(t[1], t[2], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+            t[4].modificar = temp_llamada
+            t[0] = t[4]
+        elif len(t) == 3:
             t[0] = llamada(t[1], t[2], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        elif len(t) == 4:
+            temp_llamada = llamada(t[1], [], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+            t[3].modificar = temp_llamada
+            t[0] = t[3]
         else:
             t[0] = llamada(t[1], [], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+
+
 
     #Nativas-----------------------------------------------------------------------------------------
     def p_NATIVA(t):
@@ -715,45 +730,45 @@ class Analizador:
 
     def p_NATIVA_TOFIXED(t):
         '''
-            tofixed : expresion PT RFIXED PARENI expresion PAREND 
+            tofixed : RFIXED PARENI expresion PAREND
         '''
-        t[0] = nativaConValor(t[1], t[5], Expresion.TOFIXED.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativaConValor(None, t[3], Expresion.TOFIXED.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_NATIVA_TOEXPONENTIAL(t):
         '''
-            toexponential : expresion PT REXPONENTIAL PARENI expresion PAREND 
+            toexponential : REXPONENTIAL PARENI expresion PAREND
         '''
-        t[0] = nativaConValor(t[1], t[5], Expresion.TOEXPONENTIAL.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativaConValor(None, t[3], Expresion.TOEXPONENTIAL.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_NATIVA_TOSTRING(t):
         '''
-            tostring : expresion PT RTSTRING PARENI PAREND 
+            tostring : RTSTRING PARENI PAREND
         '''
-        t[0] = nativaSinValor(t[1], Expresion.TOSTRING.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativaSinValor(None, Expresion.TOSTRING.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_NATIVA_TOLOWERCASE(t):
         '''
-            tolowercase : expresion PT RLC PARENI PAREND 
+            tolowercase : RLC PARENI PAREND
         '''
-        t[0] = nativaSinValor(t[1], Expresion.TOLOWERCASE.value , t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativaSinValor(None, Expresion.TOLOWERCASE.value , t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_NATIVA_TOUPPERCASE(t):
         '''
-            touppercase : expresion PT RUC PARENI PAREND 
+            touppercase : RUC PARENI PAREND
         '''
-        t[0] = nativaSinValor(t[1], Expresion.TOUPPERCASE.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativaSinValor(None, Expresion.TOUPPERCASE.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_NATIVA_SPLIT(t):
         '''
-            split : expresion PT RSPLIT PARENI expresion PAREND 
+            split : RSPLIT PARENI expresion PAREND
         '''
-        t[0] = nativasVector(t[1], t[5], Expresion.SPLIT.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativasVector(None, t[3], Expresion.SPLIT.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
     def p_NATIVA_CONCAT(t):
         '''
-            concat : expresion PT RCONCAT PARENI listaExpresiones PAREND
+            concat : RCONCAT PARENI listaExpresiones PAREND
         '''
-        t[0] = nativasVector(t[1], t[5], Expresion.CONCAT.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = nativasVector(None, t[3], Expresion.CONCAT.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
 
 

@@ -888,18 +888,21 @@ class Analizador:
 
     #Errores Sintaxis--------------------------------------------------------------------------------
     def p_error(t):
-        mensaje = "Token Inesperado: " + t.value
-        Analizador.arbol.añadirError("Sintaxis", mensaje, t.lineno, t.lexpos)    
-        
-        #Verficar que el archivo no ha acabado
-        if not t:
-            return Analizador.arbol
- 
-        while True:
-            nextToken = Analizador.parser.token()            
-            if not nextToken or nextToken.type == 'PTCOMA':
-                break
-        Analizador.parser.restart()
+
+        if t is not None:
+            if t.type == 'error':
+                mensaje = "Token Inesperado: " + t.value
+                tipo = "Lexico"
+            else:
+                mensaje = "Token Inesperado: " + t.value
+                tipo = "Sintactico"
+
+            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, t.lexpos)
+            Analizador.parser.errok()
+        else:
+            mensaje = "Token Inesperado: " + t.value
+            tipo = "Sintactico"
+            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, t.lexpos)
 
     parser = yacc.yacc(debug=True)
 

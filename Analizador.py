@@ -393,7 +393,7 @@ class Analizador:
         """
             forOf : RFOR PARENI declaracion ROF expresion PAREND LLAVEI sentencias LLAVED
         """
-        t[0] = cicloForOf(t[3], t[5], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+        t[0] = cicloForOf(t[3], t[5], t[8], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
 
     #Funciones----------------------------------------------------------------------------------
     def p_FUNCIONES_DECLARAR(t):

@@ -41,6 +41,10 @@ class cicloFor(instruccion):
         nodoIterador = self.iterador.grafo(REPORTES)
         REPORTES.dot += padre + "->" + nodoIterador + ";\n"
 
+        #Declarar condicion
+        nodoExpresion = self.condicion.grafo(REPORTES)
+        REPORTES.dot += padre + "->" + nodoExpresion + ";\n"
+
         #Declarar expresion
         nodoExpresion = self.expresion.grafo(REPORTES)
         REPORTES.dot += padre + "->" + nodoExpresion + ";\n"

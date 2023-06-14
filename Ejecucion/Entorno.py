@@ -396,14 +396,12 @@ class entorno:
         return retorno
 
     #================================================== METODOS ==========================================================
-    def insertarMetodo(self, ID, PARAMETROS, INSTRUCCIONES, TIPO, CLASE, REPORTES, LINEA, COLUMNA):
+    def insertarMetodo(self, ID, PARAMETROS, INSTRUCCIONES, REPORTES, LINEA, COLUMNA):
         '''
             Añade un nuevo metodo al diccionario de metodos y a la lista del reporte.
             - ID: Nombre del metodo.
             - Parametros: Lista de parametros que pide el metodo (atributos[])
             - Instrucciones: Lista de instrucciones (instruccion[])
-            - Tipo: Tipo de valor que debe de retornar la funcion (int, strimg, bool) (String)
-            - Clase: Indica si retorna un primitivo, vector, matriz, etc (String)
             - Reportes: Variable con las listas para los reportes de la ejecucion y la consola
         '''
         #Verificar que no exista
@@ -414,8 +412,8 @@ class entorno:
             return -1
 
         #Añadir el metodo a los reportes y a la lista de metodos
-        REPORTES.añadirMetodo(ID, TIPO, LINEA, COLUMNA)
-        self.metodos[ID] = metodo(ID, PARAMETROS, INSTRUCCIONES, TIPO, CLASE)
+        REPORTES.añadirMetodo(ID, Tipo.ANY.value, LINEA, COLUMNA)
+        self.metodos[ID] = metodo(ID, PARAMETROS, INSTRUCCIONES)
 
     def getMetodo(self, ID, REPORTES, LINEA, COLUMNA):
         '''
@@ -428,6 +426,7 @@ class entorno:
         '''
         if self.existeMetodo(ID):
             retorno = self.metodos[ID]
+            return retorno
         else:
             REPORTES.salida += "ERROR: El metodo " + ID + " no existe. \n"
             mensaje = "El metodo " + ID + " no existe."

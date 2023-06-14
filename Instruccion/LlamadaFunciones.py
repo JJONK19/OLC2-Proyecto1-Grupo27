@@ -101,7 +101,7 @@ class llamadaFuncion(instruccion):
             return retorno
 
             
-        for i in len(atributos):
+        for i in range(len(atributos)):
             tempAtributo = atributos[i]
             tempParametro = parametros[i]
 
@@ -115,8 +115,8 @@ class llamadaFuncion(instruccion):
                     retorno.clase = Clases.NULL.value
                     retorno.string = "NULL"
                     
-                    REPORTES.salida += "ERROR: El tipo de la entrada no coincide con el atributo" + tempAtributo.id + ".\n"
-                    mensaje = "El tipo de la entrada no coincide con el atributo" + tempAtributo.id + ".\n"
+                    REPORTES.salida += "ERROR: El tipo de la entrada no coincide con el atributo " + tempAtributo.id + ".\n"
+                    mensaje = "El tipo de la entrada no coincide con el atributo " + tempAtributo.id + ".\n"
                     REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                     return retorno
             
@@ -130,8 +130,8 @@ class llamadaFuncion(instruccion):
                     retorno.clase = Clases.NULL.value
                     retorno.string = "NULL"
                     
-                    REPORTES.salida += "ERROR: El tipo de la entrada no coincide con el atributo" + tempAtributo.id + ".\n"
-                    mensaje = "El tipo de la entrada no coincide con el atributo" + tempAtributo.id + ".\n"
+                    REPORTES.salida += "ERROR: El tipo de la entrada no coincide con el atributo " + tempAtributo.id + ".\n"
+                    mensaje = "El tipo de la entrada no coincide con el atributo " + tempAtributo.id + ".\n"
                     REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                     return retorno
 
@@ -148,7 +148,7 @@ class llamadaFuncion(instruccion):
         #Recorrer las expresiones y añadirlas al nuevo ambiente
         for parametro in parametros:
             #Enviar al entorno local
-            local = SIMBOLOS[-1]
+            local = Simbolos[-1]
             salida = local.insertarSimbolo(parametro, REPORTES)
 
             if salida == -1:

@@ -82,7 +82,7 @@ class declaracionFuncion(instruccion):
         
         #Enviar al entorno global la estructura
         entornoGlobal = SIMBOLOS[0]
-        salida = entornoGlobal.insertarMetodo(self.id, atributos, REPORTES, self.linea, self.columna)
+        salida = entornoGlobal.insertarMetodo(self.id, atributos, self.instrucciones,  REPORTES, self.linea, self.columna)
         
         if salida == -1:
             return -1

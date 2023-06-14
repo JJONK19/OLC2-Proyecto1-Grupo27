@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>PyTypeCraft</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
+    <link rel="stylesheet" href="assets/css/Header-Dark.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+ 
+    <link rel='stylesheet' href='https://semantic-ui.com/dist/semantic.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.35.0/codemirror.css'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+
+    <header class="header-dark" style="background-color: #1f1d1d;height: 500px;width: 1250px;padding: 0px;min-height: 100vh;min-width: 100%;">
+        <nav class="navbar navbar-dark navbar-expand-lg navigation-clean-search">
+            <div class="container"><a class="navbar-brand" style="color: rgb(255, 199, 0);" href="#">PyTypeCraft - V1S23 - OLC2</a>
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link"  id="abrir_doc" onclick=abrir_()>Abrir Archivo</a></li>
+                        <li class="nav-item"><a class="nav-link"  id="nuevo_doc" onclick=nuevo_()>Nuevo Archivo</a></li>
+                        <li class="nav-item"><a class="nav-link"  id="guardar_doc" onclick=guardar_()>Guardar Archivo</a></li>
+                        <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Generar</a>
+                            <div class="dropdown-menu" style="background: rgb(255,199,0);"><a class="dropdown-item" id="gen_errores" onclick=errores_(reporte_errores)>Reporte de Errores</a><a class="dropdown-item" id="gen_AST" onclick=AST_(arbol_ast)>Reporte de Árbol AST</a><a class="dropdown-item" id="gen_simbolos" onclick=simbolos_(reporte_simbolos)>Reporte de Tabla de Símbolos</a></div>
+                        </li>
+                    </ul>
+                    <form class="me-auto" target="_self">
+                        <div class="d-flex align-items-center"><label class="form-label d-flex mb-0" for="search-field"></label></div>
+                    </form><span class="navbar-text"></span>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6"><h6 style="color: rgb(255,255,255);width: auto;">Editor</h6><textarea class="code-mirror-editor" id="area_editor" style="width: 85%;height: 450px;margin-left: auto;margin-right: auto;display: block;color: rgb(255,199,0);background: rgb(0,0,0);"></textarea></div>
+                <div class="col-md-6"><h6 style="color: rgb(255,255,255);">Consola</h6><textarea class="code-mirror-consola" readonly="readonly" id="area_consola" style="width: 85%;height: 450px;margin-left: auto;margin-right: auto;display: block;color: rgb(255,199,0);background: rgb(0,0,0);"></textarea></div>
+            </div>
+        </div>
+        <button class="btn btn-primary" id="bt_analizar" type="button" style="margin: 11px;margin-left: auto;margin-right: auto;display: block;background: rgb(255,199,0);color: rgb(0,0,0);">Analizar Entrada</button>
+        <button class="btn btn-primary" id="bt_limpiar" type="button" style="margin: 11px;margin-left: auto;margin-right: auto;display: block;background: rgb(255,199,0);color: rgb(0,0,0);">Limpiar</button>
+
+
+    </header>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js'></script>
+    <script src="assets/js/main.js"></script>
+    <script src='https://semantic-ui.com/dist/semantic.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.35.0/codemirror.js'></script>
+    <script src='https://codemirror.net/mode/javascript/javascript.js'></script>
+
+    <!-- <script type="text/javascript">
+        var editor = CodeMirror.fromTextArea(document.getElementById('area_editor'), {
+            mode: "javascript",
+            lineNumbers: true,
+        });
+        editor.save()
+    </script> -->
+
+    <script >
+      
+        var code_editor = document.getElementById('area_editor');
+        var editor = CodeMirror.fromTextArea(code_editor, {
+            lineNumbers : true,
+            styleActiveLine: true,
+            theme:"udb-dark",
+            matchBrackets: true,
+            autoRefresh:true,
+            mode: "javascript"
+            });
+        editor.save() 
+        
+        var code_consola = document.getElementById('area_consola');
+        var consola = CodeMirror.fromTextArea(code_consola, {
+            lineNumbers : true,
+            styleActiveLine: true,
+            theme:"udb-dark",
+            matchBrackets: true,
+            autoRefresh:true,
+            mode: "javascript",
+            readOnly: true
+            });
+        consola.save()
+         
+    </script>
+
+    <style>
+    .CodeMirror{ height:400px!important;}
+    h4{font-size:18px;padding:0;margin:0;}
+    /* code above just for demo */
+    
+    .cm-s-udb-dark.CodeMirror {background: #1B2B34;
+      color: #f7f7f7;font-size: 16px;}
+    .cm-s-udb-dark div.CodeMirror-selected {background: rgba(255, 255, 255, 0.05);}
+    .cm-s-udb-dark .CodeMirror-line::selection,
+    .cm-s-udb-dark .CodeMirror-line > span::selection,
+    .cm-s-udb-dark .CodeMirror-line > span > span::selection {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .cm-s-udb-dark .CodeMirror-line::-moz-selection,
+    .cm-s-udb-dark .CodeMirror-line > span::-moz-selection,
+    .cm-s-udb-dark .CodeMirror-line > span > span::-moz-selection {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .cm-s-udb-dark .CodeMirror-gutters {
+      background: #222;border-right: 1px solid #aaa;}
+    
+    .cm-s-udb-dark .CodeMirror-guttermarker {color: white;}
+    .cm-s-udb-dark .CodeMirror-guttermarker-subtle {color: #aaa;}
+    .cm-s-udb-dark .CodeMirror-linenumber {color: #aaa;}
+    .cm-s-udb-dark .CodeMirror-cursor {border-left: 1px solid white;}
+    .cm-s-udb-dark .cm-keyword {color: #f8aa00;}
+    .cm-s-udb-dark .cm-atom {color: #c594c5;}
+    .cm-s-udb-dark .cm-number {color: #ffffff;}
+    .cm-s-udb-dark .cm-def {color: #f99157;}
+    .cm-s-udb-dark span.cm-variable {color: #f8d300;}
+    .cm-s-udb-dark span.cm-variable-2{color: #6699cc;}
+    .cm-s-udb-dark span.cm-variable-3,
+    .cm-s-udb-dark span.cm-def,
+    .cm-s-udb-dark span.cm-type { color: #f99157;}
+    .cm-s-udb-dark .cm-operator { color: #cda869;}
+    .cm-s-udb-dark .cm-comment { color: #65737e;}
+    .cm-s-udb-dark .cm-string { color: #fac863;}
+    .cm-s-udb-dark .cm-string-2 { color: #bd6b18;}
+    .cm-s-udb-dark .cm-meta { background-color: #141414; color: #f7f7f7;}
+    .cm-s-udb-dark .cm-builtin { color: #cda869;}
+    .cm-s-udb-dark .cm-tag { color: #ec5f67;} /**/
+    .cm-s-udb-dark .cm-attribute { color: #f8d300;;} 
+    .cm-s-udb-dark .cm-property {color: #f8d300;} 
+    .cm-s-udb-dark .cm-header { font-weight: bold;}
+    .cm-s-udb-dark .cm-hr { color: #AEAEAE;}
+    .cm-s-udb-dark .cm-link {color: #c594c5;text-decoration: none;}
+    .cm-s-udb-dark .cm-error {background: rgba(236, 95, 103, 0.4);}
+    .cm-s-udb-dark .CodeMirror-activeline-background {background: rgb(30, 61, 78);}
+    .cm-s-udb-dark .CodeMirror-matchingbracket {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .cm-s-udb-dark .cm-qualifier { color: #ecc854;}
+    
+    .box, .editor .top-boxes, .CodeMirror-gutter-wrapper, 
+    body.project .editor-pane, 
+    body.project .editor{background:#1B2B34;}
+    .CodeMirror-cursor{border-left-color:#FFFFFF;}.CodeMirror pre, 
+    .box pre,.editor .top-boxes pre,.CodeMirror-gutter-wrapper pre{color:#CDD3DE;}.cm-keyword{color:#EC5f67;}.cm-atom{color:#C594C5;}.box-html .cm-atom{color:#C594C5;}.cm-def{color:#F99157;}.cm-variable{color:#99C794;}.cm-variable-2{color:#6699CC;}.cm-variable-3{color:#CDD3DE;}.cm-header{color:#CDD3DE;}.cm-number{color:#CDD3DE;}.cm-property{color:#99C794;}.cm-attribute{color:#99C794;}.cm-builtin{color:#CDD3DE;}.cm-qualifier{color:#CDD3DE;}.cm-operator{color:#CDD3DE;}.cm-meta{color:#CDD3DE;}.cm-string{color:#FAC863;}.cm-string-2{color:#FAC863;}.cm-tag{color:#EC5f67;}.box-css .cm-tag{color:#EC5f67;}.cm-tag.cm-bracket{color:#EC5f67;}.CodeMirror-linenumber{color:#5D5D5D;}.CodeMirror-guttermarker-subtle{color:#5D5D5D;}.cm-comment{color:#65737e;}.cm-searching, .CodeMirror-focused .CodeMirror-selected, .CodeMirror-selected{background-color:#263844;}
+    </style>
+
+</body>
+
+</html>

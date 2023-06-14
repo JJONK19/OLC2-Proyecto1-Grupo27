@@ -46,6 +46,11 @@ class Instrucciones(Enum):
     CONTINUE = "CONTINUE"
     RETURN = "RETURN"
     WHILE = "WHILE"
+    FOR = "FOR"
+    FOROF = "FOROF"
+    LLAMADA_FUNCION = "LLAMADA_FUNCION"
+    DECLARACION_FUNCION = "DECLARACION_FUNCION"
+
 
 class Expresion(Enum):
     '''

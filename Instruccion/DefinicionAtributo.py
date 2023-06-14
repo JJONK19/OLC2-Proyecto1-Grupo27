@@ -73,7 +73,7 @@ class DefinicionAtributo(instruccion):
             - Reportes: Almacena un resumen de la ejecucion.
         '''
         #Para crear un atributo any, se debe ver si un atributo es de tipo any y clase primitiva
-        #En la declaracion del arbol, era la forma facil sin ser redundante
+        #En la declaracion del arbol, era la forma facil sin ser redundante en la gramatica
         if self.tipo == Tipo.ANY.value and self.clase == Clases.PRIMITIVO.value:
             self.clase = Clases.ANY.value
         

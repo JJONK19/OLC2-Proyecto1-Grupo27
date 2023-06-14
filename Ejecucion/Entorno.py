@@ -411,6 +411,7 @@ class entorno:
             REPORTES.salida += "ERROR: El método " + ID + " ya existe. \n"
             mensaje = "El método " + ID + " ya existe. \n"
             REPORTES.añadirError("Semantico", mensaje, LINEA, COLUMNA)
+            return -1
 
         #Añadir el metodo a los reportes y a la lista de metodos
         REPORTES.añadirMetodo(ID, TIPO, LINEA, COLUMNA)

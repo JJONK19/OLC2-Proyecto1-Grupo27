@@ -95,7 +95,7 @@ class DeclaracionPrimitiva(instruccion):
 
             #Definir valor por defecto
             if self.tipo == Tipo.BOOLEAN.value:
-                nuevo.valor = "false"
+                nuevo.valor = "true"
             elif self.tipo == Tipo.STRING.value:
                 nuevo.valor = ""
             elif self.tipo == Tipo.NUMBER.value:

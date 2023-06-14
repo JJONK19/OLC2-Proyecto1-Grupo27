@@ -26,6 +26,10 @@ from Instruccion.Mientras import sentenciaWhile
 from Instruccion.Accesos import accesos
 from Instruccion.Llamada import llamada
 from Instruccion.Asignacion import asignacion
+from Instruccion.For import cicloFor
+from Instruccion.ForOf import cicloForOf 
+from Instruccion.DeclaracionFunciones import declaracionFuncion
+from Instruccion.LlamadaFunciones import llamadaFuncion
 
 class Analizador:
     #-----------------------------------------------------------------------------------------
@@ -65,7 +69,10 @@ class Analizador:
         'break': 'RBREAK',
         'continue': 'RCONTINUE',
         'return': 'RRETURN',
-        'while': 'RWHILE'
+        'while': 'RWHILE',
+        'for': 'RFOR',
+        'of': 'ROF',
+        'function': 'RFUNCTION'
     }
     
     tokens = [
@@ -284,6 +291,9 @@ class Analizador:
                         | Sbreak PTCOMA
                         | Swhile PTCOMA
                         | asignacion PTCOMA
+                        | for PTCOMA
+                        | forOf PTCOMA
+                        | declararFuncion PTCOMA
                        
         '''
         t[0] = t[1]
@@ -364,6 +374,69 @@ class Analizador:
         """
         t[0] = sentenciaWhile(t[3], t[6], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
     
+    #For-----------------------------------------------------------------------------------------
+    def p_FOR(t):
+        """
+            for : RFOR PARENI forDeclaracion PTCOMA expresion PTCOMA expresion PAREND LLAVEI sentencias LLAVED
+        """
+        t[0] = cicloFor(t[3], t[5], t[7],t[10], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+
+    def p_FOR_DECLARACION(t):
+        """
+            forDeclaracion : asignacion
+                            | declaracion
+        """
+        t[0] = t[1]
+    
+    #For Of---------------------------------------------------------------------------------------
+    def p_FOROF(t):
+        """
+            forOf : RFOR PARENI declaracion ROF expresion PAREND LLAVEI sentencias LLAVED
+        """
+        t[0] = cicloForOf(t[3], t[5], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+
+    #Funciones----------------------------------------------------------------------------------
+    def p_FUNCIONES_DECLARAR(t):
+        """
+            declararFuncion : RFUNCTION ID PARENI atributosFuncion PAREND LLAVEI sentencias LLAVED
+        """
+        t[0] = declaracionFuncion(t[2], t[4], t[7], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+
+    def p_FUNCIONES_ATRIBUTOS(t):
+        """
+            atributosFuncion : atributosFuncion COMA atributoFuncion
+                    | atributoFuncion
+        """
+        if(len(t) == 4):
+            t[1].append(t[3])
+            t[0] = t[1]
+        else:
+            t[0] = [t[1]]
+
+    def p_FUNCIONES_ATRIBUTOPRIMITVO(t):
+        """
+            atributoFuncion : ID DOSPTS tiposAny 
+        """
+        t[0] = DefinicionAtributo(t[1], t[3], Clases.PRIMITIVO.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_FUNCIONES_ATRIBUTOVECTOR(t):
+        """
+            atributoFuncion : ID DOSPTS tiposAny CORI CORD 
+        """
+        t[0] = DefinicionAtributo(t[1], t[3], Clases.VECTOR.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_FUNCIONES_ATRIBUTOSTRUCT(t):
+        """
+            atributoFuncion : ID DOSPTS ID 
+        """
+        t[0] = DefinicionAtributo(t[1], t[3], Clases.STRUCT.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
+    def p_FUNCIONES_ANY(t):
+        """
+            atributoFuncion : ID
+        """
+        t[0] = DefinicionAtributo(t[1], Tipo.ANY.value, Clases.ANY.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
     #Declaraciones----------------------------------------------------------------------------------
     def p_DECLARACION_PRIMITIVA(t):
         '''
@@ -720,6 +793,19 @@ class Analizador:
             expresion : llamada
         '''
         t[0] = t[1]
+    
+    def p_EXPRESION_LLAMADAFUNCION(t):
+        '''
+            expresion : llamadaFuncion
+        '''
+        t[0] = t[1]
+    
+    #Llamada Funcion----------------------------------------------------------------------------------------
+    def p_LLAMADAFUNCION(t):
+        """
+            llamadaFuncion : ID PARENI listaExpresiones PAREND
+        """
+        t[0] = llamadaFuncion(t[1], t[3], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
     
     #Llamada----------------------------------------------------------------------------------------
     def p_LLAMADAS(t):

@@ -41,6 +41,7 @@ def hello():
   #  global_config.function_3ac_code = []
 
    # r = main.parse_code(a)
+    # r = Analizador.parse
 
     r = "ok"
 

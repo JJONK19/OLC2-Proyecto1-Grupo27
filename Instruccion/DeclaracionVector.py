@@ -127,15 +127,21 @@ class DeclaracionVector(instruccion):
             #Si tipo no es ANY, comparar contenido con el tipo del vector
             if self.tipo != Tipo.ANY.value:
                 for i in expresionEvaluar.valor:
-                    if i.tipo != self.tipo or i.clase != Clases.PRIMITIVO.value:
-                        REPORTES.salida += "ERROR: Uno o mas valores del vector no cumple con el tipo o no son primitivos. \n"
-                        mensaje = "Uno o mas valores del vector no cumple con el tipo o no son primitivos."
+                    if i.tipo != self.tipo:
+                        REPORTES.salida += "ERROR: Uno o mas valores del vector no cumple con el tipo. \n"
+                        mensaje = "Uno o mas valores del vector no cumple con el tipo."
                         REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                         return -1
             
+            #Asignar el tipo
+            expresionEvaluar.tipo = self.tipo
+            
             #Asignar la clase del contenido
             if self.tipo != Tipo.ANY.value:
-                expresionEvaluar.claseContenido = Clases.PRIMITIVO.value
+                if self.tipo == Tipo.STRING.value or self.tipo == Tipo.NUMBER.value or self.tipo == Tipo.BOOLEAN.value:
+                    expresionEvaluar.claseContenido = Clases.PRIMITIVO.value
+                else:
+                    expresionEvaluar.claseContenido = Clases.STRUCT.value
             else: 
                 expresionEvaluar.claseContenido = Clases.ANY.value
 

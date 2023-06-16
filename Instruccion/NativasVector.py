@@ -1,8 +1,12 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
+
+from Dato.Any import any
 from Dato.Vector import vector
 from Dato.Primitivo import primitivo
+from Dato.Struct import struct
+from Instruccion.DeclaracionAny import DeclaracionAny
 
 class nativasVector(instruccion):
     '''
@@ -234,7 +238,97 @@ class nativasVector(instruccion):
             retorno.string = tempVector.getString(REPORTES, self.linea, self.columna)
             retorno.valorClase = retorno.clase
             retorno.valorTipo = retorno.tipo    
-            return retorno     
+            return retorno
+    
+        elif self.tipoInstruccion == Expresion.PUSH.value:
+            #Comprobar que sea un vector
+            if expresionEvaluar.clase != Clases.VECTOR.value:
+                retorno = valor()
+                retorno.id = "NULL"
+                retorno.tipo = Tipo.NULL.value
+                retorno.valor = "NULL"
+                retorno.clase = Clases.NULL.value
+                retorno.string = "NULL"
+                
+                REPORTES.salida += "ERROR: La funcion " + self.tipoInstruccion + " solo recibe tipos Vectores. \n"
+                mensaje = "La funcion " + self.tipoInstruccion + " solo recibe sobre tipos Vectores."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                return retorno
+            
+            #Extraer valor
+            expresionContenido = self.contenido.analisis(SIMBOLOS, REPORTES)
+
+            #Verificar que no sea nulo
+            if expresionContenido.tipo == Tipo.NULL.value:
+                retorno = valor()
+                retorno.id = "NULL"
+                retorno.tipo = Tipo.NULL.value
+                retorno.valor = "NULL"
+                retorno.clase = Clases.NULL.value
+                retorno.string = "NULL"
+                
+                REPORTES.salida += "ERROR: La funcion nativa recibio un parametro NULL. \n"
+                mensaje = "La funcion nativa recibio un parametro NULL."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                return retorno
+        
+            #Comprobar tipos. SI no pasa se sale.
+            if expresionEvaluar.tipo != expresionContenido.tipo:
+                if expresionEvaluar.tipo != Tipo.ANY.value:
+                    retorno = valor()
+                    retorno.id = "NULL"
+                    retorno.tipo = Tipo.NULL.value
+                    retorno.valor = "NULL"
+                    retorno.clase = Clases.NULL.value
+                    retorno.string = "NULL"
+                    
+                    REPORTES.salida += "ERROR: El tipo de la entrada no es compatible. \n"
+                    mensaje = "El tipo de la entrada no es compatible."
+                    REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                    return retorno
+            
+            #Comprobar clases. Si no pasa se sale.
+            if expresionEvaluar.claseContenido != expresionContenido.clase:
+                if expresionEvaluar.claseContenido != Clases.ANY.value:
+                    retorno = valor()
+                    retorno.id = "NULL"
+                    retorno.tipo = Tipo.NULL.value
+                    retorno.valor = "NULL"
+                    retorno.clase = Clases.NULL.value
+                    retorno.string = "NULL"
+                    
+                    REPORTES.salida += "ERROR: La clase de la entrada no es compatible. \n"
+                    mensaje = "La clase de la entrada no es compatible."
+                    REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                    return retorno
+
+            #Hacer append al valor
+            #Crear el objeto y añadir a la lista
+            if expresionEvaluar.tipo == Clases.ANY.value:
+                #Si es vector convertir a any sus contenidos
+                if expresionContenido.clase == Clases.VECTOR.value:
+                    expresionContenido.valor = DeclaracionAny.convertirAny(expresionContenido.valor)
+                expresionEvaluar.valor.append(any(expresionContenido.id, Tipo.ANY.value, Clases.ANY.value, expresionContenido.valor, expresionContenido.valorTipo, expresionContenido.valorClase, expresionContenido.claseContenido)) 
+            
+            elif expresionContenido.clase == Clases.PRIMITIVO.value:
+                expresionEvaluar.valor.append(primitivo(expresionContenido.id, expresionContenido.tipo, expresionContenido.clase, expresionContenido.valor))    
+            elif expresionContenido.clase == Clases.VECTOR.value:
+                expresionEvaluar.valor.append(vector(expresionContenido.id, expresionContenido.tipo, expresionContenido.clase, expresionContenido.claseContenido, expresionContenido.valor))
+            elif expresionContenido.clase == Clases.STRUCT.value:
+                expresionEvaluar.valor.append(struct(expresionContenido.id, expresionContenido.tipo, expresionContenido.clase, expresionContenido.valor))
+            
+            #Retorno           
+            retorno = valor()
+            retorno.id = expresionEvaluar.id
+            retorno.tipo = expresionEvaluar.tipo
+            retorno.valor = expresionEvaluar.valor
+            retorno.clase = expresionEvaluar.clase
+            retorno.claseContenido = expresionEvaluar.claseContenido
+            retorno.string = expresionEvaluar.string
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo    
+            return retorno
+            
         
     def c3d(self):
         pass

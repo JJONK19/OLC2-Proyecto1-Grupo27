@@ -143,7 +143,9 @@ class llamadaFuncion(instruccion):
         #Crear el entorno nuevo y añadirlo a la lista
         nombre = "llamada_" + str(SIMBOLOS[0].contador)
         SIMBOLOS[0].contador += 1
-        Simbolos.append(entorno(nombre))
+        nuevoEntorno = entorno(nombre)
+        nuevoEntorno.estructuras = SIMBOLOS[0].estructuras
+        Simbolos.append(nuevoEntorno)
 
         #Recorrer las expresiones y añadirlas al nuevo ambiente
         for parametro in parametros:

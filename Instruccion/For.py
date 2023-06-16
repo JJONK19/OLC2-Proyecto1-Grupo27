@@ -76,7 +76,9 @@ class cicloFor(instruccion):
         #Crear el entorno local del for y crear la variable iteradora
         nombre = "forGlobal_" + str(SIMBOLOS[0].contador)
         SIMBOLOS[0].contador += 1
-        SIMBOLOS.append(entorno(nombre))
+        nuevoEntorno = entorno(nombre)
+        nuevoEntorno.estructuras = SIMBOLOS[0].estructuras
+        SIMBOLOS.append(nuevoEntorno)
 
         retorno = self.iterador.analisis(SIMBOLOS, REPORTES)
 
@@ -120,7 +122,9 @@ class cicloFor(instruccion):
             #Crear el entorno nuevo y añadirlo a la lista
             nombre = "for_" + str(SIMBOLOS[0].contador)
             SIMBOLOS[0].contador += 1
-            SIMBOLOS.append(entorno(nombre))
+            nuevoEntorno = entorno(nombre)
+            nuevoEntorno.estructuras = SIMBOLOS[0].estructuras
+            SIMBOLOS.append(nuevoEntorno)
 
             #Ejecutar las instrucciones. Borrar el entorno añadido en cualquier return o al finalizar.
             for instruccion in self.instrucciones:

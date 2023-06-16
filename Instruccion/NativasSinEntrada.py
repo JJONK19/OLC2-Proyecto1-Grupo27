@@ -64,18 +64,34 @@ class nativaSinValor(instruccion):
             return retorno
         
         #Comprobar que sea primitivo
-        if expresionEvaluar.clase != Clases.PRIMITIVO.value:
-            retorno = valor()
-            retorno.id = "NULL"
-            retorno.tipo = Tipo.NULL.value
-            retorno.valor = "NULL"
-            retorno.clase = Clases.NULL.value
-            retorno.string = "NULL"
+        if self.tipoInstruccion == Expresion.TOSTRING.value or self.tipoInstruccion == Expresion.TOLOWERCASE.value or self.tipoInstruccion == Expresion.TOUPPERCASE.value:
+            if expresionEvaluar.clase != Clases.PRIMITIVO.value:
+                retorno = valor()
+                retorno.id = "NULL"
+                retorno.tipo = Tipo.NULL.value
+                retorno.valor = "NULL"
+                retorno.clase = Clases.NULL.value
+                retorno.string = "NULL"
+                
+                REPORTES.salida += "ERROR: La funcion " + self.tipoInstruccion + " solo opera sobre tipos Primitivos. \n"
+                mensaje = "La funcion " + self.tipoInstruccion + " solo opera sobre tipos Primitivos."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                return retorno
             
-            REPORTES.salida += "ERROR: La funcion " + self.tipoInstruccion + " solo opera sobre tipos Primitivos. \n"
-            mensaje = "La funcion " + self.tipoInstruccion + " solo opera sobre tipos Primitivos."
-            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
-            return retorno
+        elif self.tipoInstruccion == Expresion.LENGTH.value:
+            if expresionEvaluar.clase == Clases.STRUCT.value:
+                retorno = valor()
+                retorno.id = "NULL"
+                retorno.tipo = Tipo.NULL.value
+                retorno.valor = "NULL"
+                retorno.clase = Clases.NULL.value
+                retorno.string = "NULL"
+                
+                REPORTES.salida += "ERROR: La funcion " + self.tipoInstruccion + " solo opera sobre tipos Strings o Vectores. \n"
+                mensaje = "La funcion " + self.tipoInstruccion + " solo opera sobre tipos String o Vectores."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                return retorno
+
         
         #Clasificar por tipo de operacion y ejecutar
         if self.tipoInstruccion == Expresion.TOSTRING.value:
@@ -147,6 +163,61 @@ class nativaSinValor(instruccion):
             retorno.valorClase = retorno.clase
             retorno.valorTipo = retorno.tipo    
             return retorno
+        
+        elif self.tipoInstruccion == Expresion.TYPEOF.value:
+            #Ejecutar la funcion. Solo se retorna el tipo del objeto del valor.
+            cadena = ""
+            if expresionEvaluar.tipo == Tipo.STRING.value:
+                cadena = "string"
+            elif expresionEvaluar.tipo == Tipo.NUMBER.value:
+                cadena = "number"
+            elif expresionEvaluar.tipo == Tipo.BOOLEAN.value:
+                cadena = "boolean"
+            elif expresionEvaluar.tipo == Tipo.ANY.value:
+                cadena = "any"
+            else:
+                cadena = expresionEvaluar.tipo
+
+            retorno = valor()
+            retorno.id = expresionEvaluar.id
+            retorno.tipo = Tipo.STRING.value
+            retorno.valor = cadena
+            retorno.clase = Clases.PRIMITIVO.value
+            retorno.string = cadena
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo    
+            return retorno
+
+        elif self.tipoInstruccion == Expresion.LENGTH.value:
+            #Verificar que reciba un string en la entrada y el parametro
+            if expresionEvaluar.tipo != Tipo.STRING.value:
+                if expresionEvaluar.clase != Clases.VECTOR.value:
+                    retorno = valor()
+                    retorno.id = "NULL"
+                    retorno.tipo = Tipo.NULL.value
+                    retorno.valor = "NULL"
+                    retorno.clase = Clases.NULL.value
+                    retorno.string = "NULL"
+                    
+                    REPORTES.salida += "ERROR: La funcion " + self.tipoInstruccion + " solo maneja strings o vectores. \n"
+                    mensaje = "La funcion " + self.tipoInstruccion + " solo maneja strings o vectores."
+                    REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                    return retorno
+
+            #Ejecutar la funcion. El numero de decimales es contenido y el valor que se trabaja es modificar
+            cadena = expresionEvaluar.valor
+            longitud = str(len(cadena))
+
+            retorno = valor()
+            retorno.id = expresionEvaluar.id
+            retorno.tipo = Tipo.NUMBER.value
+            retorno.valor = longitud
+            retorno.clase = Clases.PRIMITIVO.value
+            retorno.string = longitud
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo    
+            return retorno
+        
         
     def c3d(self):
         pass

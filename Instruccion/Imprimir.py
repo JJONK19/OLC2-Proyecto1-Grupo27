@@ -55,8 +55,9 @@ class imprimir(instruccion):
 
             #Añadirlo al string de la consola (Salida)
             REPORTES.salida += expresion.string + " "
-            
+   
         REPORTES.salida += "\n"
+        
 
         #Retornar none porque la instruccion no retorna nada
         return None     

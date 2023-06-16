@@ -147,7 +147,7 @@ class DeclaracionVector(instruccion):
 
             #Convertir todos los objetos a Anys en caso sea de tipo any
             anyLista = []
-            if self.tipo == Tipo.ANY.value:
+            if expresionEvaluar.claseContenido == Tipo.ANY.value:
                 for i in expresionEvaluar.valor:
 
                     if i.clase == Clases.PRIMITIVO.value:
@@ -164,7 +164,7 @@ class DeclaracionVector(instruccion):
         nuevo.id = self.id
         nuevo.linea = self.linea
         nuevo.columna = self.columna
-
+     
         #Enviar al entorno local
         local = SIMBOLOS[-1]
         salida = local.insertarSimbolo(nuevo, REPORTES)

@@ -52,6 +52,7 @@ class Instrucciones(Enum):
     DECLARACION_FUNCION = "DECLARACION_FUNCION"
 
 
+
 class Expresion(Enum):
     '''
         Indica y separa los tipos de expresion que pueden venir en la ejecucion.
@@ -79,7 +80,8 @@ class Expresion(Enum):
     TOUPPERCASE = "TOUPPERCASE"
     SPLIT = "SPLIT"
     CONCAT = "CONCAT"
-    PUSH = "PUSH"
     INCREMENTO = "INCREMENTO"
     DECREMENTO = "DECREEMENTO"
-    
+    PUSH = "PUSH"
+    LENGTH = "LENGTH"
+    TYPEOF = "TYPEOF"

@@ -72,7 +72,10 @@ class Analizador:
         'while': 'RWHILE',
         'for': 'RFOR',
         'of': 'ROF',
-        'function': 'RFUNCTION'
+        'function': 'RFUNCTION',
+        'length' : 'RLENGTH',
+        'push' : 'RPUSH',
+        'typeof' : 'RTYPEOF'
     }
     
     tokens = [
@@ -800,6 +803,12 @@ class Analizador:
         '''
         t[0] = t[1]
     
+    def p_EXPRESION_TYPEOF(t):
+        '''
+            expresion : RTYPEOF PARENI expresion PAREND
+        '''
+        t[0] = nativaSinValor(t[3], Expresion.TYPEOF.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+    
     #Llamada Funcion----------------------------------------------------------------------------------------
     def p_LLAMADAFUNCION(t):
         """
@@ -839,6 +848,8 @@ class Analizador:
                     | touppercase
                     | split
                     | concat
+                    | push 
+                    | length
         '''
         t[0] = t[1]
 
@@ -872,6 +883,12 @@ class Analizador:
         '''
         t[0] = nativaSinValor(None, Expresion.TOUPPERCASE.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
+    def p_NATIVA_LENGTH(t):
+        '''
+            length : RLENGTH PARENI PAREND
+        '''
+        t[0] = nativaSinValor(None, Expresion.LENGTH.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+
     def p_NATIVA_SPLIT(t):
         '''
             split : RSPLIT PARENI expresion PAREND
@@ -884,6 +901,11 @@ class Analizador:
         '''
         t[0] = nativasVector(None, t[3], Expresion.CONCAT.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
+    def p_NATIVA_PUSH(t):
+        '''
+            push : RPUSH PARENI expresion PAREND
+        '''
+        t[0] = nativasVector(None, t[3], Expresion.PUSH.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
 
 
     #Errores Sintaxis--------------------------------------------------------------------------------

@@ -2,6 +2,8 @@ from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
 
+from Dato.Any import any
+
 class DeclaracionAny(instruccion):
     '''
         Declara una variable any. Contiene primitivos y vectores
@@ -79,8 +81,15 @@ class DeclaracionAny(instruccion):
         else:
             #Extraer valores
             expresionEvaluar = self.expresion.analisis(SIMBOLOS, REPORTES)
+
+            #Si es vector convertir a any sus contenidos
+            if expresionEvaluar.clase == Clases.VECTOR.value:
+                expresionEvaluar.valor = DeclaracionAny.convertirAny(expresionEvaluar.valor)
+
+            #Asignar tipos
             expresionEvaluar.tipo = Tipo.ANY.value
             expresionEvaluar.clase = Clases.ANY.value
+
             nuevo = expresionEvaluar
 
         #Añadir el id de la variable a valor
@@ -94,6 +103,23 @@ class DeclaracionAny(instruccion):
             return -1
         else:
             return None
-        
+    
+    @staticmethod
+    def convertirAny(VECTOR):
+        salida = []
+        for i in range(len(VECTOR)):
+            temp = VECTOR[i]
+
+            if temp.clase == Clases.PRIMITIVO.value:
+                salida.append(any(temp.id, Tipo.ANY.value, Clases.ANY.value, temp.valor, temp.tipo, temp.clase, ""))    
+            elif temp.clase == Clases.VECTOR.value:
+                nuevo = DeclaracionAny.convertirAny(temp.valor)
+                salida.append(any(temp.id, Tipo.ANY.value, Clases.ANY.value, nuevo, temp.tipo, temp.clase, temp.claseContenido))
+            elif temp.clase == Clases.STRUCT.value:
+                salida.append(any(temp.id, Tipo.ANY.value, Clases.ANY.value, temp.valor, temp.tipo, temp.clase, "")) 
+            elif temp.clase == Clases.ANY.value:
+                salida.append(temp)
+        return salida
+    
     def c3d(self):
         pass

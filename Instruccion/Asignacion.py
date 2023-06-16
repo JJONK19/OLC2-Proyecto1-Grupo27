@@ -60,7 +60,7 @@ class asignacion(instruccion):
             access.append(i.analisis(SIMBOLOS, REPORTES))
 
         #Extraer valores
-        valorEnviado = expresionEvaluar = self.expresion.analisis(SIMBOLOS, REPORTES)
+        valorEnviado = self.expresion.analisis(SIMBOLOS, REPORTES)
         
         #Asignar ID y valores al valor. Si falla, deberia de retornar -1.
         valorEnviado.id = self.id

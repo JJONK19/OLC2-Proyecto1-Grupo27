@@ -1,5 +1,6 @@
 from Reporte.Reporte import reportes
 from Ejecucion.Entorno import entorno
+from C3D.Codigo import codigo
 
 class AST:
     '''
@@ -23,6 +24,7 @@ class AST:
         '''
         self.reporte = reportes()   #Para los reportes de la interfaz
         self.instrucciones = []      #Lista de Instrucciones
+        self.codigo = codigo()
        
     def añadirError(self, TIPO, DESCRIPCION, LINEA, COLUMNA):
         '''
@@ -60,11 +62,11 @@ class AST:
         '''
         return self.reporte.dot
     
-    def C3D (self):
+    def getC3D(self):
         '''
-            Recibe las instrucciones y retorna un string con el C3D
+            Regresa el codigo del objeto codigo
         '''
-        pass
+        return self.codigo.codigo
 
     def Grafo (self):
         '''
@@ -109,20 +111,26 @@ class AST:
                 self.reporte.salida += "ERROR: No se puede usar break fuera de un ciclo. \n"
                 mensaje = "No se puede usar break fuera de un ciclo."
                 self.reporte.añadirError("Semantico", mensaje, instruccion.linea, instruccion.columna)
-                break
+                
             elif retorno == 0:              #Continue
                 self.reporte.salida += "ERROR: No se puede usar continue fuera de un ciclo. \n"
                 mensaje = "No se puede usar continue fuera de un ciclo."
                 self.reporte.añadirError("Semantico", mensaje, instruccion.linea, instruccion.columna)
-                break
+            
             elif retorno == -1:             #Error
                 self.reporte.salida += "ERROR: La ejecucion acabo por un error en la linea " + str(instruccion.linea) + ". \n"
-                break
+               
             else:  
                 #Si viene un objeto con regreso = true, es porque se llamo un return en el entorno
                 if retorno.regreso:         #Una funcion/metodo retorna el objeto en false para evtar conflictos
                     self.reporte.salida += "ERROR: No se puede usar return fuera de una funcion. \n"
                     mensaje = "No se puede usar return fuera de una funcion."
                     self.reporte.añadirError("Semantico", mensaje, instruccion.linea, instruccion.columna)
-                    break     
+                    
+
+    def C3D (self):
+        '''
+            Recibe las instrucciones y retorna un string con el C3D
+        '''
+        pass
             

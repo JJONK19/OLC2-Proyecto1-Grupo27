@@ -61,11 +61,27 @@ class codigo:
         return codigo
 
     # Insertar ---------------------------------------------------------------------------------------------------------
-    def insertar(self, code):
-            
+    def insertar(self, codigo):
+        '''
+            Inserta el codigo en la variable correspondiente:
+            - 0: Main
+            - 1: Funciones
+            - 2: Nativas
+        '''
+        if self.posicionEscritura == 0:
+            self.main += codigo
+        elif self.posicionEscritura == 1:
+            self.funciones += codigo
+        else:
+            self.nativas += codigo
+
+    #Comentarios -------------------------------------------------------------------------------------------------------
+    def insertarComentario(self, comentario):
+        entrada = "/*" + comentario + "*/\n"
+        self.insertar(entrada)
 
     # Temporales -------------------------------------------------------------------------------------------------------
-    def agregarTemporal(self):
+    def nuevoTemporal(self):
         '''
             Agrega un temporal nuevo a la lista de temporales y retorna el temporal para su uso.
         '''
@@ -83,19 +99,59 @@ class codigo:
         self.labels += 1
         return lbl
 
-    def colocarLabel(self, lbl):
+    def insertarLabel(self, lbl):
         '''
             Agrega un Label al código de salida
         '''
-        self.codigo += f"{lbl}:\n"
-        #codeIn
+        entrada = f"{lbl}:\n"
+        self.insertar(entrada)
+
+    # Expresiones --------------------------------------------------------------------------------
+    def insertarExpresion(self, izq, der, op, res):
+        '''
+            Inserta una expresión al codigo. Recibe la expresión de la izquierda, derecha y el operador,
+            almacenado en la variable resultado (res). Todos son temporales.
+        '''
+        entrada = f'{res} = {izq} {op} {der};\n'
+        self.insertar(entrada)
+
+    def insertarModulo(self, izq, der, res):
+
+        '''
+            Inserta la operación Modulo con la librería Math.
+            Recibe la expresión de la izquierda, derecha y el operador,
+            almacenado en la variable resultado (res). Todos son temporales.
+        '''
+
+        entrada = f'{res} = math.Mod({izq}, {der});\n'
+        self.insertar(entrada)
+
+        #Insertar math a la lista de librerias
+        self.libreriasGO("math")
+
+    def insertarAsignacion(self, res, izq):
+        '''
+            Asigna una expresión a una variable. Recibe la expresión de la izquierda
+            almacenada en la variable resultado (res). Todos son temporales.
+        '''
+        entrada = f'{res} = {izq};\n'
+        self.insertar(entrada)
+
+    # If --------------------------------------------------------------------------------
+    def insertarIf(self, izq, der, lbl, operador):
+        '''
+            Inserta un if en el codigo.
+        '''
+        entrada = f'if {izq} {operador} {der} {{goto {lbl};}}\n'
+        self.insertar(entrada)
 
     # Goto --------------------------------------------------------------------------------
-    def agregarGoto(self, lbl):
+    def insertarGoto(self, lbl):
         '''
-            Crea y retorna un nuevo Label destino para la ejecución
+            Inserta un goto en el codigo. Recibe un label.
         '''
-        self.codigo += f"goto {lbl}:\n"
-        # codeIn
+        entrada = f"goto {lbl}:\n"
+        self.insertar(entrada)
 
 
+    #  --------------------------------------------------------------------------------

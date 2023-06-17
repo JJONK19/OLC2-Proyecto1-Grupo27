@@ -9,4 +9,5 @@ class simbolo:
     def __init__(self, ID, TIPO, CLASE):
         self.id = ID           
         self.tipo = TIPO        
-        self.clase = CLASE      
+        self.clase = CLASE          
+        

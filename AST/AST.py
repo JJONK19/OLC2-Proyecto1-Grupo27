@@ -66,7 +66,7 @@ class AST:
         '''
             Regresa el codigo del objeto codigo
         '''
-        return self.codigo.codigo
+        return self.codigo.generarCodigo()
 
     def Grafo (self):
         '''
@@ -132,5 +132,7 @@ class AST:
         '''
             Recibe las instrucciones y retorna un string con el C3D
         '''
-        pass
-            
+        # Limpiar reportes
+        self.reporte.limpiar()
+
+

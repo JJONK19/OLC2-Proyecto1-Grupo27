@@ -28,14 +28,14 @@ class codigo:
         '''
             Modifica la variable encabezado con el codigo correspondiente.
         '''
-        self.encabezado =  "package main;\n"
+        self.encabezado = "package main\n"
 
         # Declarar los imports
         for libreria in self.librerias:
             self.encabezado += f"import \"{libreria}\"\n"
 
         #Declarar el stack y la pila
-        self.encabezado += "var stack [10000000] float64 \nvar heap [10000000]float64\n"
+        self.encabezado += "var STACK [10000000]float64 \nvar HEAP [10000000]float64\n"
 
         #Declarar los apuntadores
         self.encabezado += "var P, H float64 \n"
@@ -47,7 +47,8 @@ class codigo:
             if posicion == (len(self.listaTemporales) - 1):
                 break
             self.encabezado += ", "
-        self.encabezado += " float64;\n"
+        self.encabezado += " float64\n"
+        return self.encabezado
 
     def generarCodigo(self):
         '''
@@ -57,8 +58,8 @@ class codigo:
             3. Funciones
             4. Nativas
         '''
-        codigo = f'{self.generarEncabezado()}{self.nativas}\n{self.funciones}\nfunc main(){{\n{self.main}\n}}'
-        return codigo
+        self.codigo = f'{self.generarEncabezado()}{self.nativas}\n{self.funciones}\nfunc main(){{\n{self.main}\n}}'
+        return self.codigo
 
     # Insertar ---------------------------------------------------------------------------------------------------------
     def insertar(self, codigo):
@@ -74,11 +75,6 @@ class codigo:
             self.funciones += codigo
         else:
             self.nativas += codigo
-
-    #Comentarios -------------------------------------------------------------------------------------------------------
-    def insertarComentario(self, comentario):
-        entrada = "/*" + comentario + "*/\n"
-        self.insertar(entrada)
 
     # Temporales -------------------------------------------------------------------------------------------------------
     def nuevoTemporal(self):
@@ -99,7 +95,7 @@ class codigo:
         self.labels += 1
         return lbl
 
-    def insertarLabel(self, lbl):
+    def insertar_Label(self, lbl):
         '''
             Agrega un Label al código de salida
         '''
@@ -107,7 +103,7 @@ class codigo:
         self.insertar(entrada)
 
     # Expresiones --------------------------------------------------------------------------------
-    def insertarExpresion(self, izq, der, op, res):
+    def insertar_Expresion(self, izq, der, op, res):
         '''
             Inserta una expresión al codigo. Recibe la expresión de la izquierda, derecha y el operador,
             almacenado en la variable resultado (res). Todos son temporales.
@@ -115,7 +111,7 @@ class codigo:
         entrada = f'{res} = {izq} {op} {der};\n'
         self.insertar(entrada)
 
-    def insertarModulo(self, izq, der, res):
+    def insertar_Modulo(self, izq, der, res):
 
         '''
             Inserta la operación Modulo con la librería Math.
@@ -129,7 +125,7 @@ class codigo:
         #Insertar math a la lista de librerias
         self.libreriasGO("math")
 
-    def insertarAsignacion(self, res, izq):
+    def insertar_Asignacion(self, res, izq):
         '''
             Asigna una expresión a una variable. Recibe la expresión de la izquierda
             almacenada en la variable resultado (res). Todos son temporales.
@@ -138,7 +134,7 @@ class codigo:
         self.insertar(entrada)
 
     # If --------------------------------------------------------------------------------
-    def insertarIf(self, izq, der, lbl, operador):
+    def insertar_If(self, izq, der, lbl, operador):
         '''
             Inserta un if en el codigo.
         '''
@@ -146,12 +142,101 @@ class codigo:
         self.insertar(entrada)
 
     # Goto --------------------------------------------------------------------------------
-    def insertarGoto(self, lbl):
+    def insertar_Goto(self, lbl):
         '''
             Inserta un goto en el codigo. Recibe un label.
         '''
         entrada = f"goto {lbl}:\n"
         self.insertar(entrada)
 
+    # Extras -------------------------------------------------------------------------------------------------------
+    def insertar_Comentario(self, comentario):
+        entrada = "/*" + comentario + "*/\n"
+        self.insertar(entrada)
 
-    #  --------------------------------------------------------------------------------
+    def insertar_NuevaLinea(self):
+        entrada = "fmt.Printf(\"%c\", 10)"
+        self.insertar(entrada)
+
+    # Stack / Heap ------------------------------------------------------------------------------------
+    # H = H + 1
+    def insertar_MoverHeap(self):
+        self.insertar("H = H + 1;")
+
+    # P = P + i
+    def insertar_MoverStack(self, index):
+        self.insertar(f"P = P + {index};")
+
+    # P = P - i
+    def insertar_RegresarStack(self, index):
+        self.insertar(f"P = P - {index};")
+
+    # heap[i]
+    def insertar_ObtenerHeap(self, target, index):
+        self.insertar(f"{target} = HEAP[(int){index}];")
+
+    # heap[i] = val
+    def insertar_SetearHeap(self, index, value):
+        self.insertar(f'HEAP[(int){index}] = {value};')
+
+    # stack[i]
+    def insertar_ObtenerStack(self, target, index):
+        self.insertar(f'{target} = STACK[(int){index}];')
+
+    # heap[i] = val
+    def insertar_SetearStack(self, index, value):
+        self.insertar(f'STACK[(int){index}] = {value};')
+
+    # Funciones --------------------------------------------------------------------------------
+    def insertar_AperturaFuncion(self, nombre):
+        #Mover a la variable de funcioens
+        self.posicionEscritura = 1
+
+        entrada = f'func {nombre}(){{\n'
+        self.insertar(entrada)
+
+    def insertar_CierreFuncion(self):
+        entrada = 'return;\n}\n'
+        self.insertar(entrada)
+
+        # Mover a la variable de main
+        self.posicionEscritura = 0
+
+    def insertar_llamadaFuncion(self, nombre):
+        entrada = f'{nombre}()\n'
+        self.insertar(entrada)
+
+    # Errores ----------------------------------------------------------------------------------
+
+    def insertar_BoundedError(self):
+        #Insertar fmt
+        self.libreriasGO("fmt")
+        entrada = ""
+        entrada += "fmt.Printf(\"%c\", 66)"
+        entrada += "fmt.Printf(\"%c\", 111)"
+        entrada += "fmt.Printf(\"%c\", 117)"
+        entrada += "fmt.Printf(\"%c\", 110)"
+        entrada += "fmt.Printf(\"%c\", 100)"
+        entrada += "fmt.Printf(\"%c\", 115)"
+        entrada += "fmt.Printf(\"%c\", 69)"
+        entrada += "fmt.Printf(\"%c\", 114)"
+        entrada += "fmt.Printf(\"%c\", 114)"
+        entrada += "fmt.Printf(\"%c\", 111)"
+        entrada += "fmt.Printf(\"%c\", 114)"
+        self.insertar(entrada)
+
+    def insertar_MathError(self):
+        # Insertar fmt
+        self.libreriasGO("fmt")
+
+        entrada = ""
+        entrada += "Printf(\"%c\", 77)"
+        entrada += "Printf(\"%c\", 97)"
+        entrada += "Printf(\"%c\", 116)"
+        entrada += "Printf(\"%c\", 104)"
+        entrada += "Printf(\"%c\", 69)"
+        entrada += "Printf(\"%c\", 114)"
+        entrada += "Printf(\"%c\", 114)"
+        entrada += "Printf(\"%c\", 111)"
+        entrada += "Printf(\"%c\", 114)"
+        self.insertar(entrada)

@@ -63,6 +63,9 @@ class imprimir(instruccion):
         return None     
 
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
+        #Añadir la libreria
+        CODIGO.libreriasGO("fmt")
+
         #Crear el temporal del retorno
         for i in self.expresion:
             expresion = i.c3d(SIMBOLOS, REPORTES, CODIGO)

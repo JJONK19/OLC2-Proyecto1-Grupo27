@@ -76,6 +76,6 @@ class accesos(instruccion):
             
         return nuevo
     
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 

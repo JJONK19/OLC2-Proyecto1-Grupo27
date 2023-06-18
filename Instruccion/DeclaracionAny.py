@@ -121,5 +121,5 @@ class DeclaracionAny(instruccion):
                 salida.append(temp)
         return salida
     
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass

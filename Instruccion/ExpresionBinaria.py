@@ -1,6 +1,7 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
+from C3D.Valor3D import valor3D
 
 class expresionBinaria(instruccion):
     '''
@@ -746,5 +747,252 @@ class expresionBinaria(instruccion):
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                 return retorno
         
-    def c3d(self):
-        pass
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
+        #Obtener el valor de las expresiones
+        expresionIzquierda = self.izquierda.c3d(SIMBOLOS, REPORTES, CODIGO)
+        expresionDerecha = self.derecha.c3d(SIMBOLOS, REPORTES, CODIGO)
+
+        #Comprobar que sea primitivo
+        if expresionIzquierda.clase != Clases.PRIMITIVO.value:
+            REPORTES.salida += "ERROR: El operador izquierdo no es de tipo Primitivo. \n"
+            mensaje = "El operador izquierdo no es de tipo Primitivo."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        
+        if expresionDerecha.clase != Clases.PRIMITIVO.value:
+            REPORTES.salida += "ERROR: El operador derecho no es de tipo Primitivo. \n"
+            mensaje = "El operador derecho no es de tipo Primitivo."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        #Separacion de instruccion
+        #Aritmeticas-------------------------------------------------------------------------------------
+        if self.tipoOperacion == Expresion.SUMA.value:
+            #Evaluar el caso en que ambos sean number
+            CODIGO.insertar_Comentario("////////// INICIA SUMA //////////")
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal y añadirle la suma de los temporales
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Expresion(tempResultado, expresionIzquierda.valor, "+", expresionDerecha.valor)
+
+                return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+    
+            elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
+                #Crear el temporal y guardar la posicion del heap
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "H")
+
+                #Ciclo de variable izquierda. Almacen guarda el ascii del caracter.
+                #Concatena las variables en una nueva posicion del heap.
+                labelCiclo = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+                tempAlmacen = CODIGO.nuevoTemporal()
+
+                CODIGO.insertar_Label(labelCiclo)
+                CODIGO.insertar_ObtenerHeap(tempAlmacen, expresionIzquierda.valor)
+                CODIGO.insertar_If(tempAlmacen, "==", "-1", labelSalida)
+                CODIGO.insertar_SetearHeap('H', tempAlmacen)   
+                CODIGO.insertar_MoverHeap()
+                CODIGO.insertar_Expresion(expresionIzquierda.valor, expresionIzquierda.valor, "+", "1")
+                CODIGO.insertar_Goto(labelCiclo)
+                CODIGO.insertar_Label(labelSalida)
+
+                #Ciclo de variable derecha. Almacen guarda el ascii del caracter.
+                #Concatena las variables en una nueva posicion del heap.
+                labelCiclo = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+                tempAlmacen = CODIGO.nuevoTemporal()
+
+                CODIGO.insertar_Label(labelCiclo)
+                CODIGO.insertar_ObtenerHeap(tempAlmacen, expresionDerecha.valor)
+                CODIGO.insertar_If(tempAlmacen, "==", "-1", labelSalida)
+                CODIGO.insertar_SetearHeap('H', tempAlmacen)   
+                CODIGO.insertar_MoverHeap()
+                CODIGO.insertar_Expresion(expresionDerecha.valor, expresionDerecha.valor, "+", "1")
+                CODIGO.insertar_Goto(labelCiclo)
+                CODIGO.insertar_Label(labelSalida)
+
+                #Guardar el fin de la cadena y mover el heap a una posicion vacia
+                CODIGO.insertar_SetearHeap('H', '-1')            
+                CODIGO.insertar_MoverHeap()
+
+                return valor3D(tempResultado, True, Tipo.STRING.value, Clases.PRIMITIVO.value)
+                
+            else:
+                REPORTES.salida += "ERROR: La operacion suma solo recibe strings o numbers (un solo tipo a la vez). \n"
+                mensaje = "La operacion suma solo recibe strings o numbers (un solo tipo a la vez)."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        elif self.tipoOperacion == Expresion.RESTA.value:
+            CODIGO.insertar_Comentario("////////// INICIA RESTA //////////")
+            #Evaluar el caso en que ambos sean number
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal y añadirle la resta de los temporales
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Expresion(tempResultado, expresionIzquierda.valor, "-", expresionDerecha.valor)
+
+                return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+    
+            else:
+                REPORTES.salida += "ERROR: La operacion resta solo recibe numbers. \n"
+                mensaje = "La operacion resta solo recibe numbers."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        elif self.tipoOperacion == Expresion.MULTIPLICACION.value:
+            CODIGO.insertar_Comentario("////////// INICIA MULTIPLICACION //////////")
+            #Evaluar el caso en que ambos sean number
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal y añadirle la multiplicacion de los temporales
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Expresion(tempResultado, expresionIzquierda.valor, "*", expresionDerecha.valor)
+
+                return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+    
+            else:
+                REPORTES.salida += "ERROR: La operacion multiplicación solo recibe numbers. \n"
+                mensaje = "La operacion multiplicación solo recibe numbers."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        elif self.tipoOperacion == Expresion.DIVISION.value:
+            CODIGO.insertar_Comentario("////////// INICIA DIVISION //////////")
+            #Evaluar el caso en que ambos sean number
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal y añadirle la division de los temporales
+                tempResultado = CODIGO.nuevoTemporal()
+
+                #Validar division entre 0
+                #---Crear label de error y de salida
+                labelSalida = CODIGO.nuevoLabel()
+                labelError = CODIGO.nuevoLabel()
+
+                CODIGO.insertar_If(expresionDerecha.valor , "!=", "0", labelSalida)
+                CODIGO.insertar_MathError()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelError)
+                
+                #--Ejecutar division
+                CODIGO.insertar_Label(labelSalida)
+                CODIGO.insertar_Expresion(tempResultado, expresionIzquierda.valor, "/", expresionDerecha.valor)
+
+                #--Label del error
+                CODIGO.insertar_Label(labelError)
+                return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+
+            else:
+                REPORTES.salida += "ERROR: La operacion división solo recibe numbers. \n"
+                mensaje = "La operacion división solo recibe numbers."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        elif self.tipoOperacion == Expresion.POT.value:
+            #Evaluar el caso en que ambos sean number
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                CODIGO.insertar_Comentario("////////// INICIA POTENCIA //////////")
+                #Crear el temporal y añadirle como valor 0. Resulatdo almacena el resultado en la iteracion.
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #Ciclo para el for. Se multiplica el valor izquierdo el numero de veces del derecho.
+                #---Crear label de error y de salida
+                labelCicloMayor = CODIGO.nuevoLabel()
+                labelCicloMenor = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #--Comprobar si es mayor o menor o cero
+                CODIGO.insertar_If(expresionDerecha.valor, "==", "0", labelSalida)
+                CODIGO.insertar_If(expresionDerecha.valor, ">", "0", labelCicloMayor)
+                CODIGO.insertar_If(expresionDerecha.valor, "<", "0", labelCicloMenor)
+
+                #--Iniciar Ciclo Mayor. Se da con exponente positivo.
+                CODIGO.insertar_Label(labelCicloMayor)
+                CODIGO.insertar_If(expresionDerecha.valor, "==", "0", labelSalida)
+                CODIGO.insertar_Expresion(tempResultado, tempResultado, "*", expresionIzquierda.valor)
+                CODIGO.insertar_Expresion(expresionDerecha.valor, expresionDerecha.valor, "-", "1")
+                CODIGO.insertar_Goto(labelCicloMayor)
+
+                #--Iniciar Ciclo Menor. Se da con exponente negativo.
+                CODIGO.insertar_Label(labelCicloMenor)
+                CODIGO.insertar_If(expresionDerecha.valor, "==", "0", labelSalida)
+                CODIGO.insertar_Expresion(tempResultado, tempResultado, "/", expresionIzquierda.valor)
+                CODIGO.insertar_Expresion(expresionDerecha.valor, expresionDerecha.valor, "+", "1")
+                CODIGO.insertar_Goto(labelCicloMenor)
+
+                #--Salida de la operacion
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+    
+            else:
+                REPORTES.salida += "ERROR: La operacion potencia solo recibe numbers. \n"
+                mensaje = "La operacion potencia solo recibe numbers."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        elif self.tipoOperacion == Expresion.MOD.value:
+            CODIGO.insertar_Comentario("////////// INICIA MODULO //////////")
+            #Evaluar el caso en que ambos sean number
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal y añadirle la division de los temporales
+                tempResultado = CODIGO.nuevoTemporal()
+
+                #Validar division entre 0
+                #---Crear label de error y de salida
+                labelSalida = CODIGO.nuevoLabel()
+                labelError = CODIGO.nuevoLabel()
+
+                CODIGO.insertar_If(expresionDerecha.valor , "!=", "0", labelSalida)
+                CODIGO.insertar_MathError()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelError)
+                
+                #--Ejecutar MODULO. Se calcula a pasito restando al dividendo el cociente por el divisor
+                CODIGO.insertar_Label(labelSalida)
+                tempDivision = CODIGO.nuevoTemporal()
+                tempMultiplicacion = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Expresion(tempDivision, expresionIzquierda.valor, "/", expresionDerecha.valor) #t1 = izq /der
+                CODIGO.insertar_Expresion(tempMultiplicacion, tempDivision, "*", expresionDerecha.valor)        #t2 = t1 * der
+                CODIGO.insertar_Expresion(tempResultado, expresionIzquierda.valor, "-", tempMultiplicacion)     #res = izq - t2
+
+                #--Label del error
+                CODIGO.insertar_Label(labelError)
+                return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+
+            else:
+                REPORTES.salida += "ERROR: La operacion división solo recibe numbers. \n"
+                mensaje = "La operacion división solo recibe numbers."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+            
+        #Relacionales-------------------------------------------------------------------------------------
+        
+        
+            
+
+            

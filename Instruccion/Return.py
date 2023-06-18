@@ -59,5 +59,5 @@ class sentenciaReturn(instruccion):
             retorno.regreso = True
             return retorno
             
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass

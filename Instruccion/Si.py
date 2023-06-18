@@ -201,6 +201,6 @@ class si(instruccion):
         SIMBOLOS.pop()
         return None
             
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 

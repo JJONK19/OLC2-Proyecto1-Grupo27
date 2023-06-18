@@ -32,7 +32,7 @@ class sentenciaBreak(instruccion):
         #Cuando una instruccion retorna 1, se interpreta como un break
         return 1
     
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 
 

@@ -80,6 +80,6 @@ class DefinicionAtributo(instruccion):
         #Crear atributo con los valores y retornar
         return atributo(self.id, self.tipo, self.clase)
         
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 

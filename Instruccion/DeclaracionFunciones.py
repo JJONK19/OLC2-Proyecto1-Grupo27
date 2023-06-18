@@ -89,6 +89,6 @@ class declaracionFuncion(instruccion):
         else:
             return None
 
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 

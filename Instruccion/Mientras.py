@@ -134,6 +134,6 @@ class sentenciaWhile(instruccion):
             #Al terminar de ejecutar, si no ha retornado se asume que cumplio las instrucciones. SOlo se saca el entorno.
             SIMBOLOS.pop()
             
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 

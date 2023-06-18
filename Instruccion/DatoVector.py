@@ -105,5 +105,5 @@ class datoVector(instruccion):
         retorno.valorTipo = retorno.tipo    
         return retorno     
         
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass

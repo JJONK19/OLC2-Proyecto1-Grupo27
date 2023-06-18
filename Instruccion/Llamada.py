@@ -60,6 +60,6 @@ class llamada(instruccion):
         salida = entorno.getSimbolo(nuevo, SIMBOLOS, REPORTES) 
         return salida
     
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 

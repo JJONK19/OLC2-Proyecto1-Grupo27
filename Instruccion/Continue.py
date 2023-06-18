@@ -32,5 +32,5 @@ class sentenciaContinue(instruccion):
         #Cuando una instruccion retorna 0, se interpreta como un continue
         return 0
     
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass

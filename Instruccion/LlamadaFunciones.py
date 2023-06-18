@@ -221,6 +221,6 @@ class llamadaFuncion(instruccion):
         retorno.string = "NULL"
         return retorno
 
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 

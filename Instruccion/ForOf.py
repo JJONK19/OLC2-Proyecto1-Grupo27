@@ -186,6 +186,6 @@ class cicloForOf(instruccion):
         #Sacar el for Global al terminar
         SIMBOLOS.pop()
 
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 

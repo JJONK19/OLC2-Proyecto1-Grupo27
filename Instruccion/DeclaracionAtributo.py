@@ -88,6 +88,6 @@ class DeclaracionAtributo(instruccion):
         elif expresionContenido.clase == Clases.ANY.value:
             return any(expresionContenido.id, expresionContenido.tipo, expresionContenido.clase, expresionContenido.valor, expresionContenido.valorTipo, expresionContenido.valorClase, expresionContenido.claseContenido)
 
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 

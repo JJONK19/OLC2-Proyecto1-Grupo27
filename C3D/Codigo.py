@@ -125,20 +125,6 @@ class codigo:
         entrada = f'{res} = {izq} {op} {der}\n'
         self.insertar(entrada)
 
-    def insertar_Modulo(self, res, izq, der):
-
-        '''
-            Inserta la operación Modulo con la librería Math.
-            Recibe la expresión de la izquierda, derecha y el operador,
-            almacenado en la variable resultado (res). Todos son temporales.
-        '''
-
-        entrada = f'{res} = math.Mod({izq}, {der})\n'
-        self.insertar(entrada)
-
-        #Insertar math a la lista de librerias
-        self.libreriasGO("math")
-
     def insertar_Asignacion(self, res, izq):
         '''
             Asigna una expresión a una variable. Recibe la expresión de la izquierda
@@ -230,17 +216,18 @@ class codigo:
         #Insertar fmt
         self.libreriasGO("fmt")
         entrada = ""
-        entrada += "fmt.Printf(\"%c\", 66)"
-        entrada += "fmt.Printf(\"%c\", 111)"
-        entrada += "fmt.Printf(\"%c\", 117)"
-        entrada += "fmt.Printf(\"%c\", 110)"
-        entrada += "fmt.Printf(\"%c\", 100)"
-        entrada += "fmt.Printf(\"%c\", 115)"
-        entrada += "fmt.Printf(\"%c\", 69)"
-        entrada += "fmt.Printf(\"%c\", 114)"
-        entrada += "fmt.Printf(\"%c\", 114)"
-        entrada += "fmt.Printf(\"%c\", 111)"
-        entrada += "fmt.Printf(\"%c\", 114)"
+        entrada += "fmt.Printf(\"%c\", 66)\n"
+        entrada += "fmt.Printf(\"%c\", 111)\n"
+        entrada += "fmt.Printf(\"%c\", 117)\n"
+        entrada += "fmt.Printf(\"%c\", 110)\n"
+        entrada += "fmt.Printf(\"%c\", 100)\n"
+        entrada += "fmt.Printf(\"%c\", 115)\n"
+        entrada += "fmt.Printf(\"%c\", 69)\n"
+        entrada += "fmt.Printf(\"%c\", 114)\n"
+        entrada += "fmt.Printf(\"%c\", 114)\n"
+        entrada += "fmt.Printf(\"%c\", 111)\n"
+        entrada += "fmt.Printf(\"%c\", 114)\n"
+        entrada += "fmt.Printf(\"%c\", 10)\n"     #Salto de linea despues del print
         self.insertar(entrada)
 
     def insertar_MathError(self):
@@ -248,13 +235,14 @@ class codigo:
         self.libreriasGO("fmt")
 
         entrada = ""
-        entrada += "Printf(\"%c\", 77)"
-        entrada += "Printf(\"%c\", 97)"
-        entrada += "Printf(\"%c\", 116)"
-        entrada += "Printf(\"%c\", 104)"
-        entrada += "Printf(\"%c\", 69)"
-        entrada += "Printf(\"%c\", 114)"
-        entrada += "Printf(\"%c\", 114)"
-        entrada += "Printf(\"%c\", 111)"
-        entrada += "Printf(\"%c\", 114)"
+        entrada += "fmt.Printf(\"%c\", 77)\n"
+        entrada += "fmt.Printf(\"%c\", 97)\n"
+        entrada += "fmt.Printf(\"%c\", 116)\n"
+        entrada += "fmt.Printf(\"%c\", 104)\n"
+        entrada += "fmt.Printf(\"%c\", 69)\n"
+        entrada += "fmt.Printf(\"%c\", 114)\n"
+        entrada += "fmt.Printf(\"%c\", 114)\n"
+        entrada += "fmt.Printf(\"%c\", 111)\n"
+        entrada += "fmt.Printf(\"%c\", 114)\n"
+        entrada += "fmt.Printf(\"%c\", 10)\n"     #Salto de linea despues del print
         self.insertar(entrada)

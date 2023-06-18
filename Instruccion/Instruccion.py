@@ -22,5 +22,11 @@ class instruccion(ABC):
         pass
 
     @abstractmethod
-    def c3d(self):
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
+        '''
+            Se encarga de ejecutar la instruccion.
+            - Simbolos: Lista con los entornos de la ejecucion.
+            - Reportes: Almacena un resumen de la ejecucion. 
+            - Codigo: Generador del C3D
+        '''
         pass

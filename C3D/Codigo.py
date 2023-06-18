@@ -14,6 +14,20 @@ class codigo:
         self.listaTemporales = []           #Almacena los temporales que se van a declarar en el archivo
         self.librerias = []                 #Nombre de las librerias de GO que se van a imprimir en el archivo
         self.posicionEscritura = 0          #0 esta en main, 1 esta en funciones, 2 esta en nativas
+
+    # Limpiar ----------------------------------------------------------------------------------
+    def limpiar(self):
+        self.codigo = ""                    #Contenedor del C3D
+        self.encabezado = ""                #Codigo con el encabezado del archivo
+        self.main = ""                      #Codigo del entorno global (main)
+        self.funciones = ""                 #Codigo con las definiciones de la funcion
+        self.nativas = ""                   #Codigo con las definiciones de las nativas
+        self.labels = 1                     #Maneja el número de labels en la ejecucion
+        self.temporales = 1                 #Maneja el numero de temporales en la ejecucion
+        self.listaTemporales = []           #Almacena los temporales que se van a declarar en el archivo
+        self.librerias = []                 #Nombre de las librerias de GO que se van a imprimir en el archivo
+        self.posicionEscritura = 0          #0 esta en main, 1 esta en funciones, 2 esta en nativas
+
     #Encabezado --------------------------------------------------------------------------------------------------------
 
     def libreriasGO(self, LIBRERIA):
@@ -91,7 +105,7 @@ class codigo:
         '''
             Crea y retorna un nuevo Label destino para la ejecución
         '''
-        lbl = f't{self.labels}'
+        lbl = f'L{self.labels}'
         self.labels += 1
         return lbl
 
@@ -103,15 +117,15 @@ class codigo:
         self.insertar(entrada)
 
     # Expresiones --------------------------------------------------------------------------------
-    def insertar_Expresion(self, izq, der, op, res):
+    def insertar_Expresion(self, res, izq, op, der):
         '''
             Inserta una expresión al codigo. Recibe la expresión de la izquierda, derecha y el operador,
             almacenado en la variable resultado (res). Todos son temporales.
         '''
-        entrada = f'{res} = {izq} {op} {der};\n'
+        entrada = f'{res} = {izq} {op} {der}\n'
         self.insertar(entrada)
 
-    def insertar_Modulo(self, izq, der, res):
+    def insertar_Modulo(self, res, izq, der):
 
         '''
             Inserta la operación Modulo con la librería Math.
@@ -119,7 +133,7 @@ class codigo:
             almacenado en la variable resultado (res). Todos son temporales.
         '''
 
-        entrada = f'{res} = math.Mod({izq}, {der});\n'
+        entrada = f'{res} = math.Mod({izq}, {der})\n'
         self.insertar(entrada)
 
         #Insertar math a la lista de librerias
@@ -130,15 +144,15 @@ class codigo:
             Asigna una expresión a una variable. Recibe la expresión de la izquierda
             almacenada en la variable resultado (res). Todos son temporales.
         '''
-        entrada = f'{res} = {izq};\n'
+        entrada = f'{res} = {izq}\n'
         self.insertar(entrada)
 
     # If --------------------------------------------------------------------------------
-    def insertar_If(self, izq, der, lbl, operador):
+    def insertar_If(self, izq, operador, der, lbl):
         '''
             Inserta un if en el codigo.
         '''
-        entrada = f'if {izq} {operador} {der} {{goto {lbl};}}\n'
+        entrada = f'if {izq} {operador} {der} {{goto {lbl}}}\n'
         self.insertar(entrada)
 
     # Goto --------------------------------------------------------------------------------
@@ -146,7 +160,7 @@ class codigo:
         '''
             Inserta un goto en el codigo. Recibe un label.
         '''
-        entrada = f"goto {lbl}:\n"
+        entrada = f"goto {lbl}\n"
         self.insertar(entrada)
 
     # Extras -------------------------------------------------------------------------------------------------------
@@ -155,37 +169,41 @@ class codigo:
         self.insertar(entrada)
 
     def insertar_NuevaLinea(self):
-        entrada = "fmt.Printf(\"%c\", 10)"
+        entrada = "fmt.Printf(\"%c\", 10)\n"
         self.insertar(entrada)
 
+    def insertar_Print(self, caracter, valor, casteo = ""):
+        entrada = f"fmt.Printf(\"%{caracter}\", {casteo}({valor}))\n"
+        self.insertar(entrada)
+    
     # Stack / Heap ------------------------------------------------------------------------------------
     # H = H + 1
     def insertar_MoverHeap(self):
-        self.insertar("H = H + 1;")
+        self.insertar("H = H + 1\n")
 
     # P = P + i
     def insertar_MoverStack(self, index):
-        self.insertar(f"P = P + {index};")
+        self.insertar(f"P = P + {index}\n")
 
     # P = P - i
     def insertar_RegresarStack(self, index):
-        self.insertar(f"P = P - {index};")
+        self.insertar(f"P = P - {index}\n")
 
     # heap[i]
     def insertar_ObtenerHeap(self, target, index):
-        self.insertar(f"{target} = HEAP[(int){index}];")
+        self.insertar(f"{target} = HEAP[int({index})]\n")
 
     # heap[i] = val
     def insertar_SetearHeap(self, index, value):
-        self.insertar(f'HEAP[(int){index}] = {value};')
+        self.insertar(f'HEAP[int({index})] = {value}\n')
 
     # stack[i]
     def insertar_ObtenerStack(self, target, index):
-        self.insertar(f'{target} = STACK[(int){index}];')
+        self.insertar(f'{target} = STACK[int({index})]\n')
 
     # heap[i] = val
     def insertar_SetearStack(self, index, value):
-        self.insertar(f'STACK[(int){index}] = {value};')
+        self.insertar(f'STACK[int({index})] = {value}\n')
 
     # Funciones --------------------------------------------------------------------------------
     def insertar_AperturaFuncion(self, nombre):
@@ -196,7 +214,7 @@ class codigo:
         self.insertar(entrada)
 
     def insertar_CierreFuncion(self):
-        entrada = 'return;\n}\n'
+        entrada = 'return\n}\n'
         self.insertar(entrada)
 
         # Mover a la variable de main

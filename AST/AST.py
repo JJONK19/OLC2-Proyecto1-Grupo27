@@ -1,6 +1,9 @@
 from Reporte.Reporte import reportes
 from Ejecucion.Entorno import entorno
 from C3D.Codigo import codigo
+from C3D.Entorno3D import entorno3D
+from C3D.Valor3D import valor3D
+from Tipos.Tipos import Tipo
 
 class AST:
     '''
@@ -66,7 +69,7 @@ class AST:
         '''
             Regresa el codigo del objeto codigo
         '''
-        return self.codigo.generarCodigo()
+        pass
 
     def Grafo (self):
         '''
@@ -132,7 +135,30 @@ class AST:
         '''
             Recibe las instrucciones y retorna un string con el C3D
         '''
-        # Limpiar reportes
+        #Limpiar reportes
         self.reporte.limpiar()
+        self.codigo.limpiar()
+        
+        #Se crea la lista de entornos y se añade el entorno global
+        entornos = []
+        entornos.append(entorno3D("Global"))  
+
+        #Se recorre y ejecutan las instrucciones
+        for instruccion in self.instrucciones:
+            retorno = instruccion.c3d(entornos, self.reporte, self.codigo)
+
+            #Verificar retornos
+            if isinstance(retorno, valor3D):
+
+                #Si es boolean se insertan las de salida
+                if retorno.tipo == Tipo.BOOLEAN.value:
+                    #Declarar etiquetas
+                    for etiqueta in retorno.trueLabel:
+                        self.codigo.insertar_Label(etiqueta)
+
+                    for etiqueta in retorno.falseLabel:
+                        self.codigo.insertar_Label(etiqueta)
+
+        return self.codigo.generarCodigo()
 
 

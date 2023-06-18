@@ -62,6 +62,77 @@ class imprimir(instruccion):
         #Retornar none porque la instruccion no retorna nada
         return None     
 
-    def c3d(self):
-        pass
+    def c3d(self, SIMBOLOS, REPORTES, CODIGO):
+        #Crear el temporal del retorno
+        for i in self.expresion:
+            expresion = i.c3d(SIMBOLOS, REPORTES, CODIGO)
+
+            #Clasificar por tipo
+            if expresion.tipo == Tipo.NUMBER.value and expresion.clase == Clases.PRIMITIVO.value:
+                #Comentario
+                CODIGO.insertar_Comentario("////////// IMPRIMIR NUMBER //////////")
+                #Asignar el numero al temporal
+                CODIGO.insertar_Print("f", expresion.valor)
+                CODIGO.insertar_Print("c", 32, "int")       #Espacio en blanco
+            
+            elif expresion.tipo == Tipo.STRING.value and expresion.clase == Clases.PRIMITIVO.value:
+                #Comentario
+                CODIGO.insertar_Comentario("////////// IMPRIMIR STRING //////////")
+                
+                #Expresion retorna la posicion en el heap en un temporal
+                #Crear temporal contenedor, label del ciclo y salida
+                labelCiclo = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+                tempComparar = CODIGO.nuevoTemporal()
+
+                #Comenzar ciclo 
+                CODIGO.insertar_Label(labelCiclo)
+                CODIGO.insertar_ObtenerHeap(tempComparar, expresion.valor)
+                CODIGO.insertar_If(tempComparar, "==", "-1", labelSalida)
+                CODIGO.insertar_Print("c", tempComparar, "int")
+                CODIGO.insertar_Expresion(expresion.valor, expresion.valor, "+", "1")
+                CODIGO.insertar_Goto(labelCiclo)
+                CODIGO.insertar_Label(labelSalida)
+                CODIGO.insertar_Print("c", 32, "int")       #Espacio en blanco
+                
+            elif expresion.tipo == Tipo.BOOLEAN.value and expresion.clase == Clases.PRIMITIVO.value:
+                #Imprimir primero las etiquetas de salida que jala el boolean
+                for etiqueta in expresion.trueLabel:
+                    CODIGO.insertar_Label(etiqueta)
+
+                for etiqueta in expresion.falseLabel:
+                    CODIGO.insertar_Label(etiqueta)
+
+                #Comentario
+                CODIGO.insertar_Comentario("////////// IMPRIMIR BOOLEAN //////////")
+
+                #Labels del if
+                labelTrue = CODIGO.nuevoLabel()
+                labelFalse = CODIGO.nuevoLabel()
+                
+                #If
+                CODIGO.insertar_If(expresion.valor, "==", "1", labelTrue)
+                CODIGO.insertar_Goto(labelFalse)
+                
+                #Imprimir true
+                CODIGO.insertar_Label(labelTrue)
+                CODIGO.insertar_Print("c", 116, "int")
+                CODIGO.insertar_Print("c", 114, "int")
+                CODIGO.insertar_Print("c", 117, "int")
+                CODIGO.insertar_Print("c", 101, "int")
+                CODIGO.insertar_Print("c", 32, "int")       #Espacio en blanco
+                
+                #Imprimir false
+                CODIGO.insertar_Label(labelFalse)
+                CODIGO.insertar_Print("c", 102, "int")
+                CODIGO.insertar_Print("c", 97, "int")
+                CODIGO.insertar_Print("c", 108, "int")
+                CODIGO.insertar_Print("c", 115, "int")
+                CODIGO.insertar_Print("c", 101, "int")
+                CODIGO.insertar_Print("c", 32, "int")      #Espacio en blanco
+        
+        CODIGO.insertar_Print("c", 10, "int")       #Salto de linea despues del print
+                
+                
+        
 

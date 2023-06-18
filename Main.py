@@ -59,7 +59,6 @@ class ventana (QtWidgets.QMainWindow):
         #--- Analizar cadena
         Interprete = Analizador()
         Salida = Interprete.analizar(self.ENTRADA)
-
         #Errores
         for i in Salida.getErrores(): 
             print(i.descripcion)
@@ -80,7 +79,7 @@ class ventana (QtWidgets.QMainWindow):
         print("AST//////////////////////////////////////////////////")
 
         print("C3D//////////////////////////////////////////////////")
-        print(Salida.getC3D())
+        print(Salida.C3D())
         print("C3D//////////////////////////////////////////////////")
 
 

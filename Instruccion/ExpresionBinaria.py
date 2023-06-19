@@ -1587,6 +1587,76 @@ class expresionBinaria(instruccion):
                 CODIGO.insertar_Asignacion(temporal, "0")
                 return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
+        # Logicas -----------------------------------------------------------------------------------
+        elif self.tipoOperacion == Expresion.AND.value:
+            #Evaluar el caso en que ambos sean boolean
+            if expresionIzquierda.tipo == Tipo.BOOLEAN.value and expresionDerecha.tipo == Tipo.BOOLEAN.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+
+                #Declarar lables de entrada y salida
+                labelVerdadero = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #---Evaluar
+                CODIGO.insertar_If(expresionIzquierda.valor, "==", "0", labelSalida)
+                CODIGO.insertar_If(expresionDerecha.valor, "==", "0", labelSalida)
+                CODIGO.insertar_Goto(labelVerdadero)
+
+                #--Es verdaddera la comparacion
+                CODIGO.insertar_Label(labelVerdadero)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #-- La condicion es falsa o acabo la verdadera
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+                
+            else:
+                REPORTES.salida += "ERROR: La operacion and solo recibe booleanos. \n"
+                mensaje = "La operacion and que solo recibe booleanos."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: La operacion and solo recibe booleanos.")
+
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+            
+        elif self.tipoOperacion == Expresion.OR.value:
+            #Evaluar el caso en que ambos sean boolean
+            if expresionIzquierda.tipo == Tipo.BOOLEAN.value and expresionDerecha.tipo == Tipo.BOOLEAN.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+
+                #Declarar lables de entrada y salida
+                labelVerdadero = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #---Evaluar
+                CODIGO.insertar_If(expresionIzquierda.valor, "==", "1", labelVerdadero)
+                CODIGO.insertar_If(expresionDerecha.valor, "==", "1", labelVerdadero)
+                CODIGO.insertar_Goto(labelSalida)
+
+                #--Es verdaddera la comparacion
+                CODIGO.insertar_Label(labelVerdadero)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #-- La condicion es falsa o acabo la verdadera
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+                
+            else:
+                REPORTES.salida += "ERROR: La operacion or solo recibe booleanos. \n"
+                mensaje = "La operacion or que solo recibe booleanos."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: La operacion or solo recibe booleanos.")
+
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
         
 
         

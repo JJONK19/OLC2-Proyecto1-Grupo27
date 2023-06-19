@@ -147,18 +147,6 @@ class AST:
         for instruccion in self.instrucciones:
             retorno = instruccion.c3d(entornos, self.reporte, self.codigo)
 
-            #Verificar retornos
-            if isinstance(retorno, valor3D):
-
-                #Si es boolean se insertan las de salida
-                if retorno.tipo == Tipo.BOOLEAN.value:
-                    #Declarar etiquetas
-                    for etiqueta in retorno.trueLabel:
-                        self.codigo.insertar_Label(etiqueta)
-
-                    for etiqueta in retorno.falseLabel:
-                        self.codigo.insertar_Label(etiqueta)
-
         return self.codigo.generarCodigo()
 
 

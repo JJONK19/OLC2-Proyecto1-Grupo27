@@ -660,7 +660,7 @@ class expresionBinaria(instruccion):
             
             elif expresionIzquierda.tipo == Tipo.BOOLEAN.value and expresionDerecha.tipo == Tipo.BOOLEAN.value:
                 #Evaluar los strings
-                booleano = expresionIzquierda.valor == expresionDerecha.valor 
+                booleano = expresionIzquierda.valor != expresionDerecha.valor 
                 
                 #Retorno
                 retorno = valor()
@@ -754,6 +754,7 @@ class expresionBinaria(instruccion):
 
         #Comprobar que sea primitivo
         if expresionIzquierda.clase != Clases.PRIMITIVO.value:
+            CODIGO.insertar_Comentario("ERROR: El operador izquierdo no es de tipo Primitivo")
             REPORTES.salida += "ERROR: El operador izquierdo no es de tipo Primitivo. \n"
             mensaje = "El operador izquierdo no es de tipo Primitivo."
             REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
@@ -764,6 +765,7 @@ class expresionBinaria(instruccion):
         
         
         if expresionDerecha.clase != Clases.PRIMITIVO.value:
+            CODIGO.insertar_Comentario("ERROR: El operador derecho no es de tipo Primitivo.")
             REPORTES.salida += "ERROR: El operador derecho no es de tipo Primitivo. \n"
             mensaje = "El operador derecho no es de tipo Primitivo."
             REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
@@ -826,6 +828,7 @@ class expresionBinaria(instruccion):
                 return valor3D(tempResultado, True, Tipo.STRING.value, Clases.PRIMITIVO.value)
                 
             else:
+                CODIGO.insertar_Comentario("ERROR: La operacion suma solo recibe strings o numbers (un solo tipo a la vez). ")
                 REPORTES.salida += "ERROR: La operacion suma solo recibe strings o numbers (un solo tipo a la vez). \n"
                 mensaje = "La operacion suma solo recibe strings o numbers (un solo tipo a la vez)."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
@@ -845,6 +848,7 @@ class expresionBinaria(instruccion):
                 return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
     
             else:
+                CODIGO.insertar_Comentario("ERROR: La operacion resta solo recibe numbers.")
                 REPORTES.salida += "ERROR: La operacion resta solo recibe numbers. \n"
                 mensaje = "La operacion resta solo recibe numbers."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
@@ -864,6 +868,7 @@ class expresionBinaria(instruccion):
                 return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
     
             else:
+                CODIGO.insertar_Comentario("ERROR: La operacion multiplicación solo recibe numbers.")
                 REPORTES.salida += "ERROR: La operacion multiplicación solo recibe numbers. \n"
                 mensaje = "La operacion multiplicación solo recibe numbers."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
@@ -898,6 +903,7 @@ class expresionBinaria(instruccion):
                 return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
             else:
+                CODIGO.insertar_Comentario("ERROR: La operacion división solo recibe numbers.")
                 REPORTES.salida += "ERROR: La operacion división solo recibe numbers. \n"
                 mensaje = "La operacion división solo recibe numbers."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
@@ -910,6 +916,7 @@ class expresionBinaria(instruccion):
             #Evaluar el caso en que ambos sean number
             if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
                 CODIGO.insertar_Comentario("////////// INICIA POTENCIA //////////")
+
                 #Crear el temporal y añadirle como valor 0. Resulatdo almacena el resultado en la iteracion.
                 tempResultado = CODIGO.nuevoTemporal()
                 CODIGO.insertar_Asignacion(tempResultado, "1")
@@ -944,6 +951,7 @@ class expresionBinaria(instruccion):
                 return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
     
             else:
+                CODIGO.insertar_Comentario("ERROR: La operacion potencia solo recibe numbers.")
                 REPORTES.salida += "ERROR: La operacion potencia solo recibe numbers. \n"
                 mensaje = "La operacion potencia solo recibe numbers."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
@@ -982,7 +990,8 @@ class expresionBinaria(instruccion):
                 return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
             else:
-                REPORTES.salida += "ERROR: La operacion división solo recibe numbers. \n"
+                CODIGO.insertar_Comentario("ERROR: La operacion modulo solo recibe numbers.")
+                REPORTES.salida += "ERROR: La operacion modulo solo recibe numbers. \n"
                 mensaje = "La operacion división solo recibe numbers."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                 
@@ -991,6 +1000,595 @@ class expresionBinaria(instruccion):
                 return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
             
         #Relacionales-------------------------------------------------------------------------------------
+        elif self.tipoOperacion == Expresion.MAYORQ.value:
+            #Evaluar el caso en que ambos sean number
+            CODIGO.insertar_Comentario("////////// INICIA MAYOR QUE //////////")
+   
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+
+                #Declarar lables de entrada y salida
+                labelVerdadero = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #---Evaluar
+                CODIGO.insertar_If(expresionIzquierda.valor, ">", expresionDerecha.valor, labelVerdadero)
+                CODIGO.insertar_Goto(labelSalida)
+
+                #--Es verdaddera la comparacion
+                CODIGO.insertar_Label(labelVerdadero)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #-- La condicion es falsa o acabo la verdadera
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+
+            elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                
+                #Declarar label
+                labelCiclo = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+                labelIzquierdaNulo = CODIGO.nuevoLabel()
+                labelDerechaNulo = CODIGO.nuevoLabel()
+                labelMayor = CODIGO.nuevoLabel()
+                labelMenor = CODIGO.nuevoLabel()
+                tempIzquierda = CODIGO.nuevoTemporal()
+                tempDerecha = CODIGO.nuevoTemporal()
+
+                #Ciclo de comparacion
+                CODIGO.insertar_Label(labelCiclo)
+                  #--- Leer el caracter del heap
+                CODIGO.insertar_ObtenerHeap(tempIzquierda, expresionIzquierda.valor)
+                CODIGO.insertar_ObtenerHeap(tempDerecha, expresionDerecha.valor)
+                  #-- Si viene -1 o es menor se sale
+                CODIGO.insertar_If(tempIzquierda, "==", "-1", labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "==", "-1", labelDerechaNulo)
+                CODIGO.insertar_If(tempIzquierda, "<", tempDerecha, labelMenor)
+                CODIGO.insertar_If(tempIzquierda, ">", tempDerecha, labelMayor)
+                  #--Se itera hasta que encuentre de los casos anteriores
+                CODIGO.insertar_Expresion(expresionIzquierda.valor, expresionIzquierda.valor, "+", "1")
+                CODIGO.insertar_Expresion(expresionDerecha.valor, expresionDerecha.valor, "+", "1")
+                CODIGO.insertar_Goto(labelCiclo)
+
+                #Label Mayor
+                CODIGO.insertar_Label(labelMayor)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Menor
+                CODIGO.insertar_Label(labelMenor)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+                
+                #Label Izquierdo Nulo
+                CODIGO.insertar_Label(labelIzquierdaNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Derecho Nulo
+                CODIGO.insertar_Label(labelDerechaNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+                
+                #--Salida de la operacion
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+            
+            else:
+                CODIGO.insertar_Comentario("ERROR: La operacion mayor que solo recibe strings o numbers (un solo tipo a la vez).")
+                REPORTES.salida += "ERROR: La operacion mayor que solo recibe strings o numbers (un solo tipo a la vez). \n"
+                mensaje = "La operacion mayor que solo recibe strings o numbers (un solo tipo a la vez)."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        elif self.tipoOperacion == Expresion.MENORQ.value:
+            #Evaluar el caso en que ambos sean number
+            CODIGO.insertar_Comentario("////////// INICIA MENOR QUE //////////")
+
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+
+                #Declarar lables de entrada y salida
+                labelVerdadero = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #---Evaluar
+                CODIGO.insertar_If(expresionIzquierda.valor, "<", expresionDerecha.valor, labelVerdadero)
+                CODIGO.insertar_Goto(labelSalida)
+
+                #--Es verdaddera la comparacion
+                CODIGO.insertar_Label(labelVerdadero)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #-- La condicion es falsa o acabo la verdadera
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+
+            
+            elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                
+                #Declarar label
+                labelCiclo = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+                labelIzquierdaNulo = CODIGO.nuevoLabel()
+                labelDerechaNulo = CODIGO.nuevoLabel()
+                labelMayor = CODIGO.nuevoLabel()
+                labelMenor = CODIGO.nuevoLabel()
+                tempIzquierda = CODIGO.nuevoTemporal()
+                tempDerecha = CODIGO.nuevoTemporal()
+
+                #Ciclo de comparacion
+                CODIGO.insertar_Label(labelCiclo)
+                  #--- Leer el caracter del heap
+                CODIGO.insertar_ObtenerHeap(tempIzquierda, expresionIzquierda.valor)
+                CODIGO.insertar_ObtenerHeap(tempDerecha, expresionDerecha.valor)
+                  #-- Si viene -1 o es menor se sale
+                CODIGO.insertar_If(tempIzquierda, "==", "-1", labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "==", "-1", labelDerechaNulo)
+                CODIGO.insertar_If(tempIzquierda, ">", tempDerecha, labelMayor)
+                CODIGO.insertar_If(tempIzquierda, "<", tempDerecha, labelMenor)
+                  #--Se itera hasta que encuentre de los casos anteriores
+                CODIGO.insertar_Expresion(expresionIzquierda.valor, expresionIzquierda.valor, "+", "1")
+                CODIGO.insertar_Expresion(expresionDerecha.valor, expresionDerecha.valor, "+", "1")
+                CODIGO.insertar_Goto(labelCiclo)
+
+                #Label Mayor
+                CODIGO.insertar_Label(labelMayor)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Menor
+                CODIGO.insertar_Label(labelMenor)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+                
+                #Label Izquierdo Nulo
+                CODIGO.insertar_Label(labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "==", "-1", labelDerechaNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Derecho Nulo
+                CODIGO.insertar_Label(labelDerechaNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+                
+                #--Salida de la operacion
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+            
+            else:
+                REPORTES.salida += "ERROR: La operacion menor que solo recibe strings o numbers (un solo tipo a la vez). \n"
+                mensaje = "La operacion menor que solo recibe strings o numbers (un solo tipo a la vez)."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: La operacion menor que solo recibe strings o numbers (un solo tipo a la vez).")
+
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        elif self.tipoOperacion == Expresion.MAYORIG.value:
+            CODIGO.insertar_Comentario("////////// INICIA MAYOR IGUAL QUE //////////")
+
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+
+                #Declarar lables de entrada y salida
+                labelVerdadero = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #---Evaluar
+                CODIGO.insertar_If(expresionIzquierda.valor, ">=", expresionDerecha.valor, labelVerdadero)
+                CODIGO.insertar_Goto(labelSalida)
+
+                #--Es verdaddera la comparacion
+                CODIGO.insertar_Label(labelVerdadero)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #-- La condicion es falsa o acabo la verdadera
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+
+            
+            elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                
+                #Declarar label
+                labelCiclo = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+                labelIzquierdaNulo = CODIGO.nuevoLabel()
+                labelDerechaNulo = CODIGO.nuevoLabel()
+                labelAmbosNulo = CODIGO.nuevoLabel()
+                labelMayor = CODIGO.nuevoLabel()
+                labelMenor = CODIGO.nuevoLabel()
+                tempIzquierda = CODIGO.nuevoTemporal()
+                tempDerecha = CODIGO.nuevoTemporal()
+
+                #Ciclo de comparacion
+                CODIGO.insertar_Label(labelCiclo)
+                  #--- Leer el caracter del heap
+                CODIGO.insertar_ObtenerHeap(tempIzquierda, expresionIzquierda.valor)
+                CODIGO.insertar_ObtenerHeap(tempDerecha, expresionDerecha.valor)
+                  #-- Si viene -1 o es menor se sale
+                CODIGO.insertar_If(tempIzquierda, "==", "-1", labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "==", "-1", labelDerechaNulo)
+                CODIGO.insertar_If(tempIzquierda, ">", tempDerecha, labelMayor)
+                CODIGO.insertar_If(tempIzquierda, "<", tempDerecha, labelMenor)
+                  #--Se itera hasta que encuentre de los casos anteriores
+                CODIGO.insertar_Expresion(expresionIzquierda.valor, expresionIzquierda.valor, "+", "1")
+                CODIGO.insertar_Expresion(expresionDerecha.valor, expresionDerecha.valor, "+", "1")
+                CODIGO.insertar_Goto(labelCiclo)
+
+                #Label Mayor
+                CODIGO.insertar_Label(labelMayor)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Menor
+                CODIGO.insertar_Label(labelMenor)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+                
+                #Label Izquierdo Nulo
+                CODIGO.insertar_Label(labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "==", "-1", labelAmbosNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Derecho Nulo
+                CODIGO.insertar_Label(labelDerechaNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Ambos Nulos. Son iguales.
+                CODIGO.insertar_Label(labelAmbosNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+    
+                #--Salida de la operacion
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+            
+            else:
+                REPORTES.salida += "ERROR: La operacion mayor igual solo recibe strings o numbers (un solo tipo a la vez). \n"
+                mensaje = "La operacion mayor igual solo recibe strings o numbers (un solo tipo a la vez)."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: La operacion mayor igual solo recibe strings o numbers (un solo tipo a la vez).")
+
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+            
+        elif self.tipoOperacion == Expresion.MENORIG.value:
+            CODIGO.insertar_Comentario("////////// INICIA MENOR IGUAL QUE //////////")
+
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+
+                #Declarar lables de entrada y salida
+                labelVerdadero = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #---Evaluar
+                CODIGO.insertar_If(expresionIzquierda.valor, "<=", expresionDerecha.valor, labelVerdadero)
+                CODIGO.insertar_Goto(labelSalida)
+
+                #--Es verdaddera la comparacion
+                CODIGO.insertar_Label(labelVerdadero)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #-- La condicion es falsa o acabo la verdadera
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+
+            elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                
+                #Declarar label
+                labelCiclo = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+                labelIzquierdaNulo = CODIGO.nuevoLabel()
+                labelDerechaNulo = CODIGO.nuevoLabel()
+                labelAmbosNulo = CODIGO.nuevoLabel()
+                labelMayor = CODIGO.nuevoLabel()
+                labelMenor = CODIGO.nuevoLabel()
+                tempIzquierda = CODIGO.nuevoTemporal()
+                tempDerecha = CODIGO.nuevoTemporal()
+
+                #Ciclo de comparacion
+                CODIGO.insertar_Label(labelCiclo)
+                  #--- Leer el caracter del heap
+                CODIGO.insertar_ObtenerHeap(tempIzquierda, expresionIzquierda.valor)
+                CODIGO.insertar_ObtenerHeap(tempDerecha, expresionDerecha.valor)
+                  #-- Si viene -1 o es menor se sale
+                CODIGO.insertar_If(tempIzquierda, "==", "-1", labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "==", "-1", labelDerechaNulo)
+                CODIGO.insertar_If(tempIzquierda, "<", tempDerecha, labelMenor)
+                CODIGO.insertar_If(tempIzquierda, ">", tempDerecha, labelMayor)
+                  #--Se itera hasta que encuentre de los casos anteriores
+                CODIGO.insertar_Expresion(expresionIzquierda.valor, expresionIzquierda.valor, "+", "1")
+                CODIGO.insertar_Expresion(expresionDerecha.valor, expresionDerecha.valor, "+", "1")
+                CODIGO.insertar_Goto(labelCiclo)
+
+                #Label Mayor
+                CODIGO.insertar_Label(labelMayor)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Menor
+                CODIGO.insertar_Label(labelMenor)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+                
+                #Label Izquierdo Nulo
+                CODIGO.insertar_Label(labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "==", "-1", labelAmbosNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Derecho Nulo
+                CODIGO.insertar_Label(labelDerechaNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Ambos Nulo
+                CODIGO.insertar_Label(labelAmbosNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+    
+                #--Salida de la operacion
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+              
+            else:
+                REPORTES.salida += "ERROR: La operacion menor igual solo recibe strings o numbers (un solo tipo a la vez). \n"
+                mensaje = "La operacion menor igual que solo recibe strings o numbers (un solo tipo a la vez)."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: La operacion menor igual solo recibe strings o numbers (un solo tipo a la vez).")
+
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        elif self.tipoOperacion == Expresion.IGUALACION.value:
+            CODIGO.insertar_Comentario("////////// INICIA IGUALACION //////////")
+
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+
+                #Declarar lables de entrada y salida
+                labelVerdadero = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #---Evaluar
+                CODIGO.insertar_If(expresionIzquierda.valor, "==", expresionDerecha.valor, labelVerdadero)
+                CODIGO.insertar_Goto(labelSalida)
+
+                #--Es verdaddera la comparacion
+                CODIGO.insertar_Label(labelVerdadero)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #-- La condicion es falsa o acabo la verdadera
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+
+            elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                
+                #Declarar label
+                labelCiclo = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+                labelIzquierdaNulo = CODIGO.nuevoLabel()
+                labelDerechaNulo = CODIGO.nuevoLabel()
+                labelDesigual = CODIGO.nuevoLabel()
+                tempIzquierda = CODIGO.nuevoTemporal()
+                tempDerecha = CODIGO.nuevoTemporal()
+
+                #Ciclo de comparacion
+                CODIGO.insertar_Label(labelCiclo)
+                  #--- Leer el caracter del heap
+                CODIGO.insertar_ObtenerHeap(tempIzquierda, expresionIzquierda.valor)
+                CODIGO.insertar_ObtenerHeap(tempDerecha, expresionDerecha.valor)
+                  #-- Si viene -1 o es menor se sale
+                CODIGO.insertar_If(tempIzquierda, "==", "-1", labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "==", "-1", labelDerechaNulo)
+                CODIGO.insertar_If(tempIzquierda, "!=", tempDerecha, labelDesigual)
+                
+                  #--Se itera hasta que encuentre de los casos anteriores
+                CODIGO.insertar_Expresion(expresionIzquierda.valor, expresionIzquierda.valor, "+", "1")
+                CODIGO.insertar_Expresion(expresionDerecha.valor, expresionDerecha.valor, "+", "1")
+                CODIGO.insertar_Goto(labelCiclo)
+
+                #Label Desigual
+                CODIGO.insertar_Label(labelDesigual)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+                
+                #Label Izquierdo Nulo
+                CODIGO.insertar_Label(labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "!=", "-1", labelDerechaNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Derecho Nulo
+                CODIGO.insertar_Label(labelDerechaNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+    
+                #--Salida de la operacion
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+            
+            elif expresionIzquierda.tipo == Tipo.BOOLEAN.value and expresionDerecha.tipo == Tipo.BOOLEAN.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+
+                #Declarar lables de entrada y salida
+                labelVerdadero = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #---Evaluar
+                CODIGO.insertar_If(expresionIzquierda.valor, "==", expresionDerecha.valor, labelVerdadero)
+                CODIGO.insertar_Goto(labelSalida)
+
+                #--Es verdaddera la comparacion
+                CODIGO.insertar_Label(labelVerdadero)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #-- La condicion es falsa o acabo la verdadera
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+            
+            else:
+                REPORTES.salida += "ERROR: La operacion igualacion que solo recibe strings o numbers (un solo tipo a la vez). \n"
+                mensaje = "La operacion igualacion que solo recibe strings o numbers (un solo tipo a la vez)."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: La operacion igualacion solo recibe strings o numbers (un solo tipo a la vez).")
+
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+
+        elif self.tipoOperacion == Expresion.DISTINTO.value:
+            CODIGO.insertar_Comentario("////////// INICIA DESIGUAL //////////")
+
+            if expresionIzquierda.tipo == Tipo.NUMBER.value and expresionDerecha.tipo == Tipo.NUMBER.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+
+                #Declarar lables de entrada y salida
+                labelVerdadero = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #---Evaluar
+                CODIGO.insertar_If(expresionIzquierda.valor, "!=", expresionDerecha.valor, labelVerdadero)
+                CODIGO.insertar_Goto(labelSalida)
+
+                #--Es verdaddera la comparacion
+                CODIGO.insertar_Label(labelVerdadero)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #-- La condicion es falsa o acabo la verdadera
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+
+            elif expresionIzquierda.tipo == Tipo.STRING.value and expresionDerecha.tipo == Tipo.STRING.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                
+                #Declarar label
+                labelCiclo = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+                labelIzquierdaNulo = CODIGO.nuevoLabel()
+                labelDerechaNulo = CODIGO.nuevoLabel()
+                labelDesigual = CODIGO.nuevoLabel()
+                tempIzquierda = CODIGO.nuevoTemporal()
+                tempDerecha = CODIGO.nuevoTemporal()
+
+                #Ciclo de comparacion
+                CODIGO.insertar_Label(labelCiclo)
+                  #--- Leer el caracter del heap
+                CODIGO.insertar_ObtenerHeap(tempIzquierda, expresionIzquierda.valor)
+                CODIGO.insertar_ObtenerHeap(tempDerecha, expresionDerecha.valor)
+                  #-- Si viene -1 o es menor se sale
+                CODIGO.insertar_If(tempIzquierda, "==", "-1", labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "==", "-1", labelDerechaNulo)
+                CODIGO.insertar_If(tempIzquierda, "!=", tempDerecha, labelDesigual)
+                
+                  #--Se itera hasta que encuentre de los casos anteriores
+                CODIGO.insertar_Expresion(expresionIzquierda.valor, expresionIzquierda.valor, "+", "1")
+                CODIGO.insertar_Expresion(expresionDerecha.valor, expresionDerecha.valor, "+", "1")
+                CODIGO.insertar_Goto(labelCiclo)
+
+                #Label Desigual
+                CODIGO.insertar_Label(labelDesigual)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+                
+                #Label Izquierdo Nulo
+                CODIGO.insertar_Label(labelIzquierdaNulo)
+                CODIGO.insertar_If(tempDerecha, "!=", "-1", labelDerechaNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+                CODIGO.insertar_Goto(labelSalida)
+
+                #Label Derecho Nulo
+                CODIGO.insertar_Label(labelDerechaNulo)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+                CODIGO.insertar_Goto(labelSalida)
+    
+                #--Salida de la operacion
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+            
+            elif expresionIzquierda.tipo == Tipo.BOOLEAN.value and expresionDerecha.tipo == Tipo.BOOLEAN.value:
+                #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
+                #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
+                tempResultado = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(tempResultado, "0")
+
+                #Declarar lables de entrada y salida
+                labelVerdadero = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
+
+                #---Evaluar
+                CODIGO.insertar_If(expresionIzquierda.valor, "!=", expresionDerecha.valor, labelVerdadero)
+                CODIGO.insertar_Goto(labelSalida)
+
+                #--Es verdaddera la comparacion
+                CODIGO.insertar_Label(labelVerdadero)
+                CODIGO.insertar_Asignacion(tempResultado, "1")
+
+                #-- La condicion es falsa o acabo la verdadera
+                CODIGO.insertar_Label(labelSalida)
+                return valor3D(tempResultado, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
+            
+            else:
+                REPORTES.salida += "ERROR: La operacion distinto que solo recibe strings o numbers (un solo tipo a la vez). \n"
+                mensaje = "La operacion distinto que solo recibe strings o numbers (un solo tipo a la vez)."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: La operacion distinto solo recibe strings o numbers (un solo tipo a la vez).")
+
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+
+        
+
         
         
             

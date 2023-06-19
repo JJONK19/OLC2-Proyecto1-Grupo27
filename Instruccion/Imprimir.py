@@ -95,23 +95,18 @@ class imprimir(instruccion):
                 CODIGO.insertar_Print("c", tempComparar, "int")
                 CODIGO.insertar_Expresion(expresion.valor, expresion.valor, "+", "1")
                 CODIGO.insertar_Goto(labelCiclo)
+
                 CODIGO.insertar_Label(labelSalida)
                 CODIGO.insertar_Print("c", 32, "int")       #Espacio en blanco
                 
             elif expresion.tipo == Tipo.BOOLEAN.value and expresion.clase == Clases.PRIMITIVO.value:
-                #Imprimir primero las etiquetas de salida que jala el boolean
-                for etiqueta in expresion.trueLabel:
-                    CODIGO.insertar_Label(etiqueta)
-
-                for etiqueta in expresion.falseLabel:
-                    CODIGO.insertar_Label(etiqueta)
-
                 #Comentario
                 CODIGO.insertar_Comentario("////////// IMPRIMIR BOOLEAN //////////")
 
                 #Labels del if
                 labelTrue = CODIGO.nuevoLabel()
                 labelFalse = CODIGO.nuevoLabel()
+                labelSalida = CODIGO.nuevoLabel()
                 
                 #If
                 CODIGO.insertar_If(expresion.valor, "==", "1", labelTrue)
@@ -124,6 +119,7 @@ class imprimir(instruccion):
                 CODIGO.insertar_Print("c", 117, "int")
                 CODIGO.insertar_Print("c", 101, "int")
                 CODIGO.insertar_Print("c", 32, "int")       #Espacio en blanco
+                CODIGO.insertar_Goto(labelSalida)
                 
                 #Imprimir false
                 CODIGO.insertar_Label(labelFalse)
@@ -133,7 +129,10 @@ class imprimir(instruccion):
                 CODIGO.insertar_Print("c", 115, "int")
                 CODIGO.insertar_Print("c", 101, "int")
                 CODIGO.insertar_Print("c", 32, "int")      #Espacio en blanco
-        
+                
+                #Salida
+                CODIGO.insertar_Label(labelSalida)
+                
         CODIGO.insertar_Print("c", 10, "int")       #Salto de linea despues del print
                 
                 

@@ -86,11 +86,9 @@ class dato(instruccion):
             return valor3D(temporal, True, Tipo.STRING.value, Clases.PRIMITIVO.value, HEAP=True)
         
         elif self.tipo == Tipo.BOOLEAN.value:
-            nuevoLabel = CODIGO.nuevoLabel()
             if self.valor == "true":
                 CODIGO.insertar_Asignacion(temporal, "1")
             else:
                 CODIGO.insertar_Asignacion(temporal, "0")
-            CODIGO.insertar_Goto(nuevoLabel)
-            return valor3D(temporal, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value, FALSE_LABEL=[nuevoLabel])
+            return valor3D(temporal, True, Tipo.BOOLEAN.value, Clases.PRIMITIVO.value)
         

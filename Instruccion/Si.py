@@ -242,14 +242,9 @@ class si(instruccion):
             labelFalso = CODIGO.nuevoLabel()
             labelSalida = CODIGO.nuevoLabel()
 
-
-
-
-            # Si es false, se revisa la siguiente condicion
+            # Evaluar la condicion
             CODIGO.insertar_If(expresion.valor, "==", "1", labelVerdadero)
             CODIGO.insertar_Goto(labelFalso)
-            CODIGO.insertar_Goto(labelSalida)
-            listaSalidas.append(labelSalida)
 
             # Crear el entorno nuevo y añadirlo a la lista
             nombre = "if_" + str(SIMBOLOS[0].contador)
@@ -285,6 +280,7 @@ class si(instruccion):
             # Al terminar de traducir, saca el entorno
             SIMBOLOS.pop()
             CODIGO.insertar_Goto(labelSalida)
+            listaSalidas.append(labelSalida)
 
             # -- Si es falso solo se imprime el label
             CODIGO.insertar_Label(labelFalso)
@@ -322,7 +318,7 @@ class si(instruccion):
         SIMBOLOS.pop()
 
         for n in listaSalidas:
-            CODIGO.insertar_Goto(n)
+            CODIGO.insertar_Label(n)
 
 
         #Aca va el return

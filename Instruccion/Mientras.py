@@ -1,3 +1,5 @@
+from C3D.Entorno3D import entorno3D
+from C3D.Valor3D import valor3D
 from Tipos.Tipos import *
 from Ejecucion.Entorno import entorno
 from Instruccion.Instruccion import instruccion
@@ -127,7 +129,7 @@ class sentenciaWhile(instruccion):
                 SIMBOLOS.pop()
                 break 
             #Si pasa por aca es que se aplica el continue a la ejecion.
-            if salir:
+            if siguiente:
                 SIMBOLOS.pop()
                 continue
             
@@ -135,5 +137,96 @@ class sentenciaWhile(instruccion):
             SIMBOLOS.pop()
             
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
+        # Lista que almacena los labels de las salidas verdaderas en la condiciones
+        # Se imprimen al terminar el else si es que viene
+        salir = False
+        siguiente = False
+        listaSalidas = []
+
+        expresion = self.condicion.c3d(SIMBOLOS, REPORTES, CODIGO)
+
+        # Verificar que sea primitivo
+        if expresion.clase != Clases.PRIMITIVO.value:
+            CODIGO.insertar_Comentario("ERROR: La condicion no retorna un primitivo.")
+            REPORTES.salida += "La condicion no retorna un primitivo. \n"
+            mensaje = "La condicion no retorna un primitivo."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+
+        # Verificar que sea boolean
+        if expresion.tipo != Tipo.BOOLEAN.value:
+            CODIGO.insertar_Comentario("ERROR: La condicion no retorna un bool.")
+            REPORTES.salida += "La condicion no retorna un bool. \n"
+            mensaje = "La condicion no retorna un bool."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+
+        # Creación de Labels
+        labelSiguiente = CODIGO.nuevoLabel()
+        labelSalida = CODIGO.nuevoLabel()
+
+        # Evaluar la condicion
+        CODIGO.insertar_If(expresion.valor, "==", "0", labelSiguiente)
+        CODIGO.insertar_Goto(labelSalida)
+        listaSalidas.append(labelSalida)
+
+        # Crear el entorno nuevo y añadirlo a la lista
+        nombre = "while_" + str(SIMBOLOS[0].contador)
+        SIMBOLOS[0].contador += 1
+        nuevoEntorno = entorno3D(nombre)
+        SIMBOLOS.append(nuevoEntorno)
+
+        # -- Si es verdadero, se ejecutan todas las instrucciones
+        CODIGO.insertar_Label(labelSiguiente)
+        for instruccion in self.instrucciones:
+            retorno = instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)
+
+            if retorno == None:  # Instruccion sin return. Se ignora.
+                pass
+            elif retorno == 1:              #Instruccion break. Termina la ejecucion y asigna a la variable de salida true.
+                salir = True
+                break
+            elif retorno == 0:              #Instruccion continue. El break termina la ejecucion.
+                siguiente = True
+                break
+
+            elif retorno == -1:  # Es un error. Se sigue arrastrando para detener la ejecucion.
+                SIMBOLOS.pop()
+                # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+
+            else:
+                pass
+                #if retorno.regreso:  # Algunas funciones retornan valores. Si return no es true, se ignora
+                #    SIMBOLOS.pop()
+                #    return retorno
+
+
+        #Si pasa por aca es que se aplica el break a la ejecion.
+        if salir:
+            SIMBOLOS.pop()
+            CODIGO.insertar_Goto(labelSalida)
+            listaSalidas.append(labelSalida)
+
+        #Si pasa por aca es que se aplica el continue a la ejecion.
+        if siguiente:
+            SIMBOLOS.pop()
+            CODIGO.insertar_Goto(labelSiguiente)
+
+        # Al terminar de traducir, saca el entorno
+        SIMBOLOS.pop()
+
+
+
+        for n in listaSalidas:
+            CODIGO.insertar_Label(n)
+
+
+        #Aca va el return
+
 

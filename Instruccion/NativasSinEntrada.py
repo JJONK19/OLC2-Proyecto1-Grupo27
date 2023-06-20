@@ -230,8 +230,7 @@ class nativaSinValor(instruccion):
             mensaje = "La funcion nativa se esta ejecutando sobre un NULL."
             REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
             CODIGO.insertar_Comentario("ERROR: La funcion nativa se esta ejecutando sobre un NULL.")
-
-                
+  
             temporal = CODIGO.nuevoTemporal()
             CODIGO.insertar_Asignacion(temporal, "0")
             return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
@@ -266,9 +265,6 @@ class nativaSinValor(instruccion):
             
             #Por divisiones sucesivas se busca extraer cada digito del numero y añadirlo al heap como string
             if expresionEvaluar.tipo == Tipo.NUMBER:
-                #Añadir la libreria
-                CODIGO.libreriasGO("math")
-
                 #Crear el temporal y guardar la posicion del heap
                 tempResultado = CODIGO.nuevoTemporal()
                 CODIGO.insertar_Asignacion(tempResultado, "H")

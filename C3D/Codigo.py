@@ -159,17 +159,34 @@ class codigo:
         self.insertar(entrada)
 
     def insertar_Print(self, caracter, valor, casteo = ""):
+        #Añadir la libreria
+        self.libreriasGO("fmt")
         entrada = f"fmt.Printf(\"%{caracter}\", {casteo}({valor}))\n"
         self.insertar(entrada)
     
     def insertar_Abs(self, res, num):
+        #Añadir la libreria
+        self.libreriasGO("math")
         entrada = f"{res} = math.Abs({num})\n"
         self.insertar(entrada)
 
     def insertar_Floor(self, res, num):
+        #Añadir la libreria
+        self.libreriasGO("math")
         entrada = f"{res} = math.Floor({num})\n"
         self.insertar(entrada)
     
+    def insertar_Pow(self, res, a, b):
+        #Añadir la libreria
+        self.libreriasGO("math")
+        entrada = f"{res} = math.Pow({a}, {b} )\n"
+        self.insertar(entrada)
+
+    def insertar_Round(self, res, valor):
+        #Añadir la libreria
+        self.libreriasGO("math")
+        entrada = f"{res} = math.Round({valor})\n"
+        self.insertar(entrada)
     # Stack / Heap ------------------------------------------------------------------------------------
     # H = H + 1
     def insertar_MoverHeap(self):

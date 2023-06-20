@@ -162,6 +162,14 @@ class codigo:
         entrada = f"fmt.Printf(\"%{caracter}\", {casteo}({valor}))\n"
         self.insertar(entrada)
     
+    def insertar_Abs(self, res, num):
+        entrada = f"{res} = math.Abs({num})\n"
+        self.insertar(entrada)
+
+    def insertar_Floor(self, res, num):
+        entrada = f"{res} = math.Floor({num})\n"
+        self.insertar(entrada)
+    
     # Stack / Heap ------------------------------------------------------------------------------------
     # H = H + 1
     def insertar_MoverHeap(self):

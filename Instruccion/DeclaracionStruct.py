@@ -2,7 +2,6 @@ from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
 
-
 class DeclaracionStruct(instruccion):
     '''
         Declara el struct. Almacena una lista con los valores y los nombres
@@ -12,11 +11,11 @@ class DeclaracionStruct(instruccion):
         - Columna: Posicion de la linea donde esta la instruccion.
     '''
 
-    def __init__(self, ID, TIPO, LISTA_VALORES, LINEA, COLUMNA):
+    def __init__(self, ID, TIPO, EXPRESION, LINEA, COLUMNA):
         super().__init__(LINEA, COLUMNA)
         self.id = ID
         self.tipo = TIPO
-        self.listaValores = LISTA_VALORES
+        self.expresion = EXPRESION
         self.tipoInstruccion = Instrucciones.DECLARACION_STRUCT.value
 
     def grafo(self, REPORTES):
@@ -52,22 +51,13 @@ class DeclaracionStruct(instruccion):
         REPORTES.cont += 1
         REPORTES.dot += padre + "->" + nodoTipado + ";\n"
 
-        #Nodo complementario :
-        nodoLlA = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += nodoLlA + "[ label = \"{\" ];\n"
+        nodoIgual = "NODO" + str(REPORTES.cont)
+        REPORTES.dot += nodoIgual + "[ label = \"=\" ];\n"
         REPORTES.cont += 1
-        REPORTES.dot += padre + "->" + nodoLlA + ";\n"
+        REPORTES.dot += padre + "->" + nodoIgual + ";\n"
 
-        #Declarar atributos
-        for i in self.listaValores:
-            nodoAtributo = i.grafo(REPORTES)
-            REPORTES.dot += padre + "->" + nodoAtributo + ";\n"
-
-        #Nodo complementario :
-        nodoLlC = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += nodoLlC + "[ label = \"}\" ];\n"
-        REPORTES.cont += 1
-        REPORTES.dot += padre + "->" + nodoLlC + ";\n"
+        nodoExp = self.expresion.grafo(REPORTES)
+        REPORTES.dot += padre + "->" + nodoExp + ";\n"
 
         # Nodo complementario ;
         nodoPtcoma = "NODO" + str(REPORTES.cont)
@@ -83,17 +73,31 @@ class DeclaracionStruct(instruccion):
             - Simbolos: Lista con los entornos de la ejecucion.
             - Reportes: Almacena un resumen de la ejecucion.
         '''
-        atributos = []
-        #Crear la lista de atributos
-        for i in self.listaValores:
-            atributos.append(i.analisis(SIMBOLOS, REPORTES))
-
-        nuevo = valor()
-        nuevo.tipo = self.tipo
-        nuevo.valor = atributos
-        nuevo.clase = Clases.STRUCT.value
-        nuevo.valorClase = nuevo.clase
-        nuevo.valorTipo = nuevo.tipo
+        #Extraer valores
+        expresionEvaluar = self.expresion.analisis(SIMBOLOS, REPORTES)
+        
+        #Verificar que no sea nulo
+        if expresionEvaluar.tipo == Tipo.NULL.value:
+            REPORTES.salida += "ERROR: No se puede asignar NULL a un primitivo. \n"
+            mensaje = "No se puede asignar NULL a un primitivo."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+            return -1
+        
+        #Comprobar que sea primitivo
+        if expresionEvaluar.clase != Clases.STRUCT.value:
+            REPORTES.salida += "ERROR: Una variable struct solo recibe structs. \n"
+            mensaje = "Una variable struct solo recibe structs."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+            return -1
+        
+        #Comprobar que el tipo sea el mismo que la variable
+        if expresionEvaluar.tipo != self.tipo:
+            REPORTES.salida += "ERROR: Struct " + self.tipo + " no recibe " + expresionEvaluar.tipo + ". \n"
+            mensaje = "Struct " + self.tipo + " no recibe " + expresionEvaluar.tipo + "."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+            return -1
+        
+        nuevo = expresionEvaluar
 
         #Añadir el id de la variable a valor
         nuevo.id = self.id

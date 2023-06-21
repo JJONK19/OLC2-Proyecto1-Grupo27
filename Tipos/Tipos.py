@@ -50,7 +50,7 @@ class Instrucciones(Enum):
     FOROF = "FOROF"
     LLAMADA_FUNCION = "LLAMADA_FUNCION"
     DECLARACION_FUNCION = "DECLARACION_FUNCION"
-
+    
 
 
 class Expresion(Enum):

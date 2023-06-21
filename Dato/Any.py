@@ -160,4 +160,4 @@ class any(simbolo):
                 else:
                     cadena += " ]"
 
-                return cadena
+            return cadena

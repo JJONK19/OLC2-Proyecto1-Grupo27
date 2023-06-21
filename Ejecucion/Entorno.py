@@ -537,3 +537,18 @@ class entorno:
         
         #Al terminar la comprobacion, retorna true
         return True
+    
+    def determinarStruct(self, ENTRADA):
+        ''' 
+            Recibe una lista de atributos y determina el tipo de struct por los mismos.
+            -Entrada . Lista de atributos[] a evaluar
+        '''
+        #Recorrer el diccionario, extraer la referencia y llamar al metodo verificar atributos.
+        #Si retorna true, se retorna la clave. Si no retorna -1.
+        for clave, valor in self.estructuras.items():
+            prueba = self.verificarAtributos(ENTRADA, valor.atributos)
+
+            if prueba:
+                return clave
+        
+        return -1

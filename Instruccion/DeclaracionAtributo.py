@@ -91,3 +91,4 @@ class DeclaracionAtributo(instruccion):
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 
+ 

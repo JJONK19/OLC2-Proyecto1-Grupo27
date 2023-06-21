@@ -72,7 +72,7 @@ class accesos(instruccion):
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                 return -1
             
-            nuevo = acceso(self.id, int(expresionEvaluar.valor))
+            nuevo = acceso(self.id, int(round(float(expresionEvaluar.valor))))
             
         return nuevo
     

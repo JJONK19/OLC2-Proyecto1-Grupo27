@@ -18,6 +18,7 @@ from Instruccion.DefinicionAtributo import DefinicionAtributo
 from Instruccion.DeclaracionAtributo import DeclaracionAtributo
 from Instruccion.DeclaracionAny import DeclaracionAny
 from Instruccion.DatoVector import datoVector
+from Instruccion.DatoStruct import datoStruct
 from Instruccion.Si import si
 from Instruccion.Break import sentenciaBreak
 from Instruccion.Continue import sentenciaContinue
@@ -402,8 +403,12 @@ class Analizador:
     def p_FUNCIONES_DECLARAR(t):
         """
             declararFuncion : RFUNCTION ID PARENI atributosFuncion PAREND LLAVEI sentencias LLAVED
+                            | RFUNCTION ID PARENI PAREND LLAVEI sentencias LLAVED
         """
-        t[0] = declaracionFuncion(t[2], t[4], t[7], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+        if(len(t) == 9):
+            t[0] = declaracionFuncion(t[2], t[4], t[7], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+        else:
+            t[0] = declaracionFuncion(t[2], [], t[6], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
 
     def p_FUNCIONES_ATRIBUTOS(t):
         """
@@ -518,9 +523,9 @@ class Analizador:
 
     def p_DECLARACION_STRUCT(t):
         """
-            declaracion : RLET ID DOSPTS ID IGUAL LLAVEI valoresStruct LLAVED 
+            declaracion : RLET ID DOSPTS ID IGUAL expresion 
         """
-        t[0] = DeclaracionStruct(t[2], t[4], t[7], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        t[0] = DeclaracionStruct(t[2], t[4], t[6], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
     
     def p_DECLARACION_STRUCT_VALORES(t):
         """
@@ -791,6 +796,12 @@ class Analizador:
         """
         t[0] = datoVector(t[2], Tipo.ANY.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
     
+    def p_EXPRESION_STRUCT(t):
+        """
+            expresion : LLAVEI valoresStruct LLAVED
+        """
+        t[0] = datoStruct(t[2], Tipo.ANY.value, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+    
     def p_EXPRESION_LLAMADAS(t):
         '''
             expresion : llamada
@@ -813,8 +824,12 @@ class Analizador:
     def p_LLAMADAFUNCION(t):
         """
             llamadaFuncion : ID PARENI listaExpresiones PAREND
+                            | ID PARENI PAREND
         """
-        t[0] = llamadaFuncion(t[1], t[3], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        if(len(t) == 5):
+            t[0] = llamadaFuncion(t[1], t[3], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        else:
+            t[0] = llamadaFuncion(t[1], [], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
     
     #Llamada----------------------------------------------------------------------------------------
     def p_LLAMADAS(t):

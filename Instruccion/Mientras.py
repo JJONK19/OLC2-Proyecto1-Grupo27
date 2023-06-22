@@ -137,11 +137,20 @@ class sentenciaWhile(instruccion):
             SIMBOLOS.pop()
             
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
+        CODIGO.insertar_Comentario("////////// INICIA WHILE //////////")
         # Lista que almacena los labels de las salidas verdaderas en la condiciones
         # Se imprimen al terminar el else si es que viene
         salir = False
         siguiente = False
         listaSalidas = []
+
+        # Creación de Labels
+        labelSiguiente = CODIGO.nuevoLabel()
+        labelSalida = CODIGO.nuevoLabel()
+        labelInicio = CODIGO.nuevoLabel()
+
+        # Inicio
+        CODIGO.insertar_Label(labelInicio)
 
         expresion = self.condicion.c3d(SIMBOLOS, REPORTES, CODIGO)
 
@@ -167,24 +176,10 @@ class sentenciaWhile(instruccion):
             CODIGO.insertar_Asignacion(temporal, "0")
             return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
-        # Creación de Labels
-        labelSiguiente = CODIGO.nuevoLabel()
-        labelSalida = CODIGO.nuevoLabel()
-        labelInicio = CODIGO.nuevoLabel()
-
-        # Inicio
-        CODIGO.insertar_Label(labelInicio)
-
         # Evaluar la condicion
         CODIGO.insertar_If(expresion.valor, "==", "1", labelSiguiente)
         CODIGO.insertar_Goto(labelSalida)
         listaSalidas.append(labelSalida)
-
-        # Crear el entorno nuevo y añadirlo a la lista
-        nombre = "while_" + str(SIMBOLOS[0].contador)
-        SIMBOLOS[0].contador += 1
-        nuevoEntorno = entorno3D(nombre)
-        SIMBOLOS.append(nuevoEntorno)
 
         # -- Si es verdadero, se ejecutan todas las instrucciones
         CODIGO.insertar_Label(labelSiguiente)
@@ -192,6 +187,12 @@ class sentenciaWhile(instruccion):
         # Mover el entorno al nuevo
         local = SIMBOLOS[-1]
         CODIGO.insertar_MoverStack(local.tamaño)
+
+        # Crear el entorno nuevo y añadirlo a la lista
+        nombre = "while_" + str(SIMBOLOS[0].contador)
+        SIMBOLOS[0].contador += 1
+        nuevoEntorno = entorno3D(nombre)
+        SIMBOLOS.append(nuevoEntorno)
 
         for instruccion in self.instrucciones:
             retorno = instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)

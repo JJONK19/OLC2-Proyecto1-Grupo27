@@ -79,6 +79,7 @@ class llamada(instruccion):
         
         #Obtener posicion de la variable
         posicion = entorno3D.getPosicion(nuevo, SIMBOLOS, REPORTES, CODIGO)
+        print(posicion)
 
         #Separar por clases
         if salida.clase == Clases.PRIMITIVO.value:

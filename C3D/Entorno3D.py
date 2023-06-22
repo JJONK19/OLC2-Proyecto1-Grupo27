@@ -79,7 +79,12 @@ class entorno3D:
 
             #Si no existe, revisa el siguiente. Suma al retroceso el tamaño del entorno.
             if not entornoTemp.existeSimbolo(CONTENIDO.id):
-                retroceso += entornoTemp.tamaño
+                #Extraer el entorno anterior de la lista
+                if (len(SIMBOLOS) - (2 + i)) < -1:
+                    break
+
+                entornoAnterior = SIMBOLOS[len(SIMBOLOS) - (2 + i)]
+                retroceso += entornoAnterior.tamaño
                 continue
             temp = entornoTemp.variables[CONTENIDO.id]
             posicionLocal = temp.posicionStack

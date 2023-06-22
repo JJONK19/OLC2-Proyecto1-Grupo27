@@ -2,6 +2,8 @@ from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Entorno import entorno
 from Ejecucion.Valor import valor
+from C3D.Valor3D import valor3D
+from C3D.Entorno3D import entorno3D
 
 class llamada(instruccion):
     '''
@@ -61,5 +63,42 @@ class llamada(instruccion):
         return salida
     
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
+        CODIGO.insertar_Comentario("////////// INICIA LLAMADA //////////")
+        #Obtener la variable de la tabla de simbolos
+        nuevo =  valor3D("", True, "", "")
+        nuevo.id = self.id
+        nuevo.linea = self.linea
+        nuevo.columna = self.columna
+
+        salida = entorno3D.getSimbolo(nuevo, SIMBOLOS, REPORTES, CODIGO)
+
+        if salida == -1:
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        #Obtener posicion de la variable
+        posicion = entorno3D.getPosicion(nuevo, SIMBOLOS, REPORTES, CODIGO)
+
+        #Separar por clases
+        if salida.clase == Clases.PRIMITIVO.value:
+            tempStack = CODIGO.nuevoTemporal()
+            tempGet = CODIGO.nuevoTemporal()
+
+            #Guardar en un temporal del valor del stack
+            CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
+            CODIGO.insertar_ObtenerStack(tempGet, tempStack)
+
+            #Retornar el valor
+            return valor3D(tempGet, True, salida.tipo, salida.clase)
+        
+        elif salida.clase == Clases.VECTOR.value:
+            pass
+
+        elif salida.clase == Clases.STRUCT.value:
+            pass
+
+        elif salida.clase == Clases.ANY.value:
+            pass
+
 

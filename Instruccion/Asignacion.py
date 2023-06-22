@@ -2,6 +2,8 @@ from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Entorno import entorno
 from Ejecucion.Valor import valor
+from C3D.Valor3D import valor3D
+from C3D.Entorno3D import entorno3D
 
 class asignacion(instruccion):
     '''
@@ -79,7 +81,61 @@ class asignacion(instruccion):
         return salida
     
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
+        CODIGO.insertar_Comentario("////////// INICIA ASIGNACION //////////")
+        #Obtener la variable de la tabla de simbolos
+        nuevo =  valor3D("", True, "", "")
+        nuevo.id = self.id
+        nuevo.linea = self.linea
+        nuevo.columna = self.columna
+
+        salida = entorno3D.getSimbolo(nuevo, SIMBOLOS, REPORTES, CODIGO)
+
+        if salida == -1:
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        #Obtener posicion de la variable
+        posicion = entorno3D.getPosicion(nuevo, SIMBOLOS, REPORTES, CODIGO)
+
+        #Evaluar el contenido
+        expresion = self.expresion.c3d(SIMBOLOS, REPORTES, CODIGO)
+
+        #Separar por clases
+        if salida.clase == Clases.PRIMITIVO.value:
+            #Comprobar tipos
+            if salida.tipo != expresion.tipo:
+                REPORTES.salida += "ERROR: La variable " + salida.id + " no es de tipo " + expresion.tipo + ". \n"
+                mensaje = "La variable " + salida.id + " no es de tipo " + expresion.tipo + "."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: La variable " + salida.id + " no es de tipo " + expresion.tipo + ".")
+                return 
+    
+            #Comprobar clases
+            if salida.clase != expresion.clase:
+                REPORTES.salida += "ERROR: La variable " + salida.id + " no es de clase " + expresion.clase + ". \n"
+                mensaje = "La variable " + salida.id + " no es de clase " + expresion.clase + "."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: La variable " + salida.id + " no es de tipo " + expresion.tipo + ".")
+                return 
+            
+            tempStack = CODIGO.nuevoTemporal()
+            tempGet = CODIGO.nuevoTemporal()
+
+            #Guardar en un temporal del valor del stack
+            CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
+            CODIGO.insertar_SetearStack(tempStack, expresion.valor)
+        
+        elif salida.clase == Clases.VECTOR.value:
+            pass
+
+        elif salida.clase == Clases.STRUCT.value:
+            pass
+
+        elif salida.clase == Clases.ANY.value:
+            pass
+
+
 
 
 

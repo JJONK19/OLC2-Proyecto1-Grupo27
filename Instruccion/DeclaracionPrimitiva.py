@@ -176,7 +176,7 @@ class DeclaracionPrimitiva(instruccion):
 
         else:
             #Extraer valores
-            expresionEvaluar = self.expresion.analisis(SIMBOLOS, REPORTES)
+            expresionEvaluar = self.expresion.c3d(SIMBOLOS, REPORTES, CODIGO)
             
             #Comprobar que sea primitivo
             if expresionEvaluar.clase != Clases.PRIMITIVO.value:

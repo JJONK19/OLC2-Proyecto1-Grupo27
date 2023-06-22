@@ -76,8 +76,7 @@ class Analizador:
         'function': 'RFUNCTION',
         'length' : 'RLENGTH',
         'push' : 'RPUSH',
-        'typeof' : 'RTYPEOF',
-        'void' : 'RVOID'
+        'typeof' : 'RTYPEOF'
     }
     
     tokens = [
@@ -403,38 +402,14 @@ class Analizador:
     #Funciones----------------------------------------------------------------------------------
     def p_FUNCIONES_DECLARAR(t):
         """
-            declararFuncion : RFUNCTION ID PARENI atributosFuncion PAREND DOSPTS tipoFuncion LLAVEI sentencias LLAVED
-                            | RFUNCTION ID PARENI PAREND DOSPTS tipoFuncion LLAVEI sentencias LLAVED
+            declararFuncion : RFUNCTION ID PARENI atributosFuncion PAREND LLAVEI sentencias LLAVED
+                            | RFUNCTION ID PARENI PAREND LLAVEI sentencias LLAVED
         """
-        if(len(t) == 11):
-            t[0] = declaracionFuncion(t[2], t[4], t[7][0], t[7][1],  t[9], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+        if(len(t) == 9):
+            t[0] = declaracionFuncion(t[2], t[4], t[7], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
         else:
-            t[0] = declaracionFuncion(t[2], [], t[6][0], t[6][1], t[8], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+            t[0] = declaracionFuncion(t[2], [], t[6], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
 
-    def p_FUNCIONES_RETURN_PRIMITVO(t):
-        """
-            tipoFuncion : tiposAny
-        """
-        t[0] = [t[1], Clases.PRIMITIVO.value]
-
-    def p_FUNCIONES_RETURN_VECTOR(t):
-        """
-            tipoFuncion : tiposAny CORI CORD
-        """
-        t[0] = [t[1], Clases.VECTOR.value]
-    
-    def p_FUNCIONES_RETURN_STRUCT(t):
-        """
-            tipoFuncion : ID
-        """
-        t[0] = [t[1], Clases.STRUCT.value]
-
-    def p_FUNCIONES_RETURN_VOID(t):
-        """
-            tipoFuncion : RVOID
-        """
-        t[0] = [Tipo.NULL.value, Clases.NULL.value]
-       
     def p_FUNCIONES_ATRIBUTOS(t):
         """
             atributosFuncion : atributosFuncion COMA atributoFuncion
@@ -854,7 +829,7 @@ class Analizador:
         if(len(t) == 5):
             t[0] = llamadaFuncion(t[1], t[3], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
         else:
-            t[0] = llamadaFuncion(t[1], [], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1))) 
+            t[0] = llamadaFuncion(t[1], [], t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
     
     #Llamada----------------------------------------------------------------------------------------
     def p_LLAMADAS(t):

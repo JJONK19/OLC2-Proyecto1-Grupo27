@@ -209,32 +209,6 @@ class llamadaFuncion(instruccion):
                 return retorno
             else:
                 if retorno.regreso:         #Algunas funciones retornan valores. Se asigna false para que no arroje error de return.
-                    #Verificar si el retorno cumple el tipo y clase
-                    if retorno.valorTipo != funcion.tipo:         
-                        retorno.id = "NULL"
-                        retorno.tipo = Tipo.NULL.value
-                        retorno.valor = "NULL"
-                        retorno.clase = Clases.NULL.value
-                        retorno.string = "NULL"
-
-                        REPORTES.salida += "ERROR: El retorno no cumple con el tipo."
-                        mensaje = "El retorno no cumple con el tipo."
-                        REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
-                        return retorno
-
-                    #Verificar si el retorno cumple el tipo
-                    if retorno.valorClase != funcion.claseReturn:         
-                        retorno.id = "NULL"
-                        retorno.tipo = Tipo.NULL.value
-                        retorno.valor = "NULL"
-                        retorno.clase = Clases.NULL.value
-                        retorno.string = "NULL"
-
-                        REPORTES.salida += "ERROR: El retorno no cumple con la clase."
-                        mensaje = "El retorno no cumple con la clase."
-                        REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
-                        return retorno
-                    
                     retorno.regreso = False
                     return retorno          
         
@@ -250,4 +224,3 @@ class llamadaFuncion(instruccion):
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 
- 

@@ -9,9 +9,9 @@ class entorno3D:
         self.variables = {}                 #Almacena variables 
         self.contador = 0                   #Sirve para crear nombres unicos para los entornos 
         self.tamaño = 0                     #Numero de variables declaradas en el entorno
-
+ 
     #========================================== VARIABLES ===============================================================
-    def insertarSimbolo(self, CONTENIDO, REPORTES):
+    def insertarSimbolo(self, CONTENIDO, REPORTES, CODIGO):
         '''
             Ingresa un simbolo en el diccionario del entorno. La variable contenido contiene toda la informacion
             relevante para crear el simbolo.
@@ -21,6 +21,7 @@ class entorno3D:
         '''
         #Verificar que no exista
         if self.existeSimbolo(CONTENIDO.id):
+            CODIGO.insertar_Comentario("ERROR: La variable " + CONTENIDO.id + " ya existe en este entorno.")
             REPORTES.salida += "ERROR: La variable " + CONTENIDO.id + " ya existe en este entorno. \n"
             mensaje = "La variable " + CONTENIDO.id + " ya existe en este entorno."
             REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
@@ -31,10 +32,11 @@ class entorno3D:
                                                  TIPO_VALOR= CONTENIDO.tipoValor, CLASE_VALOR= CONTENIDO.claseValor, 
                                                  CLASE_CONTENIDO= CONTENIDO.claseContenido, REFERENCIA = CONTENIDO.referencia)
         REPORTES.añadirSimbolo(CONTENIDO.id, CONTENIDO.tipo, "", self.nombre_entorno, CONTENIDO.linea, CONTENIDO.columna)
+        return self.variables[CONTENIDO.id]
     
     
     @staticmethod
-    def getSimbolo(CONTENIDO, SIMBOLOS, REPORTES):
+    def getSimbolo(CONTENIDO, SIMBOLOS, REPORTES, CODIGO):
         '''
             Retorna una instancia de tipo Simbolo3D con los datos de la variable. Esta se busca en todos los entornos de un ambito 
             (lista de entornos).
@@ -54,13 +56,14 @@ class entorno3D:
             return temp
             
         #Si termina el for y no lo encuentra, es error y retorna Null
+        CODIGO.insertar_Comentario("ERROR: La variable " + CONTENIDO.id + " no existe en ningun entorno.")
         REPORTES.salida += "ERROR: La variable " + CONTENIDO.id + " no existe en ningun entorno. \n"
         mensaje = "La variable " + CONTENIDO.id + " no existe en ningun entorno."
         REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)
         return -1
     
     @staticmethod
-    def getPosicion(CONTENIDO, SIMBOLOS, REPORTES):
+    def getPosicion(CONTENIDO, SIMBOLOS, REPORTES, CODIGO):
         '''
             Retorna el numero de posiciones que debe moverse el stack para acceder a una variable.
             - Contenido: Variable de tipo valor con los datos de entrada.
@@ -83,6 +86,7 @@ class entorno3D:
             return posicion
             
         #Si termina el for y no lo encuentra, es error y retorna Null
+        CODIGO.insertar_Comentario("ERROR: La variable " + CONTENIDO.id + " no existe en ningun entorno.")
         REPORTES.salida += "ERROR: La variable " + CONTENIDO.id + " no existe en ningun entorno. \n"
         mensaje = "La variable " + CONTENIDO.id + " no existe en ningun entorno."
         REPORTES.añadirError("Semantico", mensaje, CONTENIDO.linea, CONTENIDO.columna)

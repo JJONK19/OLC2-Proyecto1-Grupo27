@@ -1,6 +1,7 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
+from C3D.Valor3D import valor3D
 
 class DeclaracionPrimitiva(instruccion):
     '''
@@ -147,5 +148,68 @@ class DeclaracionPrimitiva(instruccion):
             return None
 
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
+        CODIGO.insertar_Comentario("////////// INICIA DECLARACION PRIMITIVOS //////////")
+        #TRABAJAR CON LA EXPRESION Y CREAR EL VALOR
+        nuevo = ""
+       
+        if self.expresion == None:
+            temporal = CODIGO.nuevoTemporal()
+            heap = False
+
+            #Definir valor por defecto
+            if self.tipo == Tipo.BOOLEAN.value:
+                CODIGO.insertar_Asignacion(temporal, "1")
+
+            elif self.tipo == Tipo.STRING.value:
+                heap  = True
+                CODIGO.insertar_Asignacion(temporal, "H")
+                CODIGO.insertar_SetearHeap('H', ord(""))   
+                CODIGO.insertar_MoverHeap()
+                CODIGO.insertar_SetearHeap('H', '-1')            
+                CODIGO.insertar_MoverHeap()  
+
+            elif self.tipo == Tipo.NUMBER.value:
+                CODIGO.insertar_Asignacion(temporal, "0")
+
+            nuevo =  valor3D(temporal, True, self.tipo, Clases.PRIMITIVO.value, TIPO_VALOR=self.tipo,
+                             CLASE_VALOR=Clases.PRIMITIVO.value, HEAP=heap)
+
+        else:
+            #Extraer valores
+            expresionEvaluar = self.expresion.analisis(SIMBOLOS, REPORTES)
+            
+            #Comprobar que sea primitivo
+            if expresionEvaluar.clase != Clases.PRIMITIVO.value:
+                REPORTES.salida += "ERROR: Una variable primitiva solo recibe primitivos. \n"
+                mensaje = "Una variable primitiva solo recibe primitivos."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: Una variable primitiva solo recibe primitivos.")
+                return 
+            
+            #Comprobar que el tipo sea el mismo que la variable
+            if expresionEvaluar.tipo != self.tipo:
+                REPORTES.salida += "ERROR: Primitivo " + self.tipo + " no recibe " + expresionEvaluar.tipo + ". \n"
+                mensaje = "Primitivo " + self.tipo + " no recibe " + expresionEvaluar.tipo + "."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                CODIGO.insertar_Comentario("ERROR: Primitivo " + self.tipo + " no recibe " + expresionEvaluar.tipo + ".")
+                return 
+            
+            nuevo = expresionEvaluar
+
+        #Añadir el id de la variable a valor
+        nuevo.id = self.id
+        nuevo.linea = self.linea
+        nuevo.columna = self.columna
+
+        #Enviar al entorno local
+        local = SIMBOLOS[-1]
+        salida = local.insertarSimbolo(nuevo, REPORTES, CODIGO)
+        
+        if salida == -1:
+            return 
+        
+        #Añadir al stack el valor
+        tempStack = CODIGO.nuevoTemporal()
+        CODIGO.insertar_Expresion(tempStack, "P", "+", salida.posicionStack)
+        CODIGO.insertar_SetearStack(tempStack, nuevo.valor)
 

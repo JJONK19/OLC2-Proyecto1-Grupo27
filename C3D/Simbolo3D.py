@@ -21,4 +21,4 @@ class simbolo3D:
         self.claseContenido = CLASE_CONTENIDO
         self.posicionStack = POSICION
         self.estaEnHeap = HEAP
-        self.esReferencia = REFERENCIA
+        self.esReferencia = REFERENCIA 

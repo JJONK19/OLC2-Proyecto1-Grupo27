@@ -32,6 +32,7 @@ class entorno3D:
                                                  TIPO_VALOR= CONTENIDO.tipoValor, CLASE_VALOR= CONTENIDO.claseValor, 
                                                  CLASE_CONTENIDO= CONTENIDO.claseContenido, REFERENCIA = CONTENIDO.referencia)
         REPORTES.añadirSimbolo(CONTENIDO.id, CONTENIDO.tipo, "", self.nombre_entorno, CONTENIDO.linea, CONTENIDO.columna)
+        self.tamaño += 1
         return self.variables[CONTENIDO.id]
     
     

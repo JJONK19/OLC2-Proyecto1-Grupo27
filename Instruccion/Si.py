@@ -206,7 +206,7 @@ class si(instruccion):
         return None
 
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-
+        CODIGO.insertar_Comentario("////////// INICIA IF //////////")
         # Lista que almacena los labels de las salidas verdaderas en la condiciones
         # Se imprimen al terminar el else si es que viene
         listaSalidas = []
@@ -246,14 +246,19 @@ class si(instruccion):
             CODIGO.insertar_If(expresion.valor, "==", "1", labelVerdadero)
             CODIGO.insertar_Goto(labelFalso)
 
+            # -- Si es verdadero, se ejecutan todas las instrucciones
+            CODIGO.insertar_Label(labelVerdadero)
+            
+            #Mover el entorno al nuevo
+            local = SIMBOLOS[-1]
+            CODIGO.insertar_MoverStack(local.tamaño)
+
             # Crear el entorno nuevo y añadirlo a la lista
             nombre = "if_" + str(SIMBOLOS[0].contador)
             SIMBOLOS[0].contador += 1
             nuevoEntorno = entorno3D(nombre)
             SIMBOLOS.append(nuevoEntorno)
 
-            # -- Si es verdadero, se ejecutan todas las instrucciones
-            CODIGO.insertar_Label(labelVerdadero)
             for instruccion in self.instrucciones[i]:
                 retorno = instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)
 
@@ -261,14 +266,17 @@ class si(instruccion):
                     pass
                 elif retorno == 1:  # Instruccion break. Se regresa para que el que llamo el if lo maneje.
                     SIMBOLOS.pop()
+                    CODIGO.insertar_RegresarStack(local.tamaño)
                     # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
                 elif retorno == 0:  # Instruccion continue. Se regresa para que el que llamo el if lo maneje.
                     SIMBOLOS.pop()
+                    CODIGO.insertar_RegresarStack(local.tamaño)
                     # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
                 elif retorno == -1:  # Es un error. Se sigue arrastrando para detener la ejecucion.
                     SIMBOLOS.pop()
+                    CODIGO.insertar_RegresarStack(local.tamaño)
                     # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
                 else:
@@ -279,6 +287,7 @@ class si(instruccion):
 
             # Al terminar de traducir, saca el entorno
             SIMBOLOS.pop()
+            CODIGO.insertar_RegresarStack(local.tamaño)
             CODIGO.insertar_Goto(labelSalida)
             listaSalidas.append(labelSalida)
 
@@ -286,6 +295,9 @@ class si(instruccion):
             CODIGO.insertar_Label(labelFalso)
 
         # Ejecución del Else si es falso
+        local = SIMBOLOS[-1]
+        CODIGO.insertar_MoverStack(local.tamaño)
+
         nombre = "else_" + str(SIMBOLOS[0].contador)
         SIMBOLOS[0].contador += 1
         nuevoEntorno = entorno3D(nombre)
@@ -298,14 +310,17 @@ class si(instruccion):
                 pass
             elif retorno == 1:  # Instruccion break. Se regresa para que el que llamo el if lo maneje.
                 SIMBOLOS.pop()
+                CODIGO.insertar_RegresarStack(local.tamaño)
                 # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
             elif retorno == 0:  # Instruccion continue. Se regresa para que el que llamo el if lo maneje.
                 SIMBOLOS.pop()
+                CODIGO.insertar_RegresarStack(local.tamaño)
                 # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
             elif retorno == -1:  # Es un error. Se sigue arrastrando para detener la ejecucion.
                 SIMBOLOS.pop()
+                CODIGO.insertar_RegresarStack(local.tamaño)
                 # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
             else:
@@ -316,9 +331,9 @@ class si(instruccion):
 
         # Al terminar de ejecutar, se saca el entorno y se imprimen los labels de salida
         SIMBOLOS.pop()
+        CODIGO.insertar_RegresarStack(local.tamaño)
 
         for n in listaSalidas:
             CODIGO.insertar_Label(n)
-
 
         #Aca va el return

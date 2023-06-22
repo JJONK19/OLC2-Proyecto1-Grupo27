@@ -59,6 +59,7 @@ function(data, status){
 $("#bt_limpiar").click(function () {
     editor.setValue("");
     consola.setValue("");
+    c3d.setValue("");
 })
 
 

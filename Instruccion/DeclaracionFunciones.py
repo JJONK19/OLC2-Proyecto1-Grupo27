@@ -12,11 +12,13 @@ class declaracionFuncion(instruccion):
         - Columna: Posicion de la linea donde esta la instruccion.
     '''
 
-    def __init__(self, ID, LISTA_ATRIBUTOS, INSTRUCCIONES, LINEA, COLUMNA):
+    def __init__(self, ID, LISTA_ATRIBUTOS, RETURN, CLASE_RETURN, INSTRUCCIONES, LINEA, COLUMNA):
         super().__init__(LINEA, COLUMNA)
         self.id = ID
         self.listaAtributos = LISTA_ATRIBUTOS
         self.instrucciones = INSTRUCCIONES
+        self.tipo = RETURN
+        self.claseReturn = CLASE_RETURN
         self.tipoInstruccion = Instrucciones.DECLARACION_FUNCION.value
 
     def grafo(self, REPORTES):
@@ -57,6 +59,19 @@ class declaracionFuncion(instruccion):
         REPORTES.cont += 1
         REPORTES.dot += padre + "->" + nodoFunctionB + ";\n"
 
+        #Declarar return
+        #Declarar instrucciones
+        nodoFunctionB = "NODO" + str(REPORTES.cont)
+        REPORTES.dot += nodoFunctionB + "[ label = \": " + self.tipo + "\" ];\n"
+        REPORTES.cont += 1
+        REPORTES.dot += padre + "->" + nodoFunctionB + ";\n"
+
+        #Declarar instrucciones
+        nodoFunctionB = "NODO" + str(REPORTES.cont)
+        REPORTES.dot += nodoFunctionB + "[ label = \"{\" ];\n"
+        REPORTES.cont += 1
+        REPORTES.dot += padre + "->" + nodoFunctionB + ";\n"
+
         #Declarar instrucciones
         for instruccion in self.instrucciones:
             nodoInstruccion = instruccion.grafo(REPORTES)
@@ -82,7 +97,7 @@ class declaracionFuncion(instruccion):
         
         #Enviar al entorno global la estructura
         entornoGlobal = SIMBOLOS[0]
-        salida = entornoGlobal.insertarMetodo(self.id, atributos, self.instrucciones,  REPORTES, self.linea, self.columna)
+        salida = entornoGlobal.insertarMetodo(self.id, atributos, self.tipo, self.claseReturn, self.instrucciones,  REPORTES, self.linea, self.columna)
         
         if salida == -1:
             return -1
@@ -92,3 +107,4 @@ class declaracionFuncion(instruccion):
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
 
+ 

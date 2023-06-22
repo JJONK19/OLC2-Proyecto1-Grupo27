@@ -396,7 +396,7 @@ class entorno:
         return retorno
 
     #================================================== METODOS ==========================================================
-    def insertarMetodo(self, ID, PARAMETROS, INSTRUCCIONES, REPORTES, LINEA, COLUMNA):
+    def insertarMetodo(self, ID, PARAMETROS, RETURN, CLASE_RETURN,INSTRUCCIONES, REPORTES, LINEA, COLUMNA):
         '''
             Añade un nuevo metodo al diccionario de metodos y a la lista del reporte.
             - ID: Nombre del metodo.
@@ -413,7 +413,7 @@ class entorno:
 
         #Añadir el metodo a los reportes y a la lista de metodos
         REPORTES.añadirMetodo(ID, Tipo.ANY.value, LINEA, COLUMNA)
-        self.metodos[ID] = metodo(ID, PARAMETROS, INSTRUCCIONES)
+        self.metodos[ID] = metodo(ID, PARAMETROS, RETURN, CLASE_RETURN, INSTRUCCIONES)
 
     def getMetodo(self, ID, REPORTES, LINEA, COLUMNA):
         '''

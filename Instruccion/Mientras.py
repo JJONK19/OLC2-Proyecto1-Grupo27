@@ -170,9 +170,13 @@ class sentenciaWhile(instruccion):
         # Creación de Labels
         labelSiguiente = CODIGO.nuevoLabel()
         labelSalida = CODIGO.nuevoLabel()
+        labelInicio = CODIGO.nuevoLabel()
+
+        # Inicio
+        CODIGO.insertar_Label(labelInicio)
 
         # Evaluar la condicion
-        CODIGO.insertar_If(expresion.valor, "==", "0", labelSiguiente)
+        CODIGO.insertar_If(expresion.valor, "==", "1", labelSiguiente)
         CODIGO.insertar_Goto(labelSalida)
         listaSalidas.append(labelSalida)
 
@@ -184,9 +188,15 @@ class sentenciaWhile(instruccion):
 
         # -- Si es verdadero, se ejecutan todas las instrucciones
         CODIGO.insertar_Label(labelSiguiente)
+
+        # Mover el entorno al nuevo
+        local = SIMBOLOS[-1]
+        CODIGO.insertar_MoverStack(local.tamaño)
+
         for instruccion in self.instrucciones:
             retorno = instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)
 
+            '''
             if retorno == None:  # Instruccion sin return. Se ignora.
                 pass
             elif retorno == 1:              #Instruccion break. Termina la ejecucion y asigna a la variable de salida true.
@@ -205,6 +215,7 @@ class sentenciaWhile(instruccion):
                 #if retorno.regreso:  # Algunas funciones retornan valores. Si return no es true, se ignora
                 #    SIMBOLOS.pop()
                 #    return retorno
+            
 
 
         #Si pasa por aca es que se aplica el break a la ejecion.
@@ -217,16 +228,16 @@ class sentenciaWhile(instruccion):
         if siguiente:
             SIMBOLOS.pop()
             CODIGO.insertar_Goto(labelSiguiente)
+            '''
 
         # Al terminar de traducir, saca el entorno
         SIMBOLOS.pop()
+        CODIGO.insertar_RegresarStack(local.tamaño)
 
-
+        #Insertar el goto de regreso al inicio del ciclo
+        CODIGO.insertar_Goto(labelInicio)
 
         for n in listaSalidas:
             CODIGO.insertar_Label(n)
-
-
-        #Aca va el return
 
 

@@ -34,10 +34,12 @@ class sentenciaBreak(instruccion):
         return 1
     
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        labelBreak = CODIGO.nuevoLabel()
-        CODIGO.insertar_Label(labelBreak)
 
-        retorno = valor3D()
-        retorno.labelBreak.append(labelBreak)
-        retorno.control = 1
-        return retorno
+        # Si labelBreak es igual a "" significa que no esta en un ciclo
+        local = SIMBOLOS[-1]
+        if local.labelBreak == "":
+            CODIGO.insertar_Comentario("ERROR: Se encontró un break fuera de ciclo.")
+            return
+
+        CODIGO.insertar_RegresarStack(local.contadorBreak)
+        CODIGO.insertar_Goto(local.labelBreak)

@@ -254,36 +254,25 @@ class si(instruccion):
             CODIGO.insertar_MoverStack(local.tamaño)
 
             # Crear el entorno nuevo y añadirlo a la lista
+            #Se hereda el label del break
             nombre = "if_" + str(SIMBOLOS[0].contador)
             SIMBOLOS[0].contador += 1
             nuevoEntorno = entorno3D(nombre)
+            
+            #Heredar labels y contadores
+            nuevoEntorno.labelBreak = local.labelBreak
+            nuevoEntorno.contadorBreak += local.contadorBreak
+
+            nuevoEntorno.labelContinue = local.labelContinue
+            nuevoEntorno.contadorContinue += local.contadorContinue
+
+            nuevoEntorno.labelReturn = local.labelReturn
+            nuevoEntorno.contadorReturn += local.contadorReturn
+
             SIMBOLOS.append(nuevoEntorno)
 
             for instruccion in self.instrucciones[i]:
                 retorno = instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)
-
-                if retorno == None:  # Instruccion sin return. Se ignora.
-                    pass
-                elif retorno == 1:  # Instruccion break. Se regresa para que el que llamo el if lo maneje.
-                    SIMBOLOS.pop()
-                    CODIGO.insertar_RegresarStack(local.tamaño)
-                    # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
-
-                elif retorno == 0:  # Instruccion continue. Se regresa para que el que llamo el if lo maneje.
-                    SIMBOLOS.pop()
-                    CODIGO.insertar_RegresarStack(local.tamaño)
-                    # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
-
-                elif retorno == -1:  # Es un error. Se sigue arrastrando para detener la ejecucion.
-                    SIMBOLOS.pop()
-                    CODIGO.insertar_RegresarStack(local.tamaño)
-                    # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
-
-                else:
-                    pass
-                    #if retorno.regreso:  # Algunas funciones retornan valores. Si return no es true, se ignora
-                    #    SIMBOLOS.pop()
-                    #    return retorno
 
             # Al terminar de traducir, saca el entorno
             SIMBOLOS.pop()

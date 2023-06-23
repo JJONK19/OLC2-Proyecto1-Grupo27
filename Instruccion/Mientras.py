@@ -192,46 +192,24 @@ class sentenciaWhile(instruccion):
         nombre = "while_" + str(SIMBOLOS[0].contador)
         SIMBOLOS[0].contador += 1
         nuevoEntorno = entorno3D(nombre)
+
+        #Heredar labels y contadores
+        nuevoEntorno.labelBreak = labelSalida
+        nuevoEntorno.contadorBreak += local.tamaño
+
+        nuevoEntorno.labelContinue = labelInicio
+        nuevoEntorno.contadorContinue += local.tamaño
+        
+
+        nuevoEntorno.labelReturn = local.labelReturn
+        nuevoEntorno.contadorReturn += local.contadorReturn
+
         SIMBOLOS.append(nuevoEntorno)
 
         for instruccion in self.instrucciones:
             retorno = instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)
 
-            '''
-            if retorno == None:  # Instruccion sin return. Se ignora.
-                pass
-            elif retorno == 1:              #Instruccion break. Termina la ejecucion y asigna a la variable de salida true.
-                salir = True
-                break
-            elif retorno == 0:              #Instruccion continue. El break termina la ejecucion.
-                siguiente = True
-                break
-
-            elif retorno == -1:  # Es un error. Se sigue arrastrando para detener la ejecucion.
-                SIMBOLOS.pop()
-                # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
-
-            else:
-                pass
-                #if retorno.regreso:  # Algunas funciones retornan valores. Si return no es true, se ignora
-                #    SIMBOLOS.pop()
-                #    return retorno
-            
-
-
-        #Si pasa por aca es que se aplica el break a la ejecion.
-        if salir:
-            SIMBOLOS.pop()
-            CODIGO.insertar_Goto(labelSalida)
-            listaSalidas.append(labelSalida)
-
-        #Si pasa por aca es que se aplica el continue a la ejecion.
-        if siguiente:
-            SIMBOLOS.pop()
-            CODIGO.insertar_Goto(labelSiguiente)
-            '''
-
-        # Al terminar de traducir, saca el entorno
+        # Al terminar de traducir, saca el entorno normal
         SIMBOLOS.pop()
         CODIGO.insertar_RegresarStack(local.tamaño)
 

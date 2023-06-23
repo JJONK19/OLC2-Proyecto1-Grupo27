@@ -10,9 +10,16 @@ class entorno3D:
         self.contador = 0                   #Sirve para crear nombres unicos para los entornos 
         self.tamaño = 0                     #Numero de variables declaradas en el entorno
 
-        #Sentencias de Control
-        self.listaBreak = []
- 
+        #Labels de Control
+        self.labelBreak = ""
+        self.labelContinue = ""
+        self.labelReturn = ""
+
+        #Contadores de retorno 
+        self.contadorBreak = 0
+        self.contadorContinue = 0
+        self.contadorReturn = 0
+
     #========================================== VARIABLES ===============================================================
     def insertarSimbolo(self, CONTENIDO, REPORTES, CODIGO):
         '''

@@ -60,4 +60,11 @@ class sentenciaReturn(instruccion):
             return retorno
             
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
+        # Si labelReturn es igual a "" significa que no esta en un ciclo
+        local = SIMBOLOS[-1]
+        if local.labelReturn == "":
+            CODIGO.insertar_Comentario("ERROR: Se encontró un return fuera de una función.")
+            return
+
+        CODIGO.insertar_RegresarStack(local.contadorReturn)
+        CODIGO.insertar_Goto(local.labelReturn)

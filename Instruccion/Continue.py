@@ -33,4 +33,12 @@ class sentenciaContinue(instruccion):
         return 0
     
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
+        # Si labelContinue es igual a "" significa que no esta en un ciclo
+        local = SIMBOLOS[-1]
+        if local.labelContinue == "":
+            CODIGO.insertar_Comentario("ERROR: Se encontró un continue fuera de un ciclo.")
+            return
+
+        CODIGO.insertar_RegresarStack(local.contadorContinue)
+        CODIGO.insertar_Goto(local.labelContinue)
+

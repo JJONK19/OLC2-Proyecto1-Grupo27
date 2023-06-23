@@ -3,6 +3,7 @@ from Tipos.Tipos import *
 from Ejecucion.Valor import valor
 from Ejecucion.Entorno import entorno
 from C3D.Valor3D import valor3D
+from C3D.Entorno3D import entorno3D
 
 class expresionUnaria(instruccion):
     '''
@@ -166,8 +167,8 @@ class expresionUnaria(instruccion):
                 retorno.clase = Clases.NULL.value
                 retorno.string = "NULL"
                 
-                REPORTES.salida += "ERROR: La negacion unaria solo recibe numbers. \n"
-                mensaje = "La negacion unaria solo recibe numbers."
+                REPORTES.salida += "ERROR: El incremento solo recibe numbers. \n"
+                mensaje = "El incremento unaria solo recibe numbers."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                 return retorno
             
@@ -212,8 +213,8 @@ class expresionUnaria(instruccion):
                 retorno.clase = Clases.NULL.value
                 retorno.string = "NULL"
                 
-                REPORTES.salida += "ERROR: La negacion unaria solo recibe numbers. \n"
-                mensaje = "La negacion unaria solo recibe numbers."
+                REPORTES.salida += "ERROR: El decremento unaria solo recibe numbers. \n"
+                mensaje = "El decremento unaria solo recibe numbers."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
                 return retorno
             
@@ -266,6 +267,7 @@ class expresionUnaria(instruccion):
         #Separacion de instruccion
         if self.tipoOperacion == Expresion.NOT.value:
             #Evaluar el caso en que ambos sean boolean
+            CODIGO.insertar_Comentario("////////// INICIA NOT //////////")
             if expresion.tipo == Tipo.BOOLEAN.value:
                 #Crear el temporal. Resulatdo almacena el resultado de la comparacion. 1 en el true, 0 en el false.
                 #Se le asigna 0 de una vez para que vaya al label de salida si no cumple
@@ -299,7 +301,7 @@ class expresionUnaria(instruccion):
                 return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
         
         elif self.tipoOperacion == Expresion.UNARIO.value:
-            CODIGO.insertar_Comentario("////////// INICIA RESTA //////////")
+            CODIGO.insertar_Comentario("////////// INICIA UNARIO //////////")
             #Evaluar el caso en que ambos sean number
             if expresion.tipo == Tipo.NUMBER.value:
                 #Crear el temporal y añadirle la resta de los temporales
@@ -317,7 +319,64 @@ class expresionUnaria(instruccion):
                 temporal = CODIGO.nuevoTemporal()
                 CODIGO.insertar_Asignacion(temporal, "0")
                 return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        elif self.tipoOperacion == Expresion.INCREMENTO.value:
+            #Evaluar que el valor sea booleano
+            if expresion.tipo != Tipo.NUMBER.value:
+                CODIGO.insertar_Comentario("ERROR: El incremento unaria solo recibe numbers.")
+                REPORTES.salida += "ERROR: El incremento solo recibe numbers. \n"
+                mensaje = "El incremento solo recibe numbers."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+            #Obtener la variable de la tabla de simbolos
+            nuevo =  valor3D("", True, "", "")
+            nuevo.id = expresion.id
+            nuevo.linea = self.linea
+            nuevo.columna = self.columna
+
+            #Obtener posicion de la variable
+            posicion = entorno3D.getPosicion(nuevo, SIMBOLOS, REPORTES, CODIGO)
+
+            tempStack = CODIGO.nuevoTemporal()
+            tempResultado = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Expresion(tempResultado, expresion.valor, "+", "1")
+            #Guardar en un temporal del valor del stack
+            CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
+            CODIGO.insertar_SetearStack(tempStack, tempResultado)
+
+            return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+                
+        elif self.tipoOperacion == Expresion.DECREMENTO.value:
+            #Evaluar que el valor sea booleano
+            if expresion.tipo != Tipo.NUMBER.value:
+                CODIGO.insertar_Comentario("ERROR: El decremento unaria solo recibe numbers.")
+                REPORTES.salida += "ERROR: El decremento solo recibe numbers. \n"
+                mensaje = "El decremento solo recibe numbers."
+                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+                temporal = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Asignacion(temporal, "0")
+                return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+            #Obtener la variable de la tabla de simbolos
+            nuevo =  valor3D("", True, "", "")
+            nuevo.id = expresion.id
+            nuevo.linea = self.linea
+            nuevo.columna = self.columna
+
+            #Obtener posicion de la variable
+            posicion = entorno3D.getPosicion(nuevo, SIMBOLOS, REPORTES, CODIGO)
+
+            tempStack = CODIGO.nuevoTemporal()
+            tempResultado = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Expresion(tempResultado, expresion.valor, "-", "1")
+            #Guardar en un temporal del valor del stack
+            CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
+            CODIGO.insertar_SetearStack(tempStack, tempResultado)
+
+            return valor3D(tempResultado, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
             
-        
-        
-        

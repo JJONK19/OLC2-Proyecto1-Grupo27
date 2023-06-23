@@ -3,6 +3,7 @@ from Tipos.Tipos import *
 from Ejecucion.Valor import valor
 
 from Dato.Any import any
+from C3D.Valor3D import valor3D
 
 class DeclaracionAny(instruccion):
     '''
@@ -122,4 +123,46 @@ class DeclaracionAny(instruccion):
         return salida
     
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
+        CODIGO.insertar_Comentario("////////// INICIA DECLARACION ANY //////////")
+        #TRABAJAR CON LA EXPRESION Y CREAR EL VALOR
+        nuevo = ""
+       
+        if self.expresion == None:
+            #Se define un string como valor por defecto
+            temporal = CODIGO.nuevoTemporal()
+            heap  = True
+            CODIGO.insertar_Asignacion(temporal, "H")
+            CODIGO.insertar_SetearHeap('H', ord(""))   
+            CODIGO.insertar_MoverHeap()
+            CODIGO.insertar_SetearHeap('H', '-1')            
+            CODIGO.insertar_MoverHeap()  
+
+            nuevo =  valor3D(temporal, True, self.tipo, self.clase, TIPO_VALOR=Tipo.STRING.value,
+                             CLASE_VALOR=Clases.PRIMITIVO.value, HEAP=heap)
+
+        else:
+            #Extraer valores
+            expresionEvaluar = self.expresion.c3d(SIMBOLOS, REPORTES, CODIGO) 
+            expresionEvaluar.tipoValor = expresionEvaluar.tipo
+            expresionEvaluar.claseValor = expresionEvaluar.clase 
+            expresionEvaluar.tipo = Tipo.ANY.value
+            expresionEvaluar.clase = Clases.ANY.value
+            nuevo = expresionEvaluar
+
+        #Añadir el id de la variable a valor
+        nuevo.id = self.id
+        nuevo.linea = self.linea
+        nuevo.columna = self.columna
+
+        #Enviar al entorno local
+        local = SIMBOLOS[-1]
+        salida = local.insertarSimbolo(nuevo, REPORTES, CODIGO)
+        
+        if salida == -1:
+            return 
+        
+        #Añadir al stack el valor
+        tempStack = CODIGO.nuevoTemporal()
+        CODIGO.insertar_Expresion(tempStack, "P", "+", salida.posicionStack)
+        CODIGO.insertar_SetearStack(tempStack, nuevo.valor)
+

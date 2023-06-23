@@ -133,7 +133,7 @@ class nativaConValor(instruccion):
         if self.tipoInstruccion == Expresion.TOFIXED.value:
             #Ejecutar la funcion. El numero de decimales es contenido y el valor que se trabaja es modificar
             numero = float(expresionEvaluar.valor)
-            cifras = int(expresionContenido.valor)
+            cifras = int(float(expresionContenido.valor))
             aproximar = f"{numero:.{cifras}f}"
 
             retorno = valor()
@@ -149,7 +149,7 @@ class nativaConValor(instruccion):
         elif self.tipoInstruccion == Expresion.TOEXPONENTIAL.value:
             #Ejecutar la funcion. El numero de decimales es contenido y el valor que se trabaja es modificar
             numero = float(expresionEvaluar.valor)
-            cifras = int(expresionContenido.valor)
+            cifras = int(float(expresionContenido.valor))
             exponencial = format(numero, f".{cifras}e")
 
             retorno = valor()
@@ -248,7 +248,7 @@ class nativaConValor(instruccion):
             CODIGO.insertar_Pow(tempPotencia, "10", expresionContenido.valor) #potencia = math.Pow(10, decimales)
             
             #Dividir ese numero entre la potencia
-            CODIGO.insertar_Expresion(expresionEvaluar, expresionEvaluar.valor, "/", tempPotencia)
+            CODIGO.insertar_Expresion(expresionEvaluar.valor, expresionEvaluar.valor, "/", tempPotencia)
 
             #Convertir el resultado a string ===================================================================
             #Declaracion de Labels y temporales
@@ -261,7 +261,6 @@ class nativaConValor(instruccion):
             tempDecimal = CODIGO.nuevoTemporal()
             tempAlmacen = CODIGO.nuevoTemporal()
             tempTemporal = CODIGO.nuevoTemporal()
-            tempTemporal2 = CODIGO.nuevoTemporal()
 
             #Si es negativo, añadir al heap el signo y obtener el valor absoluto
             CODIGO.insertar_If(expresionEvaluar.valor, "<", "0", labelNoEsNegativo)
@@ -277,26 +276,28 @@ class nativaConValor(instruccion):
 
             #Iniciar un ciclo para crear los enteros
             CODIGO.insertar_Label(labelEntero)
-            CODIGO.insertar_If(tempEntero, "<", "0", labelEnteroSalida)
-            CODIGO.insertar(f'{tempAlmacen} = int({tempEntero}) % 10')
-            CODIGO.insertar_Expresion(tempAlmacen, tempAlmacen, "+", "48")
-            CODIGO.insertar_SetearHeap('H', tempAlmacen)   
+            CODIGO.insertar_If(tempEntero, ">", "0", labelEnteroSalida)
+            CODIGO.insertar_Mod(tempAlmacen, tempEntero, "10")
+            CODIGO.insertar_Expresion(tempTemporal, tempAlmacen, "+", "48")
+            CODIGO.insertar_SetearHeap('H', tempTemporal)   
             CODIGO.insertar_MoverHeap()
-            CODIGO.insertar_Expresion(tempTemporal, tempEntero, "/", "10")
-            CODIGO.insertar_Floor(tempEntero, tempTemporal)
+            CODIGO.insertar_Expresion(tempEntero, tempEntero, "/", "10")
             CODIGO.insertar_Goto(labelEntero)
             CODIGO.insertar_Label(labelEnteroSalida)
             
+            #Añadir punto
+            CODIGO.insertar_SetearHeap('H', '46')            
+            CODIGO.insertar_MoverHeap()
+
             #Iniciar un ciclo para crear los Decimales
             CODIGO.insertar_Label(labelDecimal)
-            CODIGO.insertar_If(tempDecimal, "<", "0", labelDecimalSalida)
-            CODIGO.insertar(f'{tempAlmacen} = int({tempEntero}) * 10')
-            CODIGO.insertar_Expresion(tempAlmacen, tempAlmacen, "+", "48")
-            CODIGO.insertar_SetearHeap('H', tempAlmacen)   
+            CODIGO.insertar_If(tempDecimal, ">", "0", labelDecimalSalida)
+            CODIGO.insertar(f'{tempDecimal} = {tempDecimal} * 10\n')
+            CODIGO.insertar(f'{tempAlmacen} = math.Floor({tempDecimal})\n')
+            CODIGO.insertar_Expresion(tempTemporal, tempAlmacen, "+", "48")
+            CODIGO.insertar_SetearHeap('H', tempTemporal)   
             CODIGO.insertar_MoverHeap()
-            CODIGO.insertar_Expresion(tempTemporal, tempDecimal, "*", "10")
-            CODIGO.insertar_Floor(tempTemporal2, tempTemporal)
-            CODIGO.insertar_Expresion(tempDecimal, tempTemporal, "-", tempTemporal2)
+            CODIGO.insertar_Expresion(tempDecimal, tempDecimal, "-", tempAlmacen)
             CODIGO.insertar_Goto(labelDecimal)
             CODIGO.insertar_Label(labelDecimalSalida)
             
@@ -317,7 +318,6 @@ class nativaConValor(instruccion):
             tempDecimal = CODIGO.nuevoTemporal()
             tempAlmacen = CODIGO.nuevoTemporal()
             tempTemporal = CODIGO.nuevoTemporal()
-            tempTemporal2 = CODIGO.nuevoTemporal()
 
             #Si es negativo, añadir al heap el signo y obtener el valor absoluto
             CODIGO.insertar_If(expresionEvaluar.valor, "<", "0", labelNoEsNegativo)
@@ -333,26 +333,26 @@ class nativaConValor(instruccion):
 
             #Iniciar un ciclo para crear los enteros
             CODIGO.insertar_Label(labelEntero)
-            CODIGO.insertar_If(tempEntero, "<", "0", labelEnteroSalida)
-            CODIGO.insertar(f'{tempAlmacen} = int({tempEntero}) % 10')
+            CODIGO.insertar_If(tempEntero, ">", "0", labelEnteroSalida)
+            CODIGO.insertar(f'{tempTemporal} = int({tempEntero}) % 10\n')
+            CODIGO.insertar_Asignacion(tempAlmacen, tempTemporal)
             CODIGO.insertar_Expresion(tempAlmacen, tempAlmacen, "+", "48")
             CODIGO.insertar_SetearHeap('H', tempAlmacen)   
             CODIGO.insertar_MoverHeap()
-            CODIGO.insertar_Expresion(tempTemporal, tempEntero, "/", "10")
-            CODIGO.insertar_Floor(tempEntero, tempTemporal)
+            CODIGO.insertar_Expresion(tempEntero, tempEntero, "/", "10")
             CODIGO.insertar_Goto(labelEntero)
             CODIGO.insertar_Label(labelEnteroSalida)
             
             #Iniciar un ciclo para crear los Decimales
             CODIGO.insertar_Label(labelDecimal)
-            CODIGO.insertar_If(tempDecimal, "<", "0", labelDecimalSalida)
-            CODIGO.insertar(f'{tempAlmacen} = int({tempEntero}) * 10')
+            CODIGO.insertar_If(tempDecimal, ">", "0", labelDecimalSalida)
+            CODIGO.insertar(f'{tempDecimal} = {tempDecimal} * 10\n')
+            CODIGO.insertar(f'{tempAlmacen} = math.Floor({tempDecimal})\n')
             CODIGO.insertar_Expresion(tempAlmacen, tempAlmacen, "+", "48")
             CODIGO.insertar_SetearHeap('H', tempAlmacen)   
             CODIGO.insertar_MoverHeap()
-            CODIGO.insertar_Expresion(tempTemporal, tempDecimal, "*", "10")
-            CODIGO.insertar_Floor(tempTemporal2, tempTemporal)
-            CODIGO.insertar_Expresion(tempDecimal, tempTemporal, "-", tempTemporal2)
+            CODIGO.insertar_Floor(tempTemporal, tempAlmacen)
+            CODIGO.insertar_Expresion(tempDecimal, tempDecimal, "-", tempTemporal)
             CODIGO.insertar_Goto(labelDecimal)
             CODIGO.insertar_Label(labelDecimalSalida)
 

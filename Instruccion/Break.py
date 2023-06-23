@@ -1,5 +1,6 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
+from C3D.Valor3D import valor3D
  
 class sentenciaBreak(instruccion):
     '''
@@ -33,6 +34,10 @@ class sentenciaBreak(instruccion):
         return 1
     
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
+        labelBreak = CODIGO.nuevoLabel()
+        CODIGO.insertar_Label(labelBreak)
 
-
+        retorno = valor3D()
+        retorno.labelBreak.append(labelBreak)
+        retorno.control = 1
+        return retorno

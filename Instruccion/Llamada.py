@@ -79,7 +79,6 @@ class llamada(instruccion):
         
         #Obtener posicion de la variable
         posicion = entorno3D.getPosicion(nuevo, SIMBOLOS, REPORTES, CODIGO)
-        print(posicion)
 
         #Separar por clases
         if salida.clase == Clases.PRIMITIVO.value:
@@ -91,7 +90,7 @@ class llamada(instruccion):
             CODIGO.insertar_ObtenerStack(tempGet, tempStack)
 
             #Retornar el valor
-            return valor3D(tempGet, True, salida.tipo, salida.clase)
+            return valor3D(tempGet, True, salida.tipo, salida.clase, ID=self.id)
         
         elif salida.clase == Clases.VECTOR.value:
             pass
@@ -100,6 +99,24 @@ class llamada(instruccion):
             pass
 
         elif salida.clase == Clases.ANY.value:
-            pass
+            #Separar por clases
+            if salida.claseValor == Clases.PRIMITIVO.value:
+                tempStack = CODIGO.nuevoTemporal()
+                tempGet = CODIGO.nuevoTemporal()
+
+                #Guardar en un temporal del valor del stack
+                CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
+                CODIGO.insertar_ObtenerStack(tempGet, tempStack)
+
+                #Retornar el valor
+                return valor3D(tempGet, True, salida.tipoValor, salida.claseValor, ID=self.id)
+            
+            elif salida.claseValor == Clases.VECTOR.value:
+                pass
+
+            elif salida.claseValor == Clases.STRUCT.value:
+                pass
 
 
+
+ 

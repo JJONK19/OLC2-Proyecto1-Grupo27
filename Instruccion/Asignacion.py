@@ -120,7 +120,6 @@ class asignacion(instruccion):
                 return 
             
             tempStack = CODIGO.nuevoTemporal()
-            tempGet = CODIGO.nuevoTemporal()
 
             #Guardar en un temporal del valor del stack
             CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
@@ -133,9 +132,18 @@ class asignacion(instruccion):
             pass
 
         elif salida.clase == Clases.ANY.value:
-            pass
+            #Asignar en el stack
+            tempStack = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
+            CODIGO.insertar_SetearStack(tempStack, expresion.valor)
+
+            #Cambiar el tipo del any
+            salida.claseValor = expresion.clase
+            salida.tipoValor = expresion.tipo
+            salida.claseContenido = expresion.claseContenido
 
 
+ 
 
 
 

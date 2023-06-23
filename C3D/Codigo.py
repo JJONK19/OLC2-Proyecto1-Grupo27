@@ -187,6 +187,12 @@ class codigo:
         self.libreriasGO("math")
         entrada = f"{res} = math.Round({valor})\n"
         self.insertar(entrada)
+
+    def insertar_Mod(self, res, valor1, valor2):
+        #Añadir la libreria
+        self.libreriasGO("math")
+        entrada = f"{res} = math.Mod({valor1}, {valor2})\n"
+        self.insertar(entrada)
     # Stack / Heap ------------------------------------------------------------------------------------
     # H = H + 1
     def insertar_MoverHeap(self):

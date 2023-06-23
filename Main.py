@@ -4,6 +4,10 @@ import sys
 from PyQt5.QtGui import *
 from PyQt5.QtGui import QPixmap
 from Analizador import Analizador
+import sys
+limit = sys.getrecursionlimit()
+NewLimit = 5000
+sys.setrecursionlimit(NewLimit)
 
 class ventana (QtWidgets.QMainWindow):
 

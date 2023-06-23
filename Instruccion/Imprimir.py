@@ -66,7 +66,7 @@ class imprimir(instruccion):
         #Crear el temporal del retorno
         for i in self.expresion:
             expresion = i.c3d(SIMBOLOS, REPORTES, CODIGO)
-
+        
             #Clasificar por tipo
             if expresion.tipo == Tipo.NUMBER.value and expresion.clase == Clases.PRIMITIVO.value:
                 #Comentario

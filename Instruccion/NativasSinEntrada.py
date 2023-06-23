@@ -264,7 +264,7 @@ class nativaSinValor(instruccion):
             CODIGO.insertar_Comentario("////////// INICIA TOSTRING //////////")
             
             #Por divisiones sucesivas se busca extraer cada digito del numero y añadirlo al heap como string
-            if expresionEvaluar.tipo == Tipo.NUMBER:
+            if expresionEvaluar.tipo == Tipo.NUMBER.value:
                 #Crear el temporal y guardar la posicion del heap
                 tempResultado = CODIGO.nuevoTemporal()
                 CODIGO.insertar_Asignacion(tempResultado, "H")
@@ -296,7 +296,7 @@ class nativaSinValor(instruccion):
                 #Iniciar un ciclo para crear los enteros
                 CODIGO.insertar_Label(labelEntero)
                 CODIGO.insertar_If(tempEntero, "<", "0", labelEnteroSalida)
-                CODIGO.insertar(f'{tempAlmacen} = int({tempEntero}) % 10')
+                CODIGO.insertar(f'{tempAlmacen} = int({tempEntero}) % 10\n')
                 CODIGO.insertar_Expresion(tempAlmacen, tempAlmacen, "+", "48")
                 CODIGO.insertar_SetearHeap('H', tempAlmacen)   
                 CODIGO.insertar_MoverHeap()
@@ -308,7 +308,7 @@ class nativaSinValor(instruccion):
                 #Iniciar un ciclo para crear los Decimales
                 CODIGO.insertar_Label(labelDecimal)
                 CODIGO.insertar_If(tempDecimal, "<", "0", labelDecimalSalida)
-                CODIGO.insertar(f'{tempAlmacen} = int({tempEntero}) * 10')
+                CODIGO.insertar(f'{tempAlmacen} = int({tempEntero}) * 10\n')
                 CODIGO.insertar_Expresion(tempAlmacen, tempAlmacen, "+", "48")
                 CODIGO.insertar_SetearHeap('H', tempAlmacen)   
                 CODIGO.insertar_MoverHeap()
@@ -570,7 +570,7 @@ class nativaSinValor(instruccion):
                     CODIGO.insertar_Asignacion(temporal, "0")
                     return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
             
-            if expresionEvaluar.tipo == Tipo.STRING.value and expresionEvaluar.clase == Clases.PRIMITIVO:
+            if expresionEvaluar.tipo == Tipo.STRING.value and expresionEvaluar.clase == Clases.PRIMITIVO.value:
                 tempResultado = CODIGO.nuevoTemporal()
                 CODIGO.insertar_Asignacion(tempResultado, "0")
 

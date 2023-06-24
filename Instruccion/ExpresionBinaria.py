@@ -1,3 +1,5 @@
+import math
+
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
@@ -334,8 +336,9 @@ class expresionBinaria(instruccion):
                     return retorno
 
                 #Convertir el numero
-                numero = float(expresionIzquierda.valor) % float(expresionDerecha.valor) 
-                
+                #numero = float(expresionIzquierda.valor) % float(expresionDerecha.valor)
+                numero = math.fmod(float(expresionIzquierda.valor), float(expresionDerecha.valor))
+
                 #Retorno
                 retorno = valor()
                 retorno.tipo = expresionIzquierda.tipo
@@ -972,6 +975,8 @@ class expresionBinaria(instruccion):
                 labelSalida = CODIGO.nuevoLabel()
                 labelError = CODIGO.nuevoLabel()
 
+
+
                 CODIGO.insertar_If(expresionDerecha.valor , "!=", "0", labelSalida)
                 CODIGO.insertar_MathError()
                 CODIGO.insertar_Asignacion(tempResultado, "0")
@@ -979,11 +984,7 @@ class expresionBinaria(instruccion):
                 
                 #--Ejecutar MODULO. Se calcula a pasito restando al dividendo el cociente por el divisor
                 CODIGO.insertar_Label(labelSalida)
-                tempDivision = CODIGO.nuevoTemporal()
-                tempMultiplicacion = CODIGO.nuevoTemporal()
-                CODIGO.insertar_Expresion(tempDivision, expresionIzquierda.valor, "/", expresionDerecha.valor) #t1 = izq /der
-                CODIGO.insertar_Expresion(tempMultiplicacion, tempDivision, "*", expresionDerecha.valor)        #t2 = t1 * der
-                CODIGO.insertar_Expresion(tempResultado, expresionIzquierda.valor, "-", tempMultiplicacion)     #res = izq - t2
+                CODIGO.insertar_Mod(tempResultado, expresionIzquierda.valor, expresionDerecha.valor)
 
                 #--Label del error
                 CODIGO.insertar_Label(labelError)

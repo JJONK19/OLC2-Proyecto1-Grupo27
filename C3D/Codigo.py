@@ -193,6 +193,7 @@ class codigo:
         self.libreriasGO("math")
         entrada = f"{res} = math.Mod({valor1}, {valor2})\n"
         self.insertar(entrada)
+
     # Stack / Heap ------------------------------------------------------------------------------------
     # H = H + 1
     def insertar_MoverHeap(self):

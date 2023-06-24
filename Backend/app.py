@@ -71,7 +71,7 @@ def hello():
     command = f'dot -Tjpg {dot_file} -o {output_image}  '
     os.system(f'cmd /C "{command}"')
     # os.system(command)
-    
+
     #Conversión de la img a Base64
     with open(output_image, "rb") as image_file:
         base64_ast = base64.b64encode(image_file.read()).decode('utf-8')
@@ -140,7 +140,6 @@ def bye():
     output_image = "arbolast.jpg"
 
     command = f'dot -Tjpg {dot_file} -o {output_image}  '
-
     os.system(f'cmd /C "{command}"')
     #os.system(command)
 

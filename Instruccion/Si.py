@@ -283,6 +283,11 @@ class si(instruccion):
             # -- Si es falso solo se imprime el label
             CODIGO.insertar_Label(labelFalso)
 
+        if len(self.sino) == 0:
+            for n in listaSalidas:
+                CODIGO.insertar_Label(n)
+            return
+
         # Ejecución del Else si es falso
         local = SIMBOLOS[-1]
         CODIGO.insertar_MoverStack(local.tamaño)

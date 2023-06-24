@@ -237,8 +237,9 @@ class cicloFor(instruccion):
         CODIGO.insertar_Label(labelSiguiente)
 
         # Mover el entorno al nuevo
-        local = SIMBOLOS[-1]
-        CODIGO.insertar_MoverStack(local.tamaño)
+        localInterno = SIMBOLOS[-1]
+
+        CODIGO.insertar_MoverStack(localInterno.tamaño)
 
         # Crear el entorno nuevo y añadirlo a la lista
         nombre = "for_" + str(SIMBOLOS[0].contador)
@@ -262,7 +263,7 @@ class cicloFor(instruccion):
 
         # Al terminar de traducir, saca el entorno normal
         SIMBOLOS.pop()
-        CODIGO.insertar_RegresarStack(local.tamaño)
+        CODIGO.insertar_RegresarStack(localInterno.tamaño)
 
         #Insertar el goto a la actualizacion (continue llega acá)
         CODIGO.insertar_Goto(labelContinue)
@@ -274,6 +275,5 @@ class cicloFor(instruccion):
             CODIGO.insertar_Label(n)
 
         #Sacar el for global
-        local = SIMBOLOS[-1]
         CODIGO.insertar_RegresarStack(local.tamaño)
         SIMBOLOS.pop()

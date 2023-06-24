@@ -181,6 +181,7 @@ class sentenciaWhile(instruccion):
         local = SIMBOLOS[-1]
         CODIGO.insertar_MoverStack(local.tamaño)
 
+
         # Crear el entorno nuevo y añadirlo a la lista
         nombre = "while_" + str(SIMBOLOS[0].contador)
         SIMBOLOS[0].contador += 1

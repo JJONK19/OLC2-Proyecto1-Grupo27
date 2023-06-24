@@ -167,106 +167,112 @@ class cicloFor(instruccion):
         SIMBOLOS.pop()
 
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
+
         CODIGO.insertar_Comentario("////////// INICIA FOR //////////")
-
-        nombre = "forGlobal_" + str(SIMBOLOS[0].contador)
-        SIMBOLOS[0].contador += 1
-        nuevoEntorno = entorno3D(nombre)
-        SIMBOLOS.append(nuevoEntorno)
-
-        retorno = self.iterador.c3d(SIMBOLOS, REPORTES, CODIGO)
-
-        if retorno == -1:
-            return -1
-
 
         # Creación de Labels
         labelSiguiente = CODIGO.nuevoLabel()
         labelSalida = CODIGO.nuevoLabel()
         labelInicio = CODIGO.nuevoLabel()
+        labelContinue = CODIGO.nuevoLabel()
+        listaSalidas = []
 
-        # EL for se maneja como un while
-        while True:
+        # Mover el entorno al nuevo
+        local = SIMBOLOS[-1]
+        CODIGO.insertar_MoverStack(local.tamaño)
 
-            salir = False  # Indica al for si hace un break
-            siguiente = False  # Indica al for si viene un continue
+        nombre = "forGlobal_" + str(SIMBOLOS[0].contador)
+        SIMBOLOS[0].contador += 1
+        nuevoEntorno = entorno3D(nombre)
 
-            # Condicion
-            valorCondicion = self.condicion.analisis(SIMBOLOS, REPORTES)
+        # Heredar labels y contadores
+        nuevoEntorno.labelBreak = labelSalida
+        nuevoEntorno.contadorBreak += local.tamaño
 
-            # Verificar que no sea nulo
-            if valorCondicion.tipo == Tipo.NULL.value:
-                REPORTES.salida += "ERROR: La condicion retorna un NULL. \n"
-                mensaje = "La condicion retorna un NULL."
-                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
-                return -1
+        nuevoEntorno.labelContinue = labelContinue
+        nuevoEntorno.contadorContinue += local.tamaño
 
-            # Verifivar que sea primitivo
-            if valorCondicion.clase != Clases.PRIMITIVO.value:
-                REPORTES.salida += "ERROR: La condicion no retorna un primitivo. \n"
-                mensaje = "La condicion no retorna un primitivo."
-                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
-                return -1
+        nuevoEntorno.labelReturn = local.labelReturn
+        nuevoEntorno.contadorReturn += local.contadorReturn
 
-            # Verificar que sea boolean
-            if valorCondicion.tipo != Tipo.BOOLEAN.value:
-                REPORTES.salida += "ERROR: La condicion no retorna un bool. \n"
-                mensaje = "La condicion no retorna un bool."
-                REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
-                return -1
+        SIMBOLOS.append(nuevoEntorno)
 
-            # Si es false, se termina el ciclo
-            if valorCondicion.valor == "false":
-                break
+        self.iterador.c3d(SIMBOLOS, REPORTES, CODIGO)
 
-            # Crear el entorno nuevo y añadirlo a la lista
-            nombre = "for_" + str(SIMBOLOS[0].contador)
-            SIMBOLOS[0].contador += 1
-            nuevoEntorno = entorno(nombre)
-            nuevoEntorno.estructuras = SIMBOLOS[0].estructuras
-            SIMBOLOS.append(nuevoEntorno)
+        # Inicio
+        CODIGO.insertar_Label(labelInicio)
 
-            # Ejecutar las instrucciones. Borrar el entorno añadido en cualquier return o al finalizar.
-            for instruccion in self.instrucciones:
-                retorno = instruccion.analisis(SIMBOLOS, REPORTES)
+        # Condicion
+        expresion = self.condicion.c3d(SIMBOLOS, REPORTES, CODIGO)
 
-                if retorno == None:  # Instruccion sin return. Se ignora.
-                    pass
-                elif retorno == 1:  # Instruccion break. Termina la ejecucion y asigna a la variable de salida true.
-                    salir = True
-                    break
-                elif retorno == 0:  # Instruccion continue. El break termina la ejecucion.
-                    siguiente = True
-                    break
-                elif retorno == -1:  # Es un error. Se sigue arrastrando para detener la ejecucion.
-                    # Se hacen dos pops para sacar el Global del For y el for local
-                    SIMBOLOS.pop()
-                    SIMBOLOS.pop()
-                    return -1
-                else:
-                    if retorno.regreso:  # Algunas funciones retornan valores. Si return no es true, se ignora
-                        SIMBOLOS.pop()
-                        SIMBOLOS.pop()
-                        return retorno
+        # Verificar que sea primitivo
+        if expresion.clase != Clases.PRIMITIVO.value:
+            CODIGO.insertar_Comentario("ERROR: La condicion no retorna un primitivo.")
+            REPORTES.salida += "La condicion no retorna un primitivo. \n"
+            mensaje = "La condicion no retorna un primitivo."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
 
-                        # Si pasa por aca es que se aplica el break a la ejecion.
-            if salir:
-                SIMBOLOS.pop()
-                break
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
-                # Si pasa por aca es que se aplica el continue a la ejecion.
-            if siguiente:
-                SIMBOLOS.pop()
-                continue
+        # Verificar que sea boolean
+        if expresion.tipo != Tipo.BOOLEAN.value:
+            CODIGO.insertar_Comentario("ERROR: La condicion no retorna un bool.")
+            REPORTES.salida += "La condicion no retorna un bool. \n"
+            mensaje = "La condicion no retorna un bool."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
 
-            # Al terminar de ejecutar, si no ha retornado se asume que cumplio las instrucciones. SOlo se saca el entorno.
-            SIMBOLOS.pop()
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
-            # Evaluar la expresion de actualizacion
-            retorno = self.expresion.analisis(SIMBOLOS, REPORTES)
-            if retorno == -1:  # Si hay un error en la instruccion, sale. Se saca el entorno global.
-                SIMBOLOS.pop()
-                return -1
+        # Evaluar la condicion
+        CODIGO.insertar_If(expresion.valor, "==", "1", labelSiguiente)
+        CODIGO.insertar_Goto(labelSalida)
+        listaSalidas.append(labelSalida)
 
-        # Sacar el for Global al terminar
+        # -- Si es verdadero, se ejecutan todas las instrucciones
+        CODIGO.insertar_Label(labelSiguiente)
+
+        # Mover el entorno al nuevo
+        local = SIMBOLOS[-1]
+        CODIGO.insertar_MoverStack(local.tamaño)
+
+        # Crear el entorno nuevo y añadirlo a la lista
+        nombre = "for_" + str(SIMBOLOS[0].contador)
+        SIMBOLOS[0].contador += 1
+        nuevoEntorno = entorno3D(nombre)
+
+        # Heredar labels y contadores
+        nuevoEntorno.labelBreak = local.labelBreak
+        nuevoEntorno.contadorBreak += local.contadorBreak
+
+        nuevoEntorno.labelContinue = local.labelContinue
+        nuevoEntorno.contadorContinue += local.contadorContinue
+
+        nuevoEntorno.labelReturn = local.labelReturn
+        nuevoEntorno.contadorReturn += local.contadorReturn
+
+        SIMBOLOS.append(nuevoEntorno)
+
+        for instruccion in self.instrucciones:
+            instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)
+
+        # Al terminar de traducir, saca el entorno normal
+        SIMBOLOS.pop()
+        CODIGO.insertar_RegresarStack(local.tamaño)
+
+        #Insertar el goto a la actualizacion (continue llega acá)
+        CODIGO.insertar_Goto(labelContinue)
+        CODIGO.insertar_Label(labelContinue)
+        self.expresion.c3d(SIMBOLOS, REPORTES, CODIGO)
+        CODIGO.insertar_Goto(labelInicio)
+
+        for n in listaSalidas:
+            CODIGO.insertar_Label(n)
+
+        #Sacar el for global
+        local = SIMBOLOS[-1]
+        CODIGO.insertar_RegresarStack(local.tamaño)
         SIMBOLOS.pop()

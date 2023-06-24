@@ -135,8 +135,6 @@ class sentenciaWhile(instruccion):
         CODIGO.insertar_Comentario("////////// INICIA WHILE //////////")
         # Lista que almacena los labels de las salidas verdaderas en la condiciones
         # Se imprimen al terminar el else si es que viene
-        salir = False
-        siguiente = False
         listaSalidas = []
 
         # Creación de Labels
@@ -202,7 +200,7 @@ class sentenciaWhile(instruccion):
         SIMBOLOS.append(nuevoEntorno)
 
         for instruccion in self.instrucciones:
-            retorno = instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)
+            instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)
 
         # Al terminar de traducir, saca el entorno normal
         SIMBOLOS.pop()

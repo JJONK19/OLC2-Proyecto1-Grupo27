@@ -293,30 +293,7 @@ class si(instruccion):
         SIMBOLOS.append(nuevoEntorno)
 
         for instruccion in self.sino:
-            retorno = instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)
-
-            if retorno == None:  # Instruccion sin return. Se ignora.
-                pass
-            elif retorno == 1:  # Instruccion break. Se regresa para que el que llamo el if lo maneje.
-                SIMBOLOS.pop()
-                CODIGO.insertar_RegresarStack(local.tamaño)
-                # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
-
-            elif retorno == 0:  # Instruccion continue. Se regresa para que el que llamo el if lo maneje.
-                SIMBOLOS.pop()
-                CODIGO.insertar_RegresarStack(local.tamaño)
-                # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
-
-            elif retorno == -1:  # Es un error. Se sigue arrastrando para detener la ejecucion.
-                SIMBOLOS.pop()
-                CODIGO.insertar_RegresarStack(local.tamaño)
-                # return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
-
-            else:
-                pass
-                # if retorno.regreso:  # Algunas funciones retornan valores. Si return no es true, se ignora
-                #     SIMBOLOS.pop()
-                #        return retorno
+            instruccion.c3d(SIMBOLOS, REPORTES, CODIGO)
 
         # Al terminar de ejecutar, se saca el entorno y se imprimen los labels de salida
         SIMBOLOS.pop()

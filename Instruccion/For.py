@@ -1,4 +1,5 @@
 from C3D.Entorno3D import entorno3D
+from C3D.Valor3D import valor3D
 from Tipos.Tipos import *
 from Ejecucion.Entorno import entorno
 from Instruccion.Instruccion import instruccion
@@ -249,7 +250,7 @@ class cicloFor(instruccion):
         nuevoEntorno.contadorBreak += local.contadorBreak
 
         nuevoEntorno.labelContinue = local.labelContinue
-        nuevoEntorno.contadorContinue += local.contadorContinue
+        nuevoEntorno.contadorContinue += local.tamaño
 
         nuevoEntorno.labelReturn = local.labelReturn
         nuevoEntorno.contadorReturn += local.contadorReturn

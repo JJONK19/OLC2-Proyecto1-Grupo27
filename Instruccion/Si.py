@@ -290,6 +290,17 @@ class si(instruccion):
         nombre = "else_" + str(SIMBOLOS[0].contador)
         SIMBOLOS[0].contador += 1
         nuevoEntorno = entorno3D(nombre)
+
+        # Heredar labels y contadores
+        nuevoEntorno.labelBreak = local.labelBreak
+        nuevoEntorno.contadorBreak += local.contadorBreak
+
+        nuevoEntorno.labelContinue = local.labelContinue
+        nuevoEntorno.contadorContinue += local.contadorContinue
+
+        nuevoEntorno.labelReturn = local.labelReturn
+        nuevoEntorno.contadorReturn += local.contadorReturn
+
         SIMBOLOS.append(nuevoEntorno)
 
         for instruccion in self.sino:

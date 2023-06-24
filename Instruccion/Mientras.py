@@ -192,7 +192,6 @@ class sentenciaWhile(instruccion):
 
         nuevoEntorno.labelContinue = labelInicio
         nuevoEntorno.contadorContinue += local.tamaño
-        
 
         nuevoEntorno.labelReturn = local.labelReturn
         nuevoEntorno.contadorReturn += local.contadorReturn

@@ -1,60 +1,88 @@
 let arbol_ast = "" ;
 let reporte_errores = "" ;
 let reporte_simbolos = "" ;
+let url = "http://127.0.0.1:5000"
 
-$("#bt_analizar").click(function () {
-  let code = editor.getValue();
-  //console.log($("#area_editor").val());
-  console.log(editor.getValue());
-  console.log("-----------------------");
-  
-$.post("http://127.0.0.1:5000/execute",
-{
-  code: code,
-},
-function(data, status){
-     
-  //console.log(data.arbol.listaIns.length);
-  console.log(data);
-  //console.log(data.consola)
+$("#bt_compilar").click(function () {
+    let code = editor.getValue();
 
-  //var expresiones = "";
+    console.log(editor.getValue());
+    console.log("-----------------------");
 
-  // for (var i = 0; i < data.arbol.listaIns.length; i++) {
-      
-  //   if (data.arbol.listaIns[i].expresion.valor){
-  //     expresiones += data.arbol.listaIns[i].expresion.valor + "\n";
-  //   }
-  //   console.log(data.arbol.listaIns[i]);
-    
-    
-  // }
-  console.log("-----------------------");
-  //console.log(expresiones);
-  console.log("xd")
-  console.log("-----------------------");
-  //consola.setValue(data.consola);
+    $.post(url+"/c3d",
+        {
+            code: code,
+        },
+        function(data, status){
 
-  if(data.result == "ok"){
-      console.log("Si funciona el back uwu")
+            console.log(data);
 
-  }
-  consola.setValue(data.result)
+            console.log("C3D-----------------------");
+            console.log(data.Salida)
+            console.log("C3D-----------------------");
 
-  if (data.flag === "True"){
-    simbolos_(data.tablaSimbolos)
-    AST_(data.astBase64)
-    arbol_ast = data.astBase64;
-    reporte_simbolos = data.tablaSimbolos
-  } else{
-    errores_(data.listaErrores)
-    reporte_errores = data.listaErrores;
-  }
+            if(data.result == "ok"){
+                console.log("Si funciona el back uwu C3D")
+            }
 
-  console.log("Proceso terminado..")
+            c3d.setValue(data.salida_c3d)
 
-});
+            if (data.result == "ok"){
+                //simbolos_(data.tablaSimbolos)
+                //AST_(data.base64_ast)
+                arbol_ast = data.base64_ast;
+                //reporte_simbolos = data.tablaSimbolos
+            } else{
+                //errores_(data.listaErrores)
+                //reporte_errores = data.listaErrores;
+            }
+
+            console.log("Proceso terminado..")
+
+        });
 })
+
+
+
+$("#bt_ejecutar").click(function () {
+    let code = editor.getValue();
+    //console.log($("#area_editor").val());
+    console.log(editor.getValue());
+    console.log("-----------------------");
+
+    $.post(url+"/execute",
+        {
+            code: code,
+        },
+        function(data, status){
+
+            console.log(data);
+
+            console.log("-----------------------");
+            console.log(data.Salida)
+            console.log("-----------------------");
+
+            if(data.result == "ok"){
+                console.log("Si funciona el back uwu")
+            }
+
+            consola.setValue(data.salida_consola)
+
+            if (data.result === "ok"){
+                //simbolos_(data.tablaSimbolos)
+                //AST_(data.base64_ast)
+                arbol_ast = data.base64_ast;
+                //reporte_simbolos = data.tablaSimbolos
+            } else{
+                //errores_(data.listaErrores)
+                //reporte_errores = data.listaErrores;
+            }
+
+            console.log("Proceso terminado..")
+
+        });
+})
+
 
 $("#bt_limpiar").click(function () {
     editor.setValue("");
@@ -65,8 +93,8 @@ $("#bt_limpiar").click(function () {
 
 function AST_(ImageBase64) {
   var a = document.createElement("a"); 
-  a.href = "data:image/png;base64," + ImageBase64;  
-  a.download = "ReporteAST.png";  
+  a.href = "data:image/jpg;base64," + ImageBase64;
+  a.download = "ReporteAST.jpg";
   a.click();  
   }
 

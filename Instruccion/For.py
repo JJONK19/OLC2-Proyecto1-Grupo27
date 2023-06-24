@@ -1,3 +1,4 @@
+from C3D.Entorno3D import entorno3D
 from Tipos.Tipos import *
 from Ejecucion.Entorno import entorno
 from Instruccion.Instruccion import instruccion
@@ -172,5 +173,12 @@ class cicloFor(instruccion):
         SIMBOLOS.pop()
 
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
+        CODIGO.insertar_Comentario("////////// INICIA FOR //////////")
+
+        nombre = "forGlobal_" + str(SIMBOLOS[0].contador)
+        SIMBOLOS[0].contador += 1
+        nuevoEntorno = entorno3D(nombre)
+        SIMBOLOS.append(nuevoEntorno)
+
+        retorno = self.iterador.c3d(SIMBOLOS, REPORTES, CODIGO)
 

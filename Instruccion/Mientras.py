@@ -114,7 +114,6 @@ class sentenciaWhile(instruccion):
                     salir = True
                     break
                 elif retorno == 0:              #Instruccion continue. El break termina la ejecucion.
-                    siguiente = True
                     break
                 elif retorno == -1:             #Es un error. Se sigue arrastrando para detener la ejecucion.
                     SIMBOLOS.pop()
@@ -128,10 +127,6 @@ class sentenciaWhile(instruccion):
             if salir:
                 SIMBOLOS.pop()
                 break 
-            #Si pasa por aca es que se aplica el continue a la ejecion.
-            if siguiente:
-                SIMBOLOS.pop()
-                continue
             
             #Al terminar de ejecutar, si no ha retornado se asume que cumplio las instrucciones. SOlo se saca el entorno.
             SIMBOLOS.pop()

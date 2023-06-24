@@ -137,7 +137,6 @@ class cicloFor(instruccion):
                     salir = True
                     break
                 elif retorno == 0:              #Instruccion continue. El break termina la ejecucion.
-                    siguiente = True
                     break
                 elif retorno == -1:             #Es un error. Se sigue arrastrando para detener la ejecucion.
                     #Se hacen dos pops para sacar el Global del For y el for local
@@ -150,15 +149,10 @@ class cicloFor(instruccion):
                         SIMBOLOS.pop()
                         return retorno   
 
-            #Si pasa por aca es que se aplica el break a la ejecion.
+            #Si pasa por aca es que se aplica el break a la ejecucion.
             if salir:
                 SIMBOLOS.pop()
                 break 
-            
-            #Si pasa por aca es que se aplica el continue a la ejecion.
-            if siguiente:
-                SIMBOLOS.pop()
-                continue
             
             #Al terminar de ejecutar, si no ha retornado se asume que cumplio las instrucciones. SOlo se saca el entorno.
             SIMBOLOS.pop()
@@ -168,7 +162,7 @@ class cicloFor(instruccion):
             if retorno == -1:              #Si hay un error en la instruccion, sale. Se saca el entorno global.
                 SIMBOLOS.pop()
                 return -1
-
+            
         #Sacar el for Global al terminar
         SIMBOLOS.pop()
 

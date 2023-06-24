@@ -41,5 +41,6 @@ class sentenciaBreak(instruccion):
             CODIGO.insertar_Comentario("ERROR: Se encontró un break fuera de ciclo.")
             return
 
+        CODIGO.insertar_Comentario("////////// BREAK //////////")
         CODIGO.insertar_RegresarStack(local.contadorBreak)
         CODIGO.insertar_Goto(local.labelBreak)

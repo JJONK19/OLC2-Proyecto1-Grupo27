@@ -39,6 +39,7 @@ class sentenciaContinue(instruccion):
             CODIGO.insertar_Comentario("ERROR: Se encontró un continue fuera de un ciclo.")
             return
 
+        CODIGO.insertar_Comentario("////////// CONTINUE //////////")
         CODIGO.insertar_RegresarStack(local.contadorContinue)
         CODIGO.insertar_Goto(local.labelContinue)
 

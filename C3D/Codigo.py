@@ -1,3 +1,6 @@
+from Dato.Metodo import metodo
+from Tipos.Tipos import *
+
 class codigo:
     '''
         Contenedor y creador del C3D. Posee metodos que facilitan el añadir informacion a la creacion del metodo.
@@ -14,6 +17,7 @@ class codigo:
         self.listaTemporales = []           #Almacena los temporales que se van a declarar en el archivo
         self.librerias = []                 #Nombre de las librerias de GO que se van a imprimir en el archivo
         self.posicionEscritura = 0          #0 esta en main, 1 esta en funciones, 2 esta en nativas
+        self.listaFunciones = {}            #Lista de funciones declaradas en la ejecucion
 
     # Limpiar ----------------------------------------------------------------------------------
     def limpiar(self):
@@ -27,9 +31,50 @@ class codigo:
         self.listaTemporales = []           #Almacena los temporales que se van a declarar en el archivo
         self.librerias = []                 #Nombre de las librerias de GO que se van a imprimir en el archivo
         self.posicionEscritura = 0          #0 esta en main, 1 esta en funciones, 2 esta en nativas
+        self.listaFunciones = {}            #Lista de funciones declaradas en la ejecucion
 
+    #Funciones --------------------------------------------------------------------------------------------------------
+    def insertarMetodo(self, ID, PARAMETROS, RETURN, CLASE_RETURN,INSTRUCCIONES, REPORTES, LINEA, COLUMNA):
+        '''
+            Añade un nuevo metodo al diccionario de metodos y a la lista del reporte.
+            - ID: Nombre del metodo.
+            - Parametros: Lista de parametros que pide el metodo (atributos[])
+            - Instrucciones: Lista de instrucciones (instruccion[])
+            - Reportes: Variable con las listas para los reportes de la ejecucion y la consola
+        '''
+        #Verificar que no exista
+        if ID in self.listaFunciones:
+            REPORTES.salida += "ERROR: El método " + ID + " ya existe. \n"
+            mensaje = "El método " + ID + " ya existe. \n"
+            REPORTES.añadirError("Semantico", mensaje, LINEA, COLUMNA)
+            self.insertar_Comentario("ERROR: El método " + ID + " ya existe.")
+            return -1
+
+        #Añadir el metodo a los reportes y a la lista de metodos
+        REPORTES.añadirMetodo(ID, Tipo.ANY.value, LINEA, COLUMNA)
+        self.metodos[ID] = metodo(ID, PARAMETROS, RETURN, CLASE_RETURN, INSTRUCCIONES)
+
+    def getMetodo(self, ID, REPORTES, LINEA, COLUMNA):
+        '''
+            Retorna una instancia de metodo.
+            - ID: Nombre del metodo.
+            - Reportes: Variable con las listas para los reportes de la ejecucion y la consola
+            - Linea: Linea de la instruccion. Para el error.
+            - Columna: Columna donde esta el error.
+            - Reportes: Variable con las listas para los reportes de la ejecucion y la consola
+        '''
+        if ID in self.listaFunciones:
+            retorno = self.metodos[ID]
+            return retorno
+        else:
+            REPORTES.salida += "ERROR: El metodo " + ID + " no existe. \n"
+            mensaje = "El metodo " + ID + " no existe."
+            REPORTES.añadirError("Semantico", mensaje, LINEA, COLUMNA)
+            self.insertar_Comentario("ERROR: El método " + ID + " no existe.")
+            return -1
+    
+ 
     #Encabezado --------------------------------------------------------------------------------------------------------
-
     def libreriasGO(self, LIBRERIA):
         '''
             Recibe el nombre de una libreria en go (fmt, math, etc) y la añade a la lista de librerias. Si esta no existe,

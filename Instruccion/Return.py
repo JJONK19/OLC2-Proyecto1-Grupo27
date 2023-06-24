@@ -66,5 +66,6 @@ class sentenciaReturn(instruccion):
             CODIGO.insertar_Comentario("ERROR: Se encontró un return fuera de una función.")
             return
 
+        CODIGO.insertar_Comentario("////////// RETURN //////////")
         CODIGO.insertar_RegresarStack(local.contadorReturn)
         CODIGO.insertar_Goto(local.labelReturn)

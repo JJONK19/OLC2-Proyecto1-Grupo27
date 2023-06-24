@@ -1,5 +1,6 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
+from C3D.Valor3D import valor3D
 
 class declaracionFuncion(instruccion):
     '''
@@ -103,8 +104,52 @@ class declaracionFuncion(instruccion):
             return -1
         else:
             return None
-
+ 
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
+        #Se van a reutilizar la ejecucion de los atributos para tener un comprobante de los tipos de la funcion
+        SIMBOLOS = []
+        atributos = []
+        #Crear la lista de atributos
+        for i in self.listaAtributos:
+            atributos.append(i.analisis(SIMBOLOS, REPORTES))
+
+        #Crear el metodo en el generador
+        salida = CODIGO.insertarMetodo(self.id, atributos, self.tipo, self.claseReturn, self.instrucciones,  REPORTES, self.linea, self.columna)
+        
+        if salida == -1:
+            return 
+        
+        metodo = CODIGO.getMetodo(self.id, REPORTES,self.linea, self.columna)
+
+        #Crear los atributos en la tabla de simbolos
+        local = SIMBOLOS[-1]
+
+        #-- Declarar return en la tabla 
+        nuevo =  valor3D("", True, self.tipo, self.claseReturn, ID="return")
+        nuevo.linea = 0
+        nuevo.columna = 0
+
+        for atributo in metodo.parametros:
+            nuevo = ""
+            if atributo.tipo == Tipo.ANY.value:
+                nuevo =  valor3D("", True, atributo.tipo, atributo.clase, TIPO_VALOR=Tipo.NUMBER,
+                                CLASE_VALOR=Clases.PRIMITIVO.value)
+            else:
+                nuevo =  valor3D("", True, atributo.tipo, atributo.clase)
+
+            
+            #Añadir el id de la variable a valor
+            nuevo.id = atributo.id
+            nuevo.linea = 0
+            nuevo.columna = 0
+
+            salida = local.insertarSimbolo(nuevo, REPORTES, CODIGO)
+
+        
+        
+                
+
+
+
 
  

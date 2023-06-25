@@ -250,8 +250,7 @@ class llamadaFuncion(instruccion):
         return retorno
 
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
-        pass
-        
+
         #Buscar si existe la funcion
         metodo = CODIGO.getMetodo(self.id, REPORTES,self.linea, self.columna)
 
@@ -264,13 +263,82 @@ class llamadaFuncion(instruccion):
             temporal = CODIGO.nuevoTemporal()
             CODIGO.insertar_Asignacion(temporal, "0")
             return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
-        
-        #Extraer los atributos de la funcion y comparar con las expresiones de entrada
-        #Ir asignando en el stack
-        
 
-        #Si todo salio bien llamar a la funcion
+        atributos = metodo.parametros
 
-        #Retornar el stack a su posicion original
+        # Evaluar los parametros de la funcion
+        parametros = []
+        for i in self.listaExpresiones:
+            parametros.append(i.c3d(SIMBOLOS, REPORTES, CODIGO))
 
- 
+        # Declaracion de temporales
+        tempPosicionEntorno = CODIGO.nuevoTemporal()
+        tempPosicionStack = CODIGO.nuevoTemporal()
+        tempPosicionReturn = CODIGO.nuevoTemporal()
+
+        #Leer el ultimo entorno
+        local = SIMBOLOS[-1]
+        CODIGO.insertar_Expresion(tempPosicionEntorno, "P", "+", local.tamaño)
+
+        #Comprobacion de parametros
+        if len(atributos) != len(parametros):
+            CODIGO.insertar_Comentario("ERROR: La cantidad de valores de entrada en la funcion es incorrecta.")
+            REPORTES.salida += "ERROR: La cantidad de valores de entrada en la funcion es incorrecta. \n"
+            mensaje = "La cantidad de valores de entrada en la funcion es incorrecta."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+
+        for i in range(len(atributos)):
+            tempAtributo = atributos[i]
+            tempParametro = parametros[i]
+
+            if tempParametro.tipo != tempAtributo.tipo:
+                if tempAtributo.tipo != Tipo.ANY.value:
+                    CODIGO.insertar_Comentario("ERROR: El tipo de la entrada no coincide con el atributo " + tempAtributo.id)
+                    REPORTES.salida += "ERROR: El tipo de la entrada no coincide con el atributo " + tempAtributo.id + ".\n"
+                    mensaje = "El tipo de la entrada no coincide con el atributo " + tempAtributo.id + ".\n"
+                    REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+                    temporal = CODIGO.nuevoTemporal()
+                    CODIGO.insertar_Asignacion(temporal, "0")
+                    return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+
+            if tempParametro.clase != tempAtributo.clase:
+                if tempAtributo.clase != Clases.ANY.value:
+                    CODIGO.insertar_Comentario("ERROR: El tipo de la entrada no coincide con el atributo " + tempAtributo.id)
+                    REPORTES.salida += "ERROR: El tipo de la entrada no coincide con el atributo " + tempAtributo.id + ".\n"
+                    mensaje = "El tipo de la entrada no coincide con el atributo " + tempAtributo.id + ".\n"
+                    REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+                    temporal = CODIGO.nuevoTemporal()
+                    CODIGO.insertar_Asignacion(temporal, "0")
+                    return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+
+            #Insertar el valor en el stack
+            #Como en el 0 esta el return, se tiene que sumar 1 para que los parametros esten en su sitio
+            contador = i + 1
+            CODIGO.insertar_Expresion(tempPosicionStack, tempPosicionEntorno, "+", contador)
+            CODIGO.insertar_SetearStack(tempPosicionStack, tempParametro.valor)
+
+        #Crear el nuevo entorno
+        CODIGO.insertar_MoverStack(local.tamaño)
+
+        #llamada a la función
+        CODIGO.insertar_llamadaFuncion(metodo.id)
+
+        #Extraer el return
+        CODIGO.insertar_Asignacion(tempPosicionReturn, "P")
+
+        # Regresar al entorno
+        CODIGO.insertar_RegresarStack(local.tamaño)
+
+        # Retornar el valor
+        if metodo.tipo == Tipo.NULL:
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        else:
+            return valor3D(tempPosicionReturn, True, metodo.tipo, metodo.claseReturn)

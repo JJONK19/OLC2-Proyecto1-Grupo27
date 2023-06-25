@@ -79,7 +79,14 @@ class sentenciaReturn(instruccion):
             nuevo.columna = self.columna 
 
             salida = entorno3D.getSimbolo(nuevo, SIMBOLOS, REPORTES, CODIGO)
-            
+
+            #Evaluar si debe de retornar algo. Si no, solo se sale y manda el error
+            if salida.tipo == Tipo.NULL.value:
+                CODIGO.insertar_Comentario("ERROR: La funcion es de tipo void.")
+                CODIGO.insertar_RegresarStack(local.contadorReturn)
+                CODIGO.insertar_Goto(local.labelReturn)
+                return
+
             #Obtener posicion de la variable
             posicion = entorno3D.getPosicion(nuevo, SIMBOLOS, REPORTES, CODIGO)
 

@@ -69,8 +69,8 @@ def hello():
     output_image = "arbolast.jpg"
 
     command = f'dot -Tjpg {dot_file} -o {output_image}  '
-    os.system(f'cmd /C "{command}"')
-    # os.system(command)
+    #os.system(f'cmd /C "{command}"')
+    os.system(command)
 
     #Conversión de la img a Base64
     with open(output_image, "rb") as image_file:
@@ -140,8 +140,8 @@ def bye():
     output_image = "arbolast.jpg"
 
     command = f'dot -Tjpg {dot_file} -o {output_image}  '
-    os.system(f'cmd /C "{command}"')
-    #os.system(command)
+    #os.system(f'cmd /C "{command}"')
+    os.system(command)
 
     # Conversión de la img a Base64
     with open(output_image, "rb") as image_file:
@@ -180,4 +180,4 @@ if __name__ == "__main__":
     NewLimit = 5000
     sys.setrecursionlimit(NewLimit)
 
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)

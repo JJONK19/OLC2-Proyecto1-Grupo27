@@ -1,7 +1,7 @@
 let arbol_ast = "" ;
 let reporte_errores = "" ;
 let reporte_simbolos = "" ;
-let url = "http://127.0.0.1:5000"
+let url = "http://3.90.161.238:5000"
 
 $("#bt_compilar").click(function () {
     let code = editor.getValue();

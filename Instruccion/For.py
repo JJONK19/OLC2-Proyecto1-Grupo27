@@ -247,13 +247,13 @@ class cicloFor(instruccion):
         nuevoEntorno = entorno3D(nombre)
 
         # Heredar labels y contadores
-        nuevoEntorno.labelBreak = local.labelBreak
-        nuevoEntorno.contadorBreak += local.contadorBreak
+        nuevoEntorno.labelBreak = localInterno.labelBreak
+        nuevoEntorno.contadorBreak += local.tamaño
 
-        nuevoEntorno.labelContinue = local.labelContinue
+        nuevoEntorno.labelContinue = localInterno.labelContinue
         nuevoEntorno.contadorContinue += local.tamaño
 
-        nuevoEntorno.labelReturn = local.labelReturn
+        nuevoEntorno.labelReturn = localInterno.labelReturn
         nuevoEntorno.contadorReturn += local.contadorReturn
 
         SIMBOLOS.append(nuevoEntorno)

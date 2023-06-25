@@ -331,7 +331,7 @@ class llamadaFuncion(instruccion):
         CODIGO.insertar_llamadaFuncion(metodo.id)
 
         #Extraer el return
-        CODIGO.insertar_Asignacion(tempPosicionReturn, "P")
+        CODIGO.insertar_ObtenerStack(tempPosicionReturn, "P")
 
         # Regresar al entorno
         CODIGO.insertar_RegresarStack(local.tamaño)

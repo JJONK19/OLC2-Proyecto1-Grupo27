@@ -213,6 +213,7 @@ class declaracionFuncion(instruccion):
             instruccion.c3d(simbolos, REPORTES, CODIGO)
 
         #Label de salida de la funcion (para el return)
+        CODIGO.insertar_Goto(labelSalida)
         CODIGO.insertar_Label(labelSalida)
 
         #Verificar que haya venido el return 

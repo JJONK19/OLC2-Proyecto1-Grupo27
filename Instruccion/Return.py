@@ -73,8 +73,8 @@ class sentenciaReturn(instruccion):
         #Si la expresion no es vacia, evaluar el valor y asignarlo al stack
         if self.expresion != None:
             #Obtener la variable de la tabla de simbolos
-            nuevo =  valor3D("return", True, "", "")
-            nuevo.id = self.id
+            nuevo =  valor3D("", True, "", "")
+            nuevo.id = "return"
             nuevo.linea = self.linea
             nuevo.columna = self.columna 
 
@@ -133,6 +133,9 @@ class sentenciaReturn(instruccion):
                 salida.claseValor = expresion.clase
                 salida.tipoValor = expresion.tipo
                 salida.claseContenido = expresion.claseContenido
+            
+            #Luego de asignar un valor al return, actualizar la variable para que indique que hubo un cambio
+            salida.returnAsignado = True
 
         CODIGO.insertar_RegresarStack(local.contadorReturn)
         CODIGO.insertar_Goto(local.labelReturn)

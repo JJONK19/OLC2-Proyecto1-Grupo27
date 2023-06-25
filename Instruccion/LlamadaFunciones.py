@@ -271,6 +271,7 @@ class llamadaFuncion(instruccion):
         for i in self.listaExpresiones:
             parametros.append(i.c3d(SIMBOLOS, REPORTES, CODIGO))
 
+        CODIGO.insertar_Comentario("////////// INICIA LLAMADA //////////")
         # Declaracion de temporales
         tempPosicionEntorno = CODIGO.nuevoTemporal()
         tempPosicionStack = CODIGO.nuevoTemporal()

@@ -52,7 +52,7 @@ class codigo:
 
         #Añadir el metodo a los reportes y a la lista de metodos
         REPORTES.añadirMetodo(ID, Tipo.ANY.value, LINEA, COLUMNA)
-        self.metodos[ID] = metodo(ID, PARAMETROS, RETURN, CLASE_RETURN, INSTRUCCIONES)
+        self.listaFunciones[ID] = metodo(ID, PARAMETROS, RETURN, CLASE_RETURN, INSTRUCCIONES)
 
     def getMetodo(self, ID, REPORTES, LINEA, COLUMNA):
         '''
@@ -64,7 +64,7 @@ class codigo:
             - Reportes: Variable con las listas para los reportes de la ejecucion y la consola
         '''
         if ID in self.listaFunciones:
-            retorno = self.metodos[ID]
+            retorno = self.listaFunciones[ID]
             return retorno
         else:
             REPORTES.salida += "ERROR: El metodo " + ID + " no existe. \n"

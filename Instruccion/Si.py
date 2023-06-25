@@ -261,13 +261,13 @@ class si(instruccion):
             
             #Heredar labels y contadores
             nuevoEntorno.labelBreak = local.labelBreak
-            nuevoEntorno.contadorBreak += local.contadorBreak
+            nuevoEntorno.contadorBreak += local.contadorBreak + local.tamaño
 
             nuevoEntorno.labelContinue = local.labelContinue
-            nuevoEntorno.contadorContinue += local.contadorContinue
+            nuevoEntorno.contadorContinue += local.contadorContinue + local.tamaño
 
             nuevoEntorno.labelReturn = local.labelReturn
-            nuevoEntorno.contadorReturn += local.contadorReturn
+            nuevoEntorno.contadorReturn += local.contadorReturn + local.tamaño
 
             SIMBOLOS.append(nuevoEntorno)
 
@@ -298,13 +298,13 @@ class si(instruccion):
 
         # Heredar labels y contadores
         nuevoEntorno.labelBreak = local.labelBreak
-        nuevoEntorno.contadorBreak += local.contadorBreak
+        nuevoEntorno.contadorBreak += local.contadorBreak + local.tamaño
 
         nuevoEntorno.labelContinue = local.labelContinue
-        nuevoEntorno.contadorContinue += local.contadorContinue
+        nuevoEntorno.contadorContinue += local.contadorContinue + local.tamaño
 
         nuevoEntorno.labelReturn = local.labelReturn
-        nuevoEntorno.contadorReturn += local.contadorReturn
+        nuevoEntorno.contadorReturn += local.contadorReturn + local.tamaño
 
         SIMBOLOS.append(nuevoEntorno)
 

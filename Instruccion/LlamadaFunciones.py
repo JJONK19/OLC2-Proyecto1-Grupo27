@@ -337,7 +337,7 @@ class llamadaFuncion(instruccion):
         CODIGO.insertar_RegresarStack(local.tamaño)
 
         # Retornar el valor
-        if metodo.tipo == Tipo.NULL:
+        if metodo.tipo == Tipo.NULL.value:
             temporal = CODIGO.nuevoTemporal()
             CODIGO.insertar_Asignacion(temporal, "0")
             return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)

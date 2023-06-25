@@ -198,6 +198,12 @@ class declaracionFuncion(instruccion):
             pass
         elif salida.clase == Clases.ANY.value:
             pass
+        elif salida.clase == Clases.NULL.value:
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+
+            nuevo = valor3D(temporal, True, self.tipo, Clases.PRIMITIVO.value, TIPO_VALOR=self.tipo,
+                            CLASE_VALOR=Clases.PRIMITIVO.value)
 
         CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
         CODIGO.insertar_SetearStack(tempStack, nuevo.valor)

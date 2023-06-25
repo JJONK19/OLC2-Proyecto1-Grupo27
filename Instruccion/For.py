@@ -191,10 +191,10 @@ class cicloFor(instruccion):
         nuevoEntorno.contadorBreak += local.tamaño
 
         nuevoEntorno.labelContinue = labelContinue
-        nuevoEntorno.contadorContinue += local.tamaño
+        nuevoEntorno.contadorContinue += 0
 
         nuevoEntorno.labelReturn = local.labelReturn
-        nuevoEntorno.contadorReturn += local.contadorReturn
+        nuevoEntorno.contadorReturn += local.contadorReturn + local.tamaño
 
         SIMBOLOS.append(nuevoEntorno)
 
@@ -248,13 +248,13 @@ class cicloFor(instruccion):
 
         # Heredar labels y contadores
         nuevoEntorno.labelBreak = localInterno.labelBreak
-        nuevoEntorno.contadorBreak += local.tamaño
+        nuevoEntorno.contadorBreak += local.tamaño + localInterno.tamaño
 
         nuevoEntorno.labelContinue = localInterno.labelContinue
-        nuevoEntorno.contadorContinue += local.tamaño
+        nuevoEntorno.contadorContinue += localInterno.tamaño
 
         nuevoEntorno.labelReturn = localInterno.labelReturn
-        nuevoEntorno.contadorReturn += local.contadorReturn
+        nuevoEntorno.contadorReturn += local.contadorReturn + local.tamaño + localInterno.tamaño
 
         SIMBOLOS.append(nuevoEntorno)
 

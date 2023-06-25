@@ -52,6 +52,8 @@ class sentenciaReturn(instruccion):
             retorno.tipo = Tipo.NULL.value
             retorno.valor = "NULL"
             retorno.clase = Clases.NULL.value
+            retorno.valorClase = retorno.clase
+            retorno.valorTipo = retorno.tipo
             retorno.string = "NULL"
             retorno.regreso = True
             return  retorno

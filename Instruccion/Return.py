@@ -1,7 +1,9 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
- 
+from C3D.Valor3D import valor3D
+from C3D.Entorno3D import entorno3D
+
 class sentenciaReturn(instruccion):
     '''
         Recibe o no una instruccion. Retorna un objeto de tipo valor con el retorno setteado en true. 
@@ -67,5 +69,63 @@ class sentenciaReturn(instruccion):
             return
 
         CODIGO.insertar_Comentario("////////// RETURN //////////")
+
+        #Si la expresion no es vacia, evaluar el valor y asignarlo al stack
+        if self.expresion != None:
+            #Obtener la variable de la tabla de simbolos
+            nuevo =  valor3D("return", True, "", "")
+            nuevo.id = self.id
+            nuevo.linea = self.linea
+            nuevo.columna = self.columna 
+
+            salida = entorno3D.getSimbolo(nuevo, SIMBOLOS, REPORTES, CODIGO)
+            
+            #Obtener posicion de la variable
+            posicion = entorno3D.getPosicion(nuevo, SIMBOLOS, REPORTES, CODIGO)
+
+            #Evaluar el contenido
+            expresion = self.expresion.c3d(SIMBOLOS, REPORTES, CODIGO)
+
+            #Separar por clases
+            if salida.clase == Clases.PRIMITIVO.value:
+                #Comprobar tipos
+                if salida.tipo != expresion.tipo:
+                    REPORTES.salida += "ERROR: La variable " + salida.id + " no es de tipo " + expresion.tipo + ". \n"
+                    mensaje = "La variable " + salida.id + " no es de tipo " + expresion.tipo + "."
+                    REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                    CODIGO.insertar_Comentario("ERROR: La variable " + salida.id + " no es de tipo " + expresion.tipo + ".")
+                    return 
+        
+                #Comprobar clases
+                if salida.clase != expresion.clase:
+                    REPORTES.salida += "ERROR: La variable " + salida.id + " no es de clase " + expresion.clase + ". \n"
+                    mensaje = "La variable " + salida.id + " no es de clase " + expresion.clase + "."
+                    REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                    CODIGO.insertar_Comentario("ERROR: La variable " + salida.id + " no es de tipo " + expresion.tipo + ".")
+                    return 
+                
+                tempStack = CODIGO.nuevoTemporal()
+
+                #Guardar en un temporal del valor del stack
+                CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
+                CODIGO.insertar_SetearStack(tempStack, expresion.valor)
+            
+            elif salida.clase == Clases.VECTOR.value:
+                pass
+
+            elif salida.clase == Clases.STRUCT.value:
+                pass
+
+            elif salida.clase == Clases.ANY.value:
+                #Asignar en el stack
+                tempStack = CODIGO.nuevoTemporal()
+                CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
+                CODIGO.insertar_SetearStack(tempStack, expresion.valor)
+
+                #Cambiar el tipo del any
+                salida.claseValor = expresion.clase
+                salida.tipoValor = expresion.tipo
+                salida.claseContenido = expresion.claseContenido
+
         CODIGO.insertar_RegresarStack(local.contadorReturn)
         CODIGO.insertar_Goto(local.labelReturn)

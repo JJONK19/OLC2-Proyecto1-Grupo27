@@ -22,3 +22,6 @@ class simbolo3D:
         self.posicionStack = POSICION
         self.estaEnHeap = HEAP
         self.esReferencia = REFERENCIA 
+
+        #Para el return se crea una variable en la tabla de simbolos. 
+        self.returnAsignado = False

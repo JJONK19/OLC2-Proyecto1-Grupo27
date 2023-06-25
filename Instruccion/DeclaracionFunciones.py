@@ -1,6 +1,7 @@
 from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from C3D.Valor3D import valor3D
+from C3D.Entorno3D import entorno3D
 
 class declaracionFuncion(instruccion):
     '''
@@ -106,8 +107,21 @@ class declaracionFuncion(instruccion):
             return None
  
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
+        #Labels y temporales
+        labelSalida = CODIGO.nuevoLabel()
+        tempStack = CODIGO.nuevoTemporal()
+        tempResultado = CODIGO.nuevoTemporal()
+
+        #Crear una nueva tabla de simbolos
+        simbolos = []
+        nuevoEntorno = entorno3D(self.id)
+
+        #Añadir el label del return al entorno
+        nuevoEntorno.labelReturn = labelSalida
+
+        simbolos.append(nuevoEntorno)
+
         #Se van a reutilizar la ejecucion de los atributos para tener un comprobante de los tipos de la funcion
-        SIMBOLOS = []
         atributos = []
         #Crear la lista de atributos
         for i in self.listaAtributos:
@@ -122,12 +136,13 @@ class declaracionFuncion(instruccion):
         metodo = CODIGO.getMetodo(self.id, REPORTES,self.linea, self.columna)
 
         #Crear los atributos en la tabla de simbolos
-        local = SIMBOLOS[-1]
+        local = simbolos[-1]
 
-        #-- Declarar return en la tabla 
+        #-- Declarar return en la tabla. Siempre es la posicion 0.
         nuevo =  valor3D("", True, self.tipo, self.claseReturn, ID="return")
         nuevo.linea = 0
         nuevo.columna = 0
+        local.insertarSimbolo(nuevo, REPORTES, CODIGO)
 
         for atributo in metodo.parametros:
             nuevo = ""
@@ -136,14 +151,76 @@ class declaracionFuncion(instruccion):
                                 CLASE_VALOR=Clases.PRIMITIVO.value)
             else:
                 nuevo =  valor3D("", True, atributo.tipo, atributo.clase)
-
             
             #Añadir el id de la variable a valor
             nuevo.id = atributo.id
             nuevo.linea = 0
             nuevo.columna = 0
 
-            salida = local.insertarSimbolo(nuevo, REPORTES, CODIGO)
+            local.insertarSimbolo(nuevo, REPORTES, CODIGO)
+
+        #Declarar encabezado de funcion
+        CODIGO.insertar_AperturaFuncion(self.id)
+
+        #Declarar el return por defecto
+        nuevo =  valor3D("", True, "", "")
+        nuevo.id = "return"
+        nuevo.linea = self.linea
+        nuevo.columna = self.columna
+        salida = entorno3D.getSimbolo(nuevo, simbolos, REPORTES, CODIGO)
+        posicion = entorno3D.getPosicion(nuevo, simbolos, REPORTES, CODIGO)
+
+        if salida.clase == Clases.PRIMITIVO.value:
+            temporal = CODIGO.nuevoTemporal()
+            heap = False
+
+            #Definir valor por defecto
+            if self.tipo == Tipo.BOOLEAN.value:
+                CODIGO.insertar_Asignacion(temporal, "1")
+
+            elif self.tipo == Tipo.STRING.value:
+                heap  = True
+                CODIGO.insertar_Asignacion(temporal, "H")
+                CODIGO.insertar_SetearHeap('H', ord(""))   
+                CODIGO.insertar_MoverHeap()
+                CODIGO.insertar_SetearHeap('H', '-1')            
+                CODIGO.insertar_MoverHeap()  
+
+            elif self.tipo == Tipo.NUMBER.value:
+                CODIGO.insertar_Asignacion(temporal, "0")
+
+            nuevo =  valor3D(temporal, True, self.tipo, Clases.PRIMITIVO.value, TIPO_VALOR=self.tipo,
+                             CLASE_VALOR=Clases.PRIMITIVO.value, HEAP=heap)
+                
+        elif salida.clase == Clases.VECTOR.value:
+            pass
+        elif salida.clase == Clases.STRUCT.value:
+            pass
+        elif salida.clase == Clases.ANY.value:
+            pass
+
+        CODIGO.insertar_Expresion(tempStack, "P", "+", str(posicion))
+        CODIGO.insertar_SetearStack(tempStack, nuevo.valor)
+        
+        #Declarar instrucciones
+        for instruccion in self.instrucciones:
+            instruccion.c3d(simbolos, REPORTES, CODIGO)
+
+        #Label de salida de la funcion (para el return)
+        CODIGO.insertar_Label(labelSalida)
+
+        #Verificar que haya venido el return 
+        nuevo =  valor3D("", True, "", "")
+        nuevo.id = "return"
+        nuevo.linea = self.linea
+        nuevo.columna = self.columna
+        salida = entorno3D.getSimbolo(nuevo, simbolos, REPORTES, CODIGO)
+        
+        if not salida.returnAsignado and salida.tipo != Tipo.NULL.value:
+            CODIGO.insertar_Comentario("ERROR: No se ha retornado ningún valor.")
+
+        #Comprobar el return. 
+        CODIGO.insertar_CierreFuncion()
 
         
         

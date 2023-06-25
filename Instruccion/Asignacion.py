@@ -86,7 +86,7 @@ class asignacion(instruccion):
         nuevo =  valor3D("", True, "", "")
         nuevo.id = self.id
         nuevo.linea = self.linea
-        nuevo.columna = self.columna
+        nuevo.columna = self.columna 
 
         salida = entorno3D.getSimbolo(nuevo, SIMBOLOS, REPORTES, CODIGO)
 

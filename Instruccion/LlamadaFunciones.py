@@ -2,6 +2,8 @@ from Instruccion.Instruccion import instruccion
 from Tipos.Tipos import *
 from Ejecucion.Valor import valor
 from Ejecucion.Entorno import entorno
+from C3D.Valor3D import valor3D
+from C3D.Entorno3D import entorno3D
 
 class llamadaFuncion(instruccion):
     '''
@@ -249,5 +251,26 @@ class llamadaFuncion(instruccion):
 
     def c3d(self, SIMBOLOS, REPORTES, CODIGO):
         pass
+        
+        #Buscar si existe la funcion
+        metodo = CODIGO.getMetodo(self.id, REPORTES,self.linea, self.columna)
+
+        if metodo == -1:
+            CODIGO.insertar_Comentario("ERROR: La funcion no existe.")
+            REPORTES.salida += "ERROR: La funcion no existe. \n"
+            mensaje = "La funcion no existe."
+            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+
+            temporal = CODIGO.nuevoTemporal()
+            CODIGO.insertar_Asignacion(temporal, "0")
+            return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
+        
+        #Extraer los atributos de la funcion y comparar con las expresiones de entrada
+        #Ir asignando en el stack
+        
+
+        #Si todo salio bien llamar a la funcion
+
+        #Retornar el stack a su posicion original
 
  

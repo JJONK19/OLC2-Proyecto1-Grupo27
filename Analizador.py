@@ -233,7 +233,8 @@ class Analizador:
     def t_error(t):
         print(Analizador.arbol.reporte)
         mensaje = f'Caracter no reconocido {t.value[0]!r}.'
-        Analizador.arbol.añadirError("Lexico", mensaje, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+        Analizador.arbol.añadirError("Lexico", mensaje, t.lexer.lineno, 0)
+        #(lexdata[lexpos]), lexdata[lexpos:])
         t.lexer.skip(1)
 
 

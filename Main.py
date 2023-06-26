@@ -10,7 +10,6 @@ import sys
 limit = sys.getrecursionlimit()
 NewLimit = 5000
 sys.setrecursionlimit(NewLimit)
-from flask import jsonify
 
 class ventana (QtWidgets.QMainWindow):
 
@@ -91,23 +90,12 @@ class ventana (QtWidgets.QMainWindow):
         print("//ERRORES//////////////////////////////////////////////////")
 
         print("//SIMBOLOS//////////////////////////////////////////////////")
-        # Simbolos
-        listaSimbolos = []
-        a = Salida.getSimbolos()
-        for clave, valor in a.items():
-            listaSimbolos.append(valor)
 
-        print(listaSimbolos)
-        listaSimbolos2 = []
-        for i in listaSimbolos:
-            listaSimbolos2.append(jsonify(i.__json__()))
-
-        print(listaSimbolos2)
         print("//SIMBOLOS//////////////////////////////////////////////////")
 
         # Metodos
         print("//METODOS//////////////////////////////////////////////////")
-        listaErrores = Salida.getMetodos()
+
         # a = Salida.getSimbolos()
         # for clave, valor in a.items():
         #    print(clave, ":", valor)

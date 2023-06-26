@@ -233,7 +233,7 @@ class Analizador:
     def t_error(t):
         print(Analizador.arbol.reporte)
         mensaje = f'Caracter no reconocido {t.value[0]!r}.'
-        Analizador.arbol.reporte.añadirError("Lexico", mensaje, t.lexer.lineno, 0)
+        Analizador.arbol.añadirError("Lexico", mensaje, t.lexer.lineno, 0)
         t.lexer.skip(1)
 
 
@@ -962,12 +962,12 @@ class Analizador:
                 mensaje = "Token Inesperado: " + t.value
                 tipo = "Sintactico"
 
-            Analizador.arbol.reporte.añadirError(tipo, mensaje, t.lineno, t.lexpos)
+            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, t.lexpos)
             Analizador.parser.errok()
         else:
             mensaje = "Token Inesperado: " + t.value
             tipo = "Sintactico"
-            Analizador.arbol.reporte.añadirError(tipo, mensaje, t.lineno, t.lexpos)
+            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, t.lexpos)
 
     parser = yacc.yacc(debug=True)
 

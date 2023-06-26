@@ -98,8 +98,8 @@ class AST:
             con los resulatdos de la ejecución. 
         '''
         #Limpiar reportes
-        self.reporte.limpiar()
-        print(Analizador.arbol.reporte)
+        #self.reporte.limpiar()
+
         #Se crea la lista de entornos y se añade el entorno global
         entornos = []
         entornos.append(entorno("Global"))  

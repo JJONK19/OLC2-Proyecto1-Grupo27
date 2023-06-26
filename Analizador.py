@@ -230,13 +230,23 @@ class Analizador:
 
 
     # Error
+    '''
+    #Por si no jala el otro
     def t_error(t):
         print(Analizador.arbol.reporte)
         mensaje = f'Caracter no reconocido {t.value[0]!r}.'
         Analizador.arbol.añadirError("Lexico", mensaje, t.lexer.lineno, 0)
-        #(lexdata[lexpos]), lexdata[lexpos:])
+        t.lexer.skip(1)
+    '''
+
+    def t_error(t):
+        mensaje = f'Caracter no reconocido {t.value[0]!r}.'
+        Analizador.arbol.añadirError("Lexico", mensaje, t.lexer.lineno, Analizador.find_column_lex(t))
         t.lexer.skip(1)
 
+    def find_column_lex(token):
+        line_start = Analizador.lexer.lexdata.rfind('\n', 0, token.lexpos) + 1
+        return (token.lexpos - line_start) + 1
 
     def find_column(inp, pos):
         line_start = inp.rfind('\n', 0, pos) + 1
@@ -953,9 +963,6 @@ class Analizador:
 
     #Errores Sintaxis--------------------------------------------------------------------------------
     def p_error(t):
-        print("AAAAAAAAAAAA")
-        print(len(Analizador.arbol.reporte.errores))
-        print(Analizador.arbol.reporte)
         if t is not None:
             if t.type == 'error':
                 mensaje = "Token Inesperado: " + t.value
@@ -963,12 +970,12 @@ class Analizador:
                 mensaje = "Token Inesperado: " + t.value
                 tipo = "Sintactico"
 
-            Analizador.arbol.añadirError(tipo, mensaje, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, -1)
             Analizador.parser.errok()
         else:
             mensaje = "Token Inesperado: " + t.value
             tipo = "Sintactico"
-            Analizador.arbol.añadirError(tipo, mensaje, t.lineno(1), Analizador.find_column(Analizador.input, t.lexpos(1)))
+            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, -1)
 
     parser = yacc.yacc(debug=True)
 

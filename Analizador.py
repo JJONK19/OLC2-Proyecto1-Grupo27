@@ -230,15 +230,6 @@ class Analizador:
     t_ignore = " \t"
 
 
-    # Error
-    '''
-    #Por si no jala el otro
-    def t_error(t):
-        print(Analizador.arbol.reporte)
-        mensaje = f'Caracter no reconocido {t.value[0]!r}.'
-        Analizador.arbol.añadirError("Lexico", mensaje, t.lexer.lineno, 0)
-        t.lexer.skip(1)
-    '''
 
     def t_error(t):
         mensaje = f'Caracter no reconocido {t.value[0]!r}.'

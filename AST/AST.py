@@ -131,6 +131,7 @@ class AST:
                     self.reporte.añadirError("Semantico", mensaje, instruccion.linea, instruccion.columna)
                     
         self.instrucciones = []
+
     def C3D (self):
         '''
             Recibe las instrucciones y retorna un string con el C3D

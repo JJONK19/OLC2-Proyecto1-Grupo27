@@ -32,7 +32,7 @@ class DeclaracionAtributo(instruccion):
         '''
         # Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Declaracion Atributo\" ];\n"
+        REPORTES.dot += padre + "[ color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\",label = \"Declaracion Atributo\" ];\n"
         REPORTES.cont += 1
 
         #Declarar nombre

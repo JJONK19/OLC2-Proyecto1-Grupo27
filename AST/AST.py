@@ -80,7 +80,7 @@ class AST:
 
         #Añadir el padre
         padre = "NODO" + str(self.reporte.cont)
-        self.reporte.dot += padre + "[ label = \"Instrucciones\" ];\n"
+        self.reporte.dot += padre + "[color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\", label = \"Instrucciones\" ];\n"
         self.reporte.cont += 1
 
         for instruccion in self.instrucciones:

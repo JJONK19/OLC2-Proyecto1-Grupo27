@@ -63,17 +63,6 @@ class ventana (QtWidgets.QMainWindow):
         #--- Analizar cadena
         Interprete = Analizador()
         Salida = Interprete.analizar(self.ENTRADA)
-        #Errores
-        for i in Salida.getErrores(): 
-            print(i.descripcion)
-    
-        #SImbolos
-        a = Salida.getSimbolos()
-        for clave, valor in a.items():
-            print(clave, ":", valor)
-        #Instrucciones
-        for i in Salida.instrucciones: 
-            print(i)
 
 
         #AST
@@ -83,13 +72,34 @@ class ventana (QtWidgets.QMainWindow):
         print("AST//////////////////////////////////////////////////")
 
         print("//C3D//////////////////////////////////////////////////")
-        print(Salida.C3D())
+       # print(Salida.C3D())
         print("//C3D//////////////////////////////////////////////////")
 
 
         
         #EJECUTAR
         Salida.Ejecucion()
+
+        # Errores
+        print("//ERRORES//////////////////////////////////////////////////")
+        listaErrores = Salida.getErrores()
+        print("//ERRORES//////////////////////////////////////////////////")
+
+        print("//SIMBOLOS//////////////////////////////////////////////////")
+        # Simbolos
+        listaSimbolos = []
+        a = Salida.getSimbolos()
+        for clave, valor in a.items():
+            listaSimbolos.append(valor)
+        print("//SIMBOLOS//////////////////////////////////////////////////")
+
+        # Metodos
+        print("//METODOS//////////////////////////////////////////////////")
+        listaErrores = Salida.getMetodos()
+        # a = Salida.getSimbolos()
+        # for clave, valor in a.items():
+        #    print(clave, ":", valor)
+        print("//METODOS//////////////////////////////////////////////////")
 
         #--- MOSTRAR EL CONTENIDO EN LA CONSOLA
         self.Consola.setPlainText(Salida.getConsola())

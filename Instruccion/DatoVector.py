@@ -31,7 +31,7 @@ class datoVector(instruccion):
         '''
         #Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"ValorVector\" ];\n"
+        REPORTES.dot += padre + "[color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\", label = \"ValorVector\" ];\n"
         REPORTES.cont += 1
 
         #Declarar funcion

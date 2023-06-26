@@ -15,7 +15,6 @@ class llamadaFuncion(instruccion):
         - Columna: Posicion de la linea donde esta la instruccion.
     '''
 
-    #todo cambiar constructores
     def __init__(self, ID, LISTA_EXPRESIONES, LINEA, COLUMNA):
         super().__init__(LINEA, COLUMNA)
         self.id = ID
@@ -212,31 +211,33 @@ class llamadaFuncion(instruccion):
             else:
                 if retorno.regreso:         #Algunas funciones retornan valores. Se asigna false para que no arroje error de return.
                     #Verificar si el retorno cumple el tipo y clase
-                    if retorno.valorTipo != funcion.tipo:         
-                        retorno.id = "NULL"
-                        retorno.tipo = Tipo.NULL.value
-                        retorno.valor = "NULL"
-                        retorno.clase = Clases.NULL.value
-                        retorno.string = "NULL"
+                    if retorno.valorTipo != funcion.tipo:
+                        if funcion.tipo != Tipo.ANY.value:
+                            retorno.id = "NULL"
+                            retorno.tipo = Tipo.NULL.value
+                            retorno.valor = "NULL"
+                            retorno.clase = Clases.NULL.value
+                            retorno.string = "NULL"
 
-                        REPORTES.salida += "ERROR: El retorno no cumple con el tipo."
-                        mensaje = "El retorno no cumple con el tipo."
-                        REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
-                        return retorno
+                            REPORTES.salida += "ERROR: El retorno no cumple con el tipo."
+                            mensaje = "El retorno no cumple con el tipo."
+                            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                            return retorno
 
-                    #Verificar si el retorno cumple el tipo
-                    if retorno.valorClase != funcion.claseReturn:         
-                        retorno.id = "NULL"
-                        retorno.tipo = Tipo.NULL.value
-                        retorno.valor = "NULL"
-                        retorno.clase = Clases.NULL.value
-                        retorno.string = "NULL"
+                    #Verificar si el retorno cumple el t
+                    if retorno.valorClase != funcion.claseReturn:
+                        if funcion.tipo != Tipo.ANY.value:
+                            retorno.id = "NULL"
+                            retorno.tipo = Tipo.NULL.value
+                            retorno.valor = "NULL"
+                            retorno.clase = Clases.NULL.value
+                            retorno.string = "NULL"
 
-                        REPORTES.salida += "ERROR: El retorno no cumple con la clase."
-                        mensaje = "El retorno no cumple con la clase."
-                        REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
-                        return retorno
-                    
+                            REPORTES.salida += "ERROR: El retorno no cumple con la clase."
+                            mensaje = "El retorno no cumple con la clase."
+                            REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                            return retorno
+
                     retorno.regreso = False
                     return retorno          
         
@@ -280,6 +281,8 @@ class llamadaFuncion(instruccion):
         #Leer el ultimo entorno
         local = SIMBOLOS[-1]
         CODIGO.insertar_Expresion(tempPosicionEntorno, "P", "+", local.tamaño)
+
+
 
         #Comprobacion de parametros
         if len(atributos) != len(parametros):
@@ -343,3 +346,6 @@ class llamadaFuncion(instruccion):
             return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
         else:
             return valor3D(tempPosicionReturn, True, metodo.tipo, metodo.claseReturn)
+
+
+#[tam_anterior][lista_temporales][parametros]

@@ -25,7 +25,7 @@ class DeclaracionStruct(instruccion):
         '''
         # Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Declaracion Struct\" ];\n"
+        REPORTES.dot += padre + "[color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\", label = \"Declaracion Struct\" ];\n"
         REPORTES.cont += 1
 
         #Declarar palabra reservada Let

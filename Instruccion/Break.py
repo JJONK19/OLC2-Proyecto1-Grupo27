@@ -19,7 +19,7 @@ class sentenciaBreak(instruccion):
         '''
         #Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Break\" ];\n"
+        REPORTES.dot += padre + "[ color= \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\" , label = \"Break\" ];\n"
         REPORTES.cont += 1
 
         return padre

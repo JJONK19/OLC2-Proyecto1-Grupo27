@@ -20,6 +20,10 @@ class entorno3D:
         self.contadorContinue = 0
         self.contadorReturn = 0
 
+        #Proteccion de temporales
+        self.listaTemporalesAlmacenados = []
+        self.esFuncion = False
+
     #========================================== VARIABLES ===============================================================
     def insertarSimbolo(self, CONTENIDO, REPORTES, CODIGO):
         '''

@@ -22,7 +22,7 @@ class imprimir(instruccion):
         '''
         #Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Impresion\" ];\n"
+        REPORTES.dot += padre + "[color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\", label = \"Impresion\" ];\n"
         REPORTES.cont += 1
     
         #Declarar funcion

@@ -1,6 +1,7 @@
 let arbol_ast = "" ;
 let reporte_errores = "" ;
 let reporte_simbolos = "" ;
+let reporte_metodos = "" ;
 let url = "http://3.90.161.238:5000"
 
 $("#bt_compilar").click(function () {
@@ -30,8 +31,11 @@ $("#bt_compilar").click(function () {
             if (data.result == "ok"){
                 //simbolos_(data.tablaSimbolos)
                 //AST_(data.base64_ast)
+
+                reporte_errores = data.listaErrores
                 arbol_ast = data.base64_ast;
-                //reporte_simbolos = data.tablaSimbolos
+                reporte_simbolos = data.listaSimbolos
+                reporte_metodos = data.listaMetodos
             } else{
                 //errores_(data.listaErrores)
                 //reporte_errores = data.listaErrores;
@@ -71,8 +75,10 @@ $("#bt_ejecutar").click(function () {
             if (data.result === "ok"){
                 //simbolos_(data.tablaSimbolos)
                 //AST_(data.base64_ast)
+                reporte_errores = data.listaErrores
                 arbol_ast = data.base64_ast;
-                //reporte_simbolos = data.tablaSimbolos
+                reporte_simbolos = data.listaSimbolos
+                reporte_metodos = data.listaMetodos
             } else{
                 //errores_(data.listaErrores)
                 //reporte_errores = data.listaErrores;
@@ -93,8 +99,8 @@ $("#bt_limpiar").click(function () {
 
 function AST_(ImageBase64) {
   var a = document.createElement("a"); 
-  a.href = "data:image/jpg;base64," + ImageBase64;
-  a.download = "ReporteAST.jpg";
+  a.href = "data:image/svg;base64," + ImageBase64;
+  a.download = "ReporteAST.svg";
   a.click();  
   }
 

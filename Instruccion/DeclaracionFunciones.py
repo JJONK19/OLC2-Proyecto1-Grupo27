@@ -110,7 +110,6 @@ class declaracionFuncion(instruccion):
         #Labels y temporales
         labelSalida = CODIGO.nuevoLabel()
         tempStack = CODIGO.nuevoTemporal()
-        tempResultado = CODIGO.nuevoTemporal()
 
         #Crear una nueva tabla de simbolos
         simbolos = []
@@ -118,6 +117,7 @@ class declaracionFuncion(instruccion):
 
         #Añadir el label del return al entorno
         nuevoEntorno.labelReturn = labelSalida
+        nuevoEntorno.esFuncion = True
 
         simbolos.append(nuevoEntorno)
 

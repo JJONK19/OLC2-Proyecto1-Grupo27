@@ -24,7 +24,7 @@ class sentenciaReturn(instruccion):
         '''
         #Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Return\" ];\n"
+        REPORTES.dot += padre + "[color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\", label = \"Return\" ];\n"
         REPORTES.cont += 1
 
         #Declarar operador

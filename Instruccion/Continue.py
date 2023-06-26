@@ -18,7 +18,7 @@ class sentenciaContinue(instruccion):
         '''
         #Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Continue\" ];\n"
+        REPORTES.dot += padre + "[color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\", label = \"Continue\" ];\n"
         REPORTES.cont += 1
 
         return padre

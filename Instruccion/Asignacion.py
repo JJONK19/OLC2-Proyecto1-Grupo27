@@ -26,7 +26,7 @@ class asignacion(instruccion):
         '''
         # Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Asignacion\" ];\n"
+        REPORTES.dot += padre + "[color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\", label = \"Asignacion\" ];\n"
         REPORTES.cont += 1
 
         #Declarar ID

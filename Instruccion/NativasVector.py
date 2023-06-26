@@ -30,7 +30,7 @@ class nativasVector(instruccion):
         '''
         # Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"" + self.tipoInstruccion + "\" ];\n"
+        REPORTES.dot += padre + "[ color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\",label = \"" + self.tipoInstruccion + "\" ];\n"
         REPORTES.cont += 1
 
         #Declarar el valor a operar

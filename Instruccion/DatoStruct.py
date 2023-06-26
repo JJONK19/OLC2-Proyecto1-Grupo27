@@ -27,7 +27,7 @@ class datoStruct(instruccion):
         '''
         # Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Dato Struct\" ];\n"
+        REPORTES.dot += padre + "[color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\", label = \"Dato Struct\" ];\n"
         REPORTES.cont += 1
 
         #Nodo complementario :

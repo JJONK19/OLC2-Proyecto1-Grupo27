@@ -26,7 +26,7 @@ class sentenciaWhile(instruccion):
         '''
         #Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"While\" ];\n"
+        REPORTES.dot += padre + "[color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\", label = \"While\" ];\n"
         REPORTES.cont += 1
 
         #Declarar while

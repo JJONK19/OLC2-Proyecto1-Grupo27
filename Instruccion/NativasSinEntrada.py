@@ -326,7 +326,7 @@ class nativaSinValor(instruccion):
 
             elif expresionEvaluar.tipo == Tipo.STRING.value:
                 #Solo retorna el apuntador.
-                return valor3D(expresionEvaluar.value, True, Tipo.STRING.value, Clases.PRIMITIVO.value)
+                return valor3D(expresionEvaluar.valor, True, Tipo.STRING.value, Clases.PRIMITIVO.value)
             
             elif expresionEvaluar.tipo == Tipo.BOOLEAN.value:
                 #Crear el temporal y guardar la posicion del heap

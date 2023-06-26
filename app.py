@@ -38,21 +38,32 @@ def hello():
     # --- Analizar cadena
     Interprete = Analizador()
     Salida = Interprete.analizar(entrada)
-    # Errores
-    for i in Salida.getErrores():
-        print(i.descripcion)
 
-    # SImbolos
-    a = Salida.getSimbolos()
-    for clave, valor in a.items():
-        print(clave, ":", valor)
-    # Instrucciones
-    for i in Salida.instrucciones:
-        print(i)
 
     print("EJECUCION////////////////////////////////////////////")
     Salida.Ejecucion()
     print("EJECUCION////////////////////////////////////////////")
+
+    # Errores
+    print("//ERRORES//////////////////////////////////////////////////")
+    listaErrores = Salida.getErrores()
+    print("//ERRORES//////////////////////////////////////////////////")
+
+    print("//SIMBOLOS//////////////////////////////////////////////////")
+    # Simbolos
+    listaSimbolos = []
+    a = Salida.getSimbolos()
+    for clave, valor in a.items():
+        listaSimbolos.append(valor)
+    print("//SIMBOLOS//////////////////////////////////////////////////")
+
+    # Metodos
+    print("//METODOS//////////////////////////////////////////////////")
+    listaMetodos = Salida.getMetodos()
+
+    print("//METODOS//////////////////////////////////////////////////")
+
+
 
     print("AST//////////////////////////////////////////////////")
     salida_ast = Salida.Grafo()
@@ -66,9 +77,9 @@ def hello():
         file.write(salida_ast)
 
     #Creacion de la img a partir del archivo dot
-    output_image = "arbolast.jpg"
+    output_image = "arbolast.svg"
 
-    command = f'dot -Tjpg {dot_file} -o {output_image}  '
+    command = f'dot -Tsvg {dot_file} -o {output_image}  '
     #os.system(f'cmd /C "{command}"')
     os.system(command)
 
@@ -87,7 +98,10 @@ def hello():
         {
         "result": r,
         "salida_consola": salida_consola,
-        "base64_ast": base64_ast
+        "base64_ast": base64_ast,
+        "listaMetodos": listaMetodos,
+        "listaErrores": listaErrores,
+        "listaSimbolos": listaSimbolos
         }
     )
 
@@ -113,17 +127,7 @@ def bye():
     # --- Analizar cadena
     Interprete = Analizador()
     Salida = Interprete.analizar(entrada)
-    # Errores
-    for i in Salida.getErrores():
-        print(i.descripcion)
 
-    # SImbolos
-    a = Salida.getSimbolos()
-    for clave, valor in a.items():
-        print(clave, ":", valor)
-    # Instrucciones
-    for i in Salida.instrucciones:
-        print(i)
 
     print("AST//////////////////////////////////////////////////")
     salida_ast = Salida.Grafo()
@@ -137,9 +141,9 @@ def bye():
         file.write(salida_ast)
 
     # Creacion de la img a partir del archivo dot
-    output_image = "arbolast.jpg"
+    output_image = "arbolast.svg"
 
-    command = f'dot -Tjpg {dot_file} -o {output_image}  '
+    command = f'dot -Tsvg {dot_file} -o {output_image}  '
     #os.system(f'cmd /C "{command}"')
     os.system(command)
 
@@ -150,6 +154,26 @@ def bye():
     print("EJECUCION////////////////////////////////////////////")
     Salida.Ejecucion()
     print("EJECUCION////////////////////////////////////////////")
+
+
+    # Errores
+    print("//ERRORES//////////////////////////////////////////////////")
+    listaErrores = Salida.getErrores()
+    print("//ERRORES//////////////////////////////////////////////////")
+
+    print("//SIMBOLOS//////////////////////////////////////////////////")
+    # Simbolos
+    listaSimbolos = []
+    a = Salida.getSimbolos()
+    for clave, valor in a.items():
+        listaSimbolos.append(valor)
+    print("//SIMBOLOS//////////////////////////////////////////////////")
+
+    # Metodos
+    print("//METODOS//////////////////////////////////////////////////")
+    listaMetodos = Salida.getMetodos()
+
+    print("//METODOS//////////////////////////////////////////////////")
 
     #print("CONSOLA//////////////////////////////////////////////")
     #salida_consola = Salida.getConsola()
@@ -167,7 +191,10 @@ def bye():
         {
             "result": r,
             "salida_c3d": salida_c3d,
-            "base64_ast": base64_ast
+            "base64_ast": base64_ast,
+            "listaMetodos": listaMetodos,
+            "listaErrores": listaErrores,
+            "listaSimbolos": listaSimbolos
         }
     )
 

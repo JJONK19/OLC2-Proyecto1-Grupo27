@@ -24,7 +24,7 @@ class llamada(instruccion):
         '''
         # Declarar el padre
         padre = "NODO" + str(REPORTES.cont)
-        REPORTES.dot += padre + "[ label = \"Llamada\" ];\n"
+        REPORTES.dot += padre + "[color = \"brown\", style =\"radial\", fillcolor = \"gold:brown\", gradientangle = \"315\", label = \"Llamada\" ];\n"
         REPORTES.cont += 1
 
         #Declarar ID

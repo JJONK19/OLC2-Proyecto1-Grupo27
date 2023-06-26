@@ -116,11 +116,11 @@ console.log(tablaerrores)
 download(tablaerrores,"ReporteErrores.html","text/html")
 }
 
-function simbolos_(listaSimbolos) {
+function simbolos_(listaSimbolos, listaMetodos) {
 alert("Mensaje: Generando Reporte Simbolos .." + "\nEstado: En proceso.");
 //alert(listaSimbolos)
 
-var tablasimbolos = getSimbolos(listaSimbolos)
+var tablasimbolos = getSimbolos(listaSimbolos, listaMetodos)
 
 console.log(tablasimbolos)
 
@@ -177,7 +177,7 @@ function getErrores(listaErrores){
   
   }  
 
-function getSimbolos(listaSimbolos){
+function getSimbolos(listaSimbolos, listaMetodos){
 var texto="";
 
 texto+=`<html><head><title>Reporte de Tabla de Simbolos</title><style>
@@ -206,11 +206,29 @@ th {
     <th>Tipo de Simbolo</th>
     <th>Valor</th>
     <th>Entorno</th>
-    <th>Columna</th>
     <th>Linea</th>
+    <th>Columna</th>
  
 </tr>`;
 var cuenta=1;
+
+if (listaMetodos.length !== 0) {
+
+    listaMetodos.forEach(metodo =>{
+        texto+="<tr>\n";
+        texto+="<td>"+cuenta+"</td>\n";
+        texto+="<td>"+metodo.id+"</td>\n";
+        texto+="<td>"+metodo.tipo+"</td>\n";
+        texto+="<td>"+metodo.valor+"</td>\n";
+        texto+="<td>"+metodo.entorno+"</td>\n";
+        texto+="<td>"+metodo.linea+"</td>\n";
+        texto+="<td>"+metodo.columna+"</td>\n";
+        texto+="</tr>";
+        cuenta++;
+    })
+
+}
+
 listaSimbolos.forEach(simbolo =>{
     texto+="<tr>\n";
     texto+="<td>"+cuenta+"</td>\n";

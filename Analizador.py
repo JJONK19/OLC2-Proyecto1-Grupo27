@@ -231,8 +231,9 @@ class Analizador:
 
     # Error
     def t_error(t):
+        print(Analizador.arbol.reporte)
         mensaje = f'Caracter no reconocido {t.value[0]!r}.'
-        Analizador.arbol.añadirError("Lexico", mensaje, t.lexer.lineno, 0)    
+        Analizador.arbol.reporte.añadirError("Lexico", mensaje, t.lexer.lineno, 0)
         t.lexer.skip(1)
 
 
@@ -270,6 +271,7 @@ class Analizador:
             inicio : sentencias
         '''
         Analizador.arbol.instrucciones = t[1]       #Añadir las instrucciones al arbol
+        print(Analizador.arbol.reporte)
         t[0] = Analizador.arbol                     #Se retorna la instancia del arbol 
 
 
@@ -950,21 +952,22 @@ class Analizador:
 
     #Errores Sintaxis--------------------------------------------------------------------------------
     def p_error(t):
-
+        print("AAAAAAAAAAAA")
+        print(len(Analizador.arbol.reporte.errores))
+        print(Analizador.arbol.reporte)
         if t is not None:
             if t.type == 'error':
                 mensaje = "Token Inesperado: " + t.value
-                tipo = "Lexico"
             else:
                 mensaje = "Token Inesperado: " + t.value
                 tipo = "Sintactico"
 
-            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, t.lexpos)
+            Analizador.arbol.reporte.añadirError(tipo, mensaje, t.lineno, t.lexpos)
             Analizador.parser.errok()
         else:
             mensaje = "Token Inesperado: " + t.value
             tipo = "Sintactico"
-            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, t.lexpos)
+            Analizador.arbol.reporte.añadirError(tipo, mensaje, t.lineno, t.lexpos)
 
     parser = yacc.yacc(debug=True)
 

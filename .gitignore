@@ -10,3 +10,6 @@ __pycache__/*
 
 
 *.pyc
+Instruccion/__pycache__/ExpresionBinaria.cpython-310.pyc
+__pycache__/Analizador.cpython-310.pyc
+AST/__pycache__/AST.cpython-310.pyc

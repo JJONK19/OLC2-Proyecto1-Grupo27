@@ -186,6 +186,7 @@ class expresionBinaria(instruccion):
                 REPORTES.salida += "ERROR: La operacion suma solo recibe strings o numbers (un solo tipo a la vez). \n"
                 mensaje = "La operacion suma solo recibe strings o numbers (un solo tipo a la vez)."
                 REPORTES.añadirError("Semantico", mensaje, self.linea, self.columna)
+                print(REPORTES)
                 return retorno
         
         elif self.tipoOperacion == Expresion.RESTA.value:

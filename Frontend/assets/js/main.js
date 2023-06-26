@@ -22,10 +22,6 @@ $("#bt_compilar").click(function () {
             console.log(data.Salida)
             console.log("C3D-----------------------");
 
-            if(data.result == "ok"){
-                console.log("Si funciona el back uwu C3D")
-            }
-
             c3d.setValue(data.salida_c3d)
 
             if (data.result == "ok"){
@@ -37,8 +33,8 @@ $("#bt_compilar").click(function () {
                 reporte_simbolos = data.listaSimbolos
                 reporte_metodos = data.listaMetodos
             } else{
-                //errores_(data.listaErrores)
-                //reporte_errores = data.listaErrores;
+                errores_(data.listaErrores)
+                reporte_errores = data.listaErrores;
             }
 
             console.log("Proceso terminado..")
@@ -66,10 +62,6 @@ $("#bt_ejecutar").click(function () {
             console.log(data.listaSimbolos)
             console.log("-----------------------");
 
-            if(data.result == "ok"){
-                console.log("Si funciona el back uwu")
-            }
-
             consola.setValue(data.salida_consola)
 
             if (data.result === "ok"){
@@ -80,8 +72,8 @@ $("#bt_ejecutar").click(function () {
                 reporte_simbolos = data.listaSimbolos
                 reporte_metodos = data.listaMetodos
             } else{
-                //errores_(data.listaErrores)
-                //reporte_errores = data.listaErrores;
+                errores_(data.listaErrores)
+                reporte_errores = data.listaErrores;
             }
 
             console.log("Proceso terminado..")

@@ -106,11 +106,22 @@ def hello():
     print(salida_consola)
     print("CONSOLA//////////////////////////////////////////////")
 
-    r = "ok"
+    if len(listaErrores_aux) != 0:
+        return jsonify(
+            {
+                "result": "ko",
+                "salida_consola": salida_consola,
+                "base64_ast": base64_ast,
+                "listaMetodos": listaMetodos_aux,
+                "listaErrores": listaErrores_aux,
+                "listaSimbolos": listaSimbolos_aux
+            }
+        )
+
 
     return jsonify(
         {
-        "result": r,
+        "result": "ok",
         "salida_consola": salida_consola,
         "base64_ast": base64_ast,
         "listaMetodos": listaMetodos_aux,
@@ -176,6 +187,8 @@ def bye():
 
     for i in listaErrores:
         listaErrores_aux.append(i.__json__())
+
+
     print("//ERRORES//////////////////////////////////////////////////")
 
     print("//SIMBOLOS//////////////////////////////////////////////////")
@@ -212,13 +225,25 @@ def bye():
     print(salida_c3d)
     print("C3D//////////////////////////////////////////////////")
 
-    r = "ok"
+
+
+    if len(listaErrores_aux) != 0:
+        return jsonify(
+            {
+                "result": "ko",
+                "base64_ast": base64_ast,
+                "salida_c3d": salida_c3d,
+                "listaMetodos": listaMetodos_aux,
+                "listaErrores": listaErrores_aux,
+                "listaSimbolos": listaSimbolos_aux
+            }
+        )
 
     return jsonify(
         {
-        "result": r,
-        "salida_consola": salida_consola,
+        "result": "ok",
         "base64_ast": base64_ast,
+        "salida_c3d": salida_c3d,
         "listaMetodos": listaMetodos_aux,
         "listaErrores": listaErrores_aux,
         "listaSimbolos": listaSimbolos_aux

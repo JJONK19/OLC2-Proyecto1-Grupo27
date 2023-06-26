@@ -212,7 +212,7 @@ th {
 </tr>`;
 var cuenta=1;
 
-if (listaMetodos.length !== 0) {
+if (listaMetodos.length != 0) {
 
     listaMetodos.forEach(metodo =>{
         texto+="<tr>\n";

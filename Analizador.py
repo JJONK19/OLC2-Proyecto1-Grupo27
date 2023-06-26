@@ -39,7 +39,6 @@ class Analizador:
 
     #-----------------------------------------------------------------------------------------
     arbol = AST()              #Contenedor de la informacion generada en el analisis
-    arbol.reporte.limpiar()
     input = ''
 
     #-----------------------------------------------------------------------------------------
@@ -974,6 +973,8 @@ class Analizador:
     def analizar(self, Entrada):
         Analizador.lexer.lineno = 1
         Analizador.input = Entrada
+        Analizador.arbol.reporte.limpiar()
+        Analizador.arbol.instrucciones = []
 
         if len(Entrada) == 0:
             mensaje = "La Cadena está vacía"

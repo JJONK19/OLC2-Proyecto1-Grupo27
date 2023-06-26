@@ -129,8 +129,8 @@ class AST:
                     self.reporte.salida += "ERROR: No se puede usar return fuera de una funcion. \n"
                     mensaje = "No se puede usar return fuera de una funcion."
                     self.reporte.añadirError("Semantico", mensaje, instruccion.linea, instruccion.columna)
-                    
-        self.instrucciones = []
+
+
 
     def C3D (self):
         '''

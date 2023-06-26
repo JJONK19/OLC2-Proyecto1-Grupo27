@@ -58,7 +58,7 @@ def hello():
 
     listaSimbolos_aux = []
     for i in listaSimbolos:
-        listaSimbolos_aux.append(jsonify(i.__json__()))
+        listaSimbolos_aux.append(i.__json__())
 
     print(listaSimbolos_aux)
     print("//SIMBOLOS//////////////////////////////////////////////////")

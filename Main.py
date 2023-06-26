@@ -1,3 +1,5 @@
+import json
+
 from PyQt5 import QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
 import sys
@@ -8,6 +10,7 @@ import sys
 limit = sys.getrecursionlimit()
 NewLimit = 5000
 sys.setrecursionlimit(NewLimit)
+from flask import jsonify
 
 class ventana (QtWidgets.QMainWindow):
 
@@ -93,6 +96,11 @@ class ventana (QtWidgets.QMainWindow):
             listaSimbolos.append(valor)
 
         print(listaSimbolos)
+        listaSimbolos2 = []
+        for i in listaSimbolos:
+            listaSimbolos2.append(jsonify(i.json()))
+
+        print(listaSimbolos2)
         print("//SIMBOLOS//////////////////////////////////////////////////")
 
         # Metodos

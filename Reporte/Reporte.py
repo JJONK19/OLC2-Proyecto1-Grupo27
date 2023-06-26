@@ -12,6 +12,14 @@ class Error:
         self.linea = LINEA
         self.columna = COLUMNA
 
+    def __json__(self):
+        return {
+            'tipo': self.tipo,
+            'descripcion': self.descripcion,
+            'linea': self.linea,
+            'columna': self.columna
+        }
+
 class rSimbolo:
     '''
         Se almacena en la variable simbolos de la clase Reportes. Se utiliza para los reportes.
@@ -30,6 +38,17 @@ class rSimbolo:
         self.linea = LINEA
         self.columna = COLUMNA
 
+    def __json__(self):
+        return {
+            'id': self.id,
+            'tipo': self.tipo,
+            'valor': self.valor,
+            'entorno': self.entorno,
+            'linea': self.linea,
+            'columna': self.columna
+        }
+
+
 
 class rMetodo:
     '''
@@ -44,6 +63,16 @@ class rMetodo:
         self.tipo = TIPO
         self.linea = LINEA
         self.columna = COLUMNA
+
+    def __json__(self):
+        return {
+            'id': self.id,
+            'tipo': self.tipo,
+            'valor': "",
+            'entorno': "Global",
+            'linea': self.linea,
+            'columna': self.columna
+        }
 
 class reportes:
     '''

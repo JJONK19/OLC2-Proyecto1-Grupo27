@@ -130,13 +130,12 @@ class AST:
                     mensaje = "No se puede usar return fuera de una funcion."
                     self.reporte.añadirError("Semantico", mensaje, instruccion.linea, instruccion.columna)
                     
-
+        self.instrucciones = []
     def C3D (self):
         '''
             Recibe las instrucciones y retorna un string con el C3D
         '''
-        #Limpiar reportes
-        self.reporte.limpiar()
+        #Limpiar c3d
         self.codigo.limpiar()
         
         #Se crea la lista de entornos y se añade el entorno global

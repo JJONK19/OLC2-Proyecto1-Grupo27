@@ -963,12 +963,12 @@ class Analizador:
                 mensaje = "Token Inesperado: " + t.value
                 tipo = "Sintactico"
 
-            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, -1)
+            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, Analizador.find_column_lex(t))
             Analizador.parser.errok()
         else:
             mensaje = "Token Inesperado: " + t.value
             tipo = "Sintactico"
-            Analizador.arbol.añadirError(tipo, mensaje, t.lineno, -1)
+            Analizador.arbol.añadirError(tipo, mensaje, -1, -1)
 
     parser = yacc.yacc(debug=True)
 

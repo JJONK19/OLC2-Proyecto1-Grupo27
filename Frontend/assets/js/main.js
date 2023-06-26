@@ -63,7 +63,7 @@ $("#bt_ejecutar").click(function () {
             console.log(data);
 
             console.log("-----------------------");
-            console.log(data.Salida)
+            console.log(data.listaSimbolos)
             console.log("-----------------------");
 
             if(data.result == "ok"){
@@ -204,7 +204,8 @@ th {
     <th>No.</th>
     <th>Identificador</th>
     <th>Tipo de Simbolo</th>
-    <th>Tipo de Variable</th>
+    <th>Valor</th>
+    <th>Entorno</th>
     <th>Columna</th>
     <th>Linea</th>
  
@@ -213,11 +214,12 @@ var cuenta=1;
 listaSimbolos.forEach(simbolo =>{
     texto+="<tr>\n";
     texto+="<td>"+cuenta+"</td>\n";
-    texto+="<td>"+simbolo.identificador+"</td>\n";
-    texto+="<td>"+simbolo.tipoSimbolo+"</td>\n";
-    texto+="<td>"+simbolo.tipoVar+"</td>\n";
-    texto+="<td>"+simbolo.columna+"</td>\n";
+    texto+="<td>"+simbolo.id+"</td>\n";
+    texto+="<td>"+simbolo.tipo+"</td>\n";
+    texto+="<td>"+simbolo.valor+"</td>\n";
+    texto+="<td>"+simbolo.entorno+"</td>\n";
     texto+="<td>"+simbolo.linea+"</td>\n";
+    texto+="<td>"+simbolo.columna+"</td>\n";
     texto+="</tr>";
     cuenta++;
 })

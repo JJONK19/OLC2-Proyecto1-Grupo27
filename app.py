@@ -105,9 +105,9 @@ def hello():
         "result": r,
         "salida_consola": salida_consola,
         "base64_ast": base64_ast,
-        "listaMetodos": listaMetodos,
-        "listaErrores": listaErrores,
-        "listaSimbolos": listaSimbolos
+        #"listaMetodos": listaMetodos,
+        #"listaErrores": listaErrores,
+        "listaSimbolos": listaSimbolos_aux
         }
     )
 

@@ -1,3 +1,10 @@
 
 Entrada.txt
 Agrupacion de Clases.txt
+__pycache__/*
+**/__pycache__/
+*.dot
+*.svg
+*.jpg
+
+

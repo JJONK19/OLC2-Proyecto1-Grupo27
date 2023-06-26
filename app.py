@@ -55,6 +55,12 @@ def hello():
     a = Salida.getSimbolos()
     for clave, valor in a.items():
         listaSimbolos.append(valor)
+
+    listaSimbolos_aux = []
+    for i in listaSimbolos:
+        listaSimbolos_aux.append(jsonify(i.__json__()))
+
+    print(listaSimbolos_aux)
     print("//SIMBOLOS//////////////////////////////////////////////////")
 
     # Metodos

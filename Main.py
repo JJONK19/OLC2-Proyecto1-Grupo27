@@ -98,7 +98,7 @@ class ventana (QtWidgets.QMainWindow):
         print(listaSimbolos)
         listaSimbolos2 = []
         for i in listaSimbolos:
-            listaSimbolos2.append(jsonify(i.json()))
+            listaSimbolos2.append(jsonify(i.__json__()))
 
         print(listaSimbolos2)
         print("//SIMBOLOS//////////////////////////////////////////////////")

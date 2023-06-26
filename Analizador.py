@@ -964,7 +964,7 @@ class Analizador:
             Analizador.arbol.añadirError(tipo, mensaje, t.lineno, Analizador.find_column_lex(t))
             Analizador.parser.errok()
         else:
-            mensaje = "Token Inesperado: " + t.value
+            mensaje = "Token Inesperado: ERROR"
             tipo = "Sintactico"
             Analizador.arbol.añadirError(tipo, mensaje, -1, -1)
 

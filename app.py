@@ -51,6 +51,8 @@ def hello():
 
     for i in listaErrores:
         listaErrores_aux.append(i.__json__())
+
+    print("Lista de Errores Generada")
     print("//ERRORES//////////////////////////////////////////////////")
 
     print("//SIMBOLOS//////////////////////////////////////////////////")
@@ -64,7 +66,7 @@ def hello():
     for i in listaSimbolos:
         listaSimbolos_aux.append(i.__json__())
 
-    print(listaSimbolos_aux)
+    print("Lista de Simbolos Generada")
     print("//SIMBOLOS//////////////////////////////////////////////////")
 
     # Metodos
@@ -74,14 +76,14 @@ def hello():
     listaMetodos_aux = []
     for i in listaMetodos:
         listaMetodos_aux.append(i.__json__())
-
+    print("Lista de Metodos Generada")
     print("//METODOS//////////////////////////////////////////////////")
 
 
 
     print("AST//////////////////////////////////////////////////")
     salida_ast = Salida.Grafo()
-    print(salida_ast)
+    print("Grafo Generado")
     print("AST//////////////////////////////////////////////////")
 
     dot_file = "arbolast.dot"
@@ -103,7 +105,7 @@ def hello():
 
     print("CONSOLA//////////////////////////////////////////////")
     salida_consola = Salida.getConsola()
-    print(salida_consola)
+    print("Salida a consola Generada")
     print("CONSOLA//////////////////////////////////////////////")
 
     if len(listaErrores_aux) != 0:
@@ -156,7 +158,7 @@ def bye():
 
     print("AST//////////////////////////////////////////////////")
     salida_ast = Salida.Grafo()
-    print(salida_ast)
+    print("Grafo Generado")
     print("AST//////////////////////////////////////////////////")
 
     dot_file = "arbolast.dot"
@@ -188,7 +190,7 @@ def bye():
     for i in listaErrores:
         listaErrores_aux.append(i.__json__())
 
-
+    print("Lista de Errores Generada")
     print("//ERRORES//////////////////////////////////////////////////")
 
     print("//SIMBOLOS//////////////////////////////////////////////////")
@@ -202,7 +204,7 @@ def bye():
     for i in listaSimbolos:
         listaSimbolos_aux.append(i.__json__())
 
-    print(listaSimbolos_aux)
+    print("Lista de Simbolos Generada")
     print("//SIMBOLOS//////////////////////////////////////////////////")
 
     # Metodos
@@ -212,7 +214,7 @@ def bye():
     listaMetodos_aux = []
     for i in listaMetodos:
         listaMetodos_aux.append(i.__json__())
-
+    print("Lista de Metodos Generada")
     print("//METODOS//////////////////////////////////////////////////")
 
     #print("CONSOLA//////////////////////////////////////////////")
@@ -222,7 +224,7 @@ def bye():
 
     print("C3D//////////////////////////////////////////////////")
     salida_c3d = Salida.C3D()
-    print(salida_c3d)
+    print("Salida C3D Generada")
     print("C3D//////////////////////////////////////////////////")
 
 

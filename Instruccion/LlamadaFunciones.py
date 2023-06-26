@@ -295,6 +295,20 @@ class llamadaFuncion(instruccion):
             CODIGO.insertar_Asignacion(temporal, "0")
             return valor3D(temporal, True, Tipo.NUMBER.value, Clases.PRIMITIVO.value)
 
+        #Verficar que el entorno sea de una funcion para proteger atributos
+        # Si la llamada es de una función == True, sino ignoramos el listado de Temporales
+        #globalEnv = SIMBOLOS[0]
+        #if globalEnv.esFuncion:
+            #Proteger el return
+            #Proteger los parametros de la funcion
+
+           # if len(globalEnv.listaTemporalesAlmacenados) != 0 :
+
+
+                #globalEnv.listaTemporalesAlmacenados.append()
+
+
+
         for i in range(len(atributos)):
             tempAtributo = atributos[i]
             tempParametro = parametros[i]

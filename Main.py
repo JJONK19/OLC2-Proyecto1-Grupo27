@@ -91,6 +91,8 @@ class ventana (QtWidgets.QMainWindow):
         a = Salida.getSimbolos()
         for clave, valor in a.items():
             listaSimbolos.append(valor)
+
+        print(listaSimbolos)
         print("//SIMBOLOS//////////////////////////////////////////////////")
 
         # Metodos

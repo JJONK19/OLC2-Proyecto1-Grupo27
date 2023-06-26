@@ -97,5 +97,6 @@ class reportes:
         '''
             Actualiza las variables del reporte de simbolos
         '''
-        self.simbolos[(ID, ENTORNO)] = VALOR
+        temp = self.simbolos[(ID, ENTORNO)]
+        temp.valor = VALOR
     

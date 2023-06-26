@@ -95,6 +95,8 @@ class DeclaracionAny(instruccion):
 
         #Añadir el id de la variable a valor
         nuevo.id = self.id
+        nuevo.linea = self.linea
+        nuevo.columna = self.columna
       
         #Enviar al entorno local
         local = SIMBOLOS[-1]

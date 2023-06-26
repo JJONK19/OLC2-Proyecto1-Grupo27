@@ -47,6 +47,10 @@ def hello():
     # Errores
     print("//ERRORES//////////////////////////////////////////////////")
     listaErrores = Salida.getErrores()
+    listaErrores_aux = []
+
+    for i in listaErrores:
+        listaErrores_aux.append(i.__json__())
     print("//ERRORES//////////////////////////////////////////////////")
 
     print("//SIMBOLOS//////////////////////////////////////////////////")
@@ -66,6 +70,10 @@ def hello():
     # Metodos
     print("//METODOS//////////////////////////////////////////////////")
     listaMetodos = Salida.getMetodos()
+
+    listaMetodos_aux = []
+    for i in listaMetodos:
+        listaMetodos_aux.append(i.__json__())
 
     print("//METODOS//////////////////////////////////////////////////")
 
@@ -105,8 +113,8 @@ def hello():
         "result": r,
         "salida_consola": salida_consola,
         "base64_ast": base64_ast,
-        #"listaMetodos": listaMetodos,
-        #"listaErrores": listaErrores,
+        "listaMetodos": listaMetodos_aux,
+        "listaErrores": listaErrores_aux,
         "listaSimbolos": listaSimbolos_aux
         }
     )
@@ -161,10 +169,13 @@ def bye():
     Salida.Ejecucion()
     print("EJECUCION////////////////////////////////////////////")
 
-
     # Errores
     print("//ERRORES//////////////////////////////////////////////////")
     listaErrores = Salida.getErrores()
+    listaErrores_aux = []
+
+    for i in listaErrores:
+        listaErrores_aux.append(i.__json__())
     print("//ERRORES//////////////////////////////////////////////////")
 
     print("//SIMBOLOS//////////////////////////////////////////////////")
@@ -173,11 +184,21 @@ def bye():
     a = Salida.getSimbolos()
     for clave, valor in a.items():
         listaSimbolos.append(valor)
+
+    listaSimbolos_aux = []
+    for i in listaSimbolos:
+        listaSimbolos_aux.append(i.__json__())
+
+    print(listaSimbolos_aux)
     print("//SIMBOLOS//////////////////////////////////////////////////")
 
     # Metodos
     print("//METODOS//////////////////////////////////////////////////")
     listaMetodos = Salida.getMetodos()
+
+    listaMetodos_aux = []
+    for i in listaMetodos:
+        listaMetodos_aux.append(i.__json__())
 
     print("//METODOS//////////////////////////////////////////////////")
 
@@ -195,12 +216,12 @@ def bye():
 
     return jsonify(
         {
-            "result": r,
-            "salida_c3d": salida_c3d,
-            "base64_ast": base64_ast,
-            "listaMetodos": listaMetodos,
-            "listaErrores": listaErrores,
-            "listaSimbolos": listaSimbolos
+        "result": r,
+        "salida_consola": salida_consola,
+        "base64_ast": base64_ast,
+        "listaMetodos": listaMetodos_aux,
+        "listaErrores": listaErrores_aux,
+        "listaSimbolos": listaSimbolos_aux
         }
     )
 
